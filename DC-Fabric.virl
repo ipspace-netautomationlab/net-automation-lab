@@ -24,6 +24,7 @@
         <interface id="0" name="Ethernet2/1"/>
         <interface id="1" name="Ethernet2/2"/>
     </node>
+    <node name="server-1" type="SIMPLE" subtype="server" location="399,350"/>
     <annotations/>
     <connection dst="/virl:topology/virl:node[3]/virl:interface[1]" src="/virl:topology/virl:node[1]/virl:interface[1]"/>
     <connection dst="/virl:topology/virl:node[4]/virl:interface[1]" src="/virl:topology/virl:node[1]/virl:interface[2]"/>
