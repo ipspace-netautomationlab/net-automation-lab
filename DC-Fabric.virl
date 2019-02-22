@@ -26,6 +26,7 @@
     </node>
     <node name="server-1" type="SIMPLE" subtype="server" location="399,350"/>
     <node name="server-2" type="SIMPLE" subtype="server" location="554,330"/>
+    <node name="server-3" type="SIMPLE" subtype="server" location="685,324"/>
     <annotations/>
     <connection dst="/virl:topology/virl:node[3]/virl:interface[1]" src="/virl:topology/virl:node[1]/virl:interface[1]"/>
     <connection dst="/virl:topology/virl:node[4]/virl:interface[1]" src="/virl:topology/virl:node[1]/virl:interface[2]"/>
