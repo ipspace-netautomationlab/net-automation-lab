@@ -69,6 +69,8 @@ spine-and-leaf topology (2 spines and 4 leafs).
 All the project files have been uploaded to a GitHub repo where the "master" branch contains the
 official release and the "development" branch is used as development environment.
 
+Commits inside master branch will be referred to homework completion.
+
 Within the master branch folder you can find the following folders:
 
 *	Ansible: this folder contains the Ansible config files;
