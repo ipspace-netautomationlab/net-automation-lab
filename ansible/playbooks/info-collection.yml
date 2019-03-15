@@ -1,0 +1,15 @@
+---
+
+#- name: gathering complete spine device info collection
+#  gather_facts: no
+#  hosts: spine
+#
+#  roles:
+#    - switch-spine
+
+- name: gathering complete leaf device info collection
+  gather_facts: no
+  hosts: leaf
+
+  roles:
+    - switch-leaf

@@ -1,0 +1,6 @@
+---
+
+- name: write IP addresses to HTML report file
+  template:
+    src: report_ipaddr.j2
+    dest: "{{output_folder}}/{{inventory_hostname}}_ipaddr.html"

@@ -1,0 +1,11 @@
+---
+
+- name: collect device information
+  register: nxosfacts_out
+  nxos_facts:
+    gather_subset: all
+
+- name: write all the results to JSON file
+  copy:
+    content: "{{ nxosfacts_out | to_nice_json }}"
+    dest: "{{output_folder}}/{{inventory_hostname}}_nxosfacts.json"
