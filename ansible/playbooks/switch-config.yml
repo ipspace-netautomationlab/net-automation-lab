@@ -1,8 +1,0 @@
----
-
-- name: basic show commands
-  gather_facts: yes
-  hosts: spine
-
-  roles:
-    - switch-spine
