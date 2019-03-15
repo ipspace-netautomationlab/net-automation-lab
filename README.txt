@@ -92,3 +92,10 @@ variables:
 *	username and password for device access;
 *	connection module = network_cli;
 *	device OS = nxos.
+
+- SECOND ASSIGNMENT: EASY WINS
+
+The second assignment has been implemented by "info-collection.yml" playbook. It collects 
+nxos system info by using nxos_facts module. The retrieved data is presented in HTML files
+inside the "output/web" folder. The pages display ip addresses, net interfaces and system data.
+Moreover all information has been stored into "output/json" folder as JSON files.
