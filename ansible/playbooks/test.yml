@@ -1,0 +1,8 @@
+---
+
+- name: basic show commands
+  gather_facts: no
+  hosts: catalyst-switch
+
+  roles:
+    - switch

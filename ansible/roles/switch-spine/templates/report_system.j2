@@ -9,7 +9,7 @@
 </head>
 <body>
   <div id="title1">
-    <h1>System info report for &quot;nx-osv-4&quot;</h1>
+    <h1>System info report for &quot;{{inventory_hostname}}&quot;</h1>
   </div>
   <div class="limiter">
     <div class="container-table100">
@@ -34,19 +34,19 @@
             <table>
               <tbody>
                   <tr class="row100 body">
-                    <td class="cell100 column1">7.3(0)D1(1)</td>
-                    <td class="cell100 column2">TM00030000B</td>
-                    <td class="cell100 column3">NX-OSv Chassis</td>
-                    <td class="cell100 column4">2992</td>
-                    <td class="cell100 column5">996</td>
-                    <td class="cell100 column6">bootflash:///titanium-d1.7.3.0.D1.1.bin</td>
+                    <td class="cell100 column1">{{ansible_net_version}}</td>
+                    <td class="cell100 column2">{{ansible_net_serialnum}}</td>
+                    <td class="cell100 column3">{{ansible_net_model}}</td>
+                    <td class="cell100 column4">{{ansible_net_memtotal_mb}}</td>
+                    <td class="cell100 column5">{{ansible_net_memfree_mb}}</td>
+                    <td class="cell100 column6">{{ansible_net_image}}</td>
                   </tr>
               </tbody>
             </table>
           </div>
         </div>
         <div id="title2">
-          <h1>Module info report for &quot;nx-osv-4&quot;</h1>
+          <h1>Module info report for &quot;{{inventory_hostname}}&quot;</h1>
         </div>
         <div class="table100 ver1 m-b-110">
           <div class="table100-head">
@@ -64,31 +64,15 @@
           <div class="table100-body js-pscroll">
             <table>
               <tbody>
-                                  <tr class="row100 body">
-                    <td class="cell100 column1">N7K-SUP1</td>
-                    <td class="cell100 column2">0</td>
-                    <td class="cell100 column3">active *</td>
-                    <td class="cell100 column4">NX-OSv Supervisor Module</td>
+                {% for mod in module %}
+                  <tr class="row100 body">
+                    <td class="cell100 column1">{{mod.model}}</td>
+                    <td class="cell100 column2">{{mod.ports}}</td>
+                    <td class="cell100 column3">{{mod.status}}</td>
+                    <td class="cell100 column4">{{mod.type}}</td>
                   </tr>
-                                  <tr class="row100 body">
-                    <td class="cell100 column1">N7K-F248XP-25</td>
-                    <td class="cell100 column2">48</td>
-                    <td class="cell100 column3">ok</td>
-                    <td class="cell100 column4">NX-OSv Ethernet Module</td>
-                  </tr>
-                                  <tr class="row100 body">
-                    <td class="cell100 column1">N7K-F248XP-25</td>
-                    <td class="cell100 column2">48</td>
-                    <td class="cell100 column3">ok</td>
-                    <td class="cell100 column4">NX-OSv Ethernet Module</td>
-                  </tr>
-                                  <tr class="row100 body">
-                    <td class="cell100 column1">N7K-F248XP-25</td>
-                    <td class="cell100 column2">48</td>
-                    <td class="cell100 column3">ok</td>
-                    <td class="cell100 column4">NX-OSv Ethernet Module</td>
-                  </tr>
-                              </tbody>
+                {%endfor%}
+              </tbody>
             </table>
           </div>
         </div>

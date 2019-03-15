@@ -1,0 +1,6 @@
+---
+
+# Declaring datacenter groups
+
+[catalyst-switch]
+ws-1 ansible_host=10.98.0.4

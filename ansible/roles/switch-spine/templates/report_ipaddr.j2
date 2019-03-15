@@ -10,6 +10,8 @@
 <body>
   <div id="title">
     <h1>IP address list report for &quot;{{inventory_hostname}}&quot;</h1>
+  </div>
+  <div id="management">
     <h2>Management IP address for &quot;{{inventory_hostname}}&quot;&colon; {{ansible_net_interfaces.mgmt0.ipv4.address}}</h2>
   </div>
   <div class="limiter">
