@@ -1,6 +1,6 @@
 
 
-hostname {{ mng_params.hostname }}
+hostname {{ generic_params.hostname }}
 
 {% for feature in global_features %}
 feature {{ global_features.name }}
@@ -9,8 +9,8 @@ feature {{ global_features.name }}
 cfs eth distribute
 nv overlay evpn
 
-hardware access-list tcam region ifacl {{ tcam_acl_size }}
-hardware access-list tcam region arp-ether {{ tcam_arp_size }}
+hardware access-list tcam region ifacl {{ generic_global_params.tcam_acl_size }}
+hardware access-list tcam region arp-ether {{ generic_global_params.tcam_arp_size }}
 
 clock timezone {{ ntp_global_params.time-zone }}
 clock summer-time {{ ntp_global_params.summer-time }}
@@ -20,7 +20,7 @@ power redundancy-mode combined force
 no password strength-check
 
 {% for user in global_users %}
-username {{ global_users.username[user] }} password {{ global_users.username[user].pwd }}  role {{ global_users.username[user].role }}
+username {{ global_users[user].username }} password 5 {{ global_users[user].pwd }}  role {{ global_users[user].role }}
 {% endfor %}
 
 no ip domain-lookup
@@ -28,17 +28,17 @@ radius-server timeout {{ radius_global_params.timeout }}
 radius-server retransmit {{ radius_global_params.retransmit }}
 radius-server deadtime {{ radius_global_params.deadtime }}
 
-{% for host in radius_global_params.groups.servers %}
-radius-host host {{ radius_global_params.groups.servers[host].ipaddr }} key 0 {{ radius_global_params.groups.servers[server].secret }} authentication accounting 
+{% for host in radius_global_params.group.servers %}
+radius-host host {{ radius_global_params.group.servers[host].ipaddr }} key 0 {{ radius_global_params.group.servers[server].secret }} authentication accounting 
 {% endfor %}
 
-aaa group server radius {{ radius_global_params.groups }}
-    {% for host in radius_global_params.groups.servers%}
-    server {{ radius_global_params.servers[host].ipaddr }}
-	{% endfor %}
+aaa group server radius {{ radius_global_params.group }}
+    {% for host in radius_global_params.group.servers%}
+    server {{ radius_global_params.group.servers[host].ipaddr }}
+{% endfor %}
     use-vrf {{ mng_params.vrf }}
     source-interface {{ mng_params.ifname }}
-	
+
 spanning-tree mode mst
 no system default switchport
 
@@ -46,17 +46,14 @@ errdisable recovery cause link-flap
 errdisable recovery cause udld
 errdisable recovery cause loopback
 
-ip access-list {{ snmp_global_params.acl_name }}
-  10 permit udp host {{ snmp_global_params.servers.ipaddr }} host {{ mng_params.ipaddr }} eq snmp 
-
 copp profile strict
 
 snmp-server contact {{ snmp_global_params.contact }}
 snmp-server location {{ snmp_global_params.location }}
 snmp-server source-interface traps {{ mng_params.ifname }}
 snmp-server source-interface informs {{ mng_params.ifname }}
-{% for  user in snmp_global_params.snmp_users}
-snmp-server user {{ snmp_global_params.snmp_users[user] }} {{ snmp_global_params.snmp_users[user].role }} auth md5 {{ snmp_global_params.snmp_users[user].pwd}} priv {{ snmp_global_params.snmp_users[user].pwd }} localizedkey
+{% for user in global_users %}
+snmp-server user {{ global_users[user].username }} {{ global_users[user].role }} auth md5 {{ global_users[user].pwd}} priv {{ global_users[user].pwd }} localizedkey
 {% endfor %}
 
 snmp-server enable traps bgp
@@ -65,13 +62,15 @@ snmp-server enable traps sysmgr cseFailSwCoreNotifyExtended
 snmp-server enable traps config ccmCLIRunningConfigChanged
 snmp-server enable traps snmp authentication
 snmp-server enable traps system Clock-change-notification
-snmp-server community {{ snmp_global_params.communities.name }} group network-operator
+{% for community in snmp_global_params.communities %}
+snmp-server community {{ snmp_global_params.communities[community].name }} group network-operator
+{% endfor %}
 
 {% for host in snmp_global_params.servers %}
 snmp-server host {{ snmp_global_params.servers[host].ipaddr }} use-vrf {{ mng_params.vrf }}
 {% endfor %}
 
-{% for host in ntp_global_params %}
+{% for host in ntp_global_params.servers %}
 ntp server {{ ntp_global_params.servers[host].ipaddr }} use-vrf {{ mng_params.vrf }}
 {% endfor %}
 ntp source-interface  {{ mng_params.ifname }}
@@ -94,39 +93,63 @@ interface nve1
   no shutdown
   host-reachability protocol bgp
   source-interface loopback0
-  {% for vrf in vrf_params %}
-  member vni {{ vrf_params.vrfs[vrf].vni }} associate-vrf
+  {% for vrf in service_params.vrfs %}
+  member vni {{ service_params.vrfs[vrf].id + 1000 }} associate-vrf
+  {% for vlan in service_params.vrfs[vrf].vlans %}
+  member vni {{ service_params.vrfs[vrf].vlans[vlan].id + 10000}}
+    suppress-arp
+    mcast-group 239.1.0.{{service_params.vrfs[vrf].id}}
+  {% endfor %}
   {% endfor %}
 
-vlan {{ vlan_global_params.vlans.id }}
-  name {{ vlan_global_params.vlans.name }}
-  vn-segment {{ vlan_global_params.vlans.vn-segment }}
-
-vrf context {{ mng_params.vrf }}
-  ip route 0.0.0.0/0 {{ mng_params.default-gw }}
-  
-vrf context {{ vrf_params.vrfs.name }}
-  vni {{ vrf_params.vrfs.vni }}
+{% for vrf in service_params.vrfs %}
+{% if service_params.vrfs[vrf].name!="GLOBAL" %}
+vrf context {{ service_params.vrfs[vrf].name }}
+  vni {{ service_params.vrfs[vrf].id + 1000 }}
   ip pim ssm range {{ pim_global_params.ssm_multicast_group }}
-  rd {{ vrf_params.vrfs.rd }}
+  rd {{ 1:service_params.vrfs[vrf].id }}
   address-family ipv4 unicast
-    route-target both {{ vrf_params.vrfs.rt_ip }}
-	route-target both {{ vrf_params.vrfs.rt_evpn }} evpn
-
-interface Vlan{{ vlan_global_params.vlans.id }}
-  description {{ vlan_global_params.vlans.description}}
+    route-target both {{ 1:service_params.vrfs[vrf].id }}
+    route-target both {{ 1:service_params.vrfs[vrf].id }} evpn
+!
+vlan {{service_params.vrfs[vrf].id + 1000}}
+ name l3-{{service_params.vrfs[vrf].name}}
+ vn-segment {{ service_params.vrfs[vrf].id + 1000 }}
+!
+interface Vlan{{service_params.vrfs[vrf].id + 1000}}
+  description l3-{{service_params.vrfs[vrf].name}}
   no shutdown
-  mtu {{ vlan_global_params.mtu}}
-  vrf member {{ vlan_global_params.vlans.vrf_member}}				//Qui se vuoi puoi controllare se associarlo ad una VRF attraverso il parametro {{ vlan_global_params.vlans.vrf_enabled}}
+  mtu {{phyif_global_params.mtu}}
+  vrf member {{service_params.vrfs[vrf].name}}
   no ip redirects
   ip forward
   no ipv6 redirects
+{% endif %}
+{% for vlan in service_params.vrfs[vrf].vlans %}
+vlan {{ service_params.vrfs[vrf].vlans[vlan].id }}
+  name {{ service_params.vrfs[vrf].vlans[vlan].name }}
+  vn-segment {{ service_params.vrfs[vrf].vlans[vlan].id + 10000}}
+!
+ {% if service_params.vrfs[vrf].vlans[vlan].ipaddr is defined%}
+int Vlan{{ service_params.vrfs[vrf].vlans[vlan].id }}
+  description {{ service_params.vrfs[vrf].vlans[vlan].description }}
+  no shutdown
+  mtu {{vlanif_global_params.mtu}}
+  vrf member {{service_params.vrfs[vrf].name}}
+  ip address {{ service_params.vrfs[vrf].vlans[vlan].ipaddr | ipaddr}}
+  fabric forwarding mode anycast-gateway
+  {%endif%}
+{% endfor %}
+{% endfor %}
 
-{% for interface in underlay.interfaces.ethernet %}
-interface Ethernet {{underlay.interfaces.ethernet[interface]}}
-  description {{underlay.interfaces.ethernet[interface].description}}
+vrf context {{ mng_params.vrf }}
+  ip route 0.0.0.0/0 {{ mng_params.default-gw }}
+
+{% for interface in underlay.interfaces.phy %}
+interface Ethernet {{underlay.interfaces.phy[interface].name}}
+  description {{underlay.interfaces.phy[interface].description}}
   mtu {{phyif_global_params.mtu}}
-  ip address {{underlay.interfaces.ethernet[interface].ipaddr}}
+  ip address {{underlay.interfaces.phy[interface].ipaddr | ipaddr}}
   ip ospf network point-to-point
   no ip ospf passive-interface
   ip router ospf underlay area {{ ospf_params.underlay_area }}
@@ -136,18 +159,29 @@ interface Ethernet {{underlay.interfaces.ethernet[interface]}}
 
 {% for interface in underlay.interfaces.loopback %}
 interface loopback{{ underlay.interfaces.loopback[interface].id }}
-  ip address {{ underlay.interfaces.loopback[interface].ipaddr }}
+  ip address {{ underlay.interfaces.loopback[interface].ipaddr | ipaddr }}
   ip router ospf underlay area {{ ospf_global_params.underlay_area }}
   ip pim sparse-mode
 {% endfor %}
 
-{% for interface in overlay.interfaces.ethernet %}
-interface Ethernet {{overlay.interfaces.ethernet[interface]}}
-  description {{overlay.interfaces.ethernet[interface].description}}
+{% for interface in overlay.interfaces.phy.trunk %}
+interface Ethernet {{overlay.interfaces.phy.trunk[interface].name}}
+  description {{overlay.interfaces.phy.trunk[interface].description}}
   mtu {{phyif_global_params.mtu}}
-  switchport mode ...
-  switchport trunk 
-  switchport access vlan ... || switchport trunk allowed vlan ...
+  switchport mode trunk
+  switchport trunk allowed vlan {{overlay.interfaces.phy.trunk[interface].vlan_list}}
+  spanning-tree port type edge
+  spanning-tree bpduguard enable
+  spanning-tree guard root
+  no shutdown
+{% endfor %}
+
+{% for interface in overlay.interfaces.phy.access %}
+interface Ethernet {{overlay.interfaces.phy.access[interface].name}}
+  description {{overlay.interfaces.phy.access[interface].description}}
+  mtu {{phyif_global_params.mtu}}
+  switchport mode access
+  switchport access vlan {{overlay.interfaces.phy.access[interface].vlan}}
   spanning-tree port type edge
   spanning-tree bpduguard enable
   spanning-tree guard root
@@ -192,20 +226,20 @@ router bgp {{ bgp_global_params.local_as_id }}
       send-community extended
       soft-reconfiguration inbound always
 {% for neighbor in bgp_global_params.reflectors %}  
-  neighbor {{ bgp_global_params.reflectors[neighbor].ipaddr }}
+  neighbor {{ bgp_global_params.reflectors[neighbor].ipaddr | ipaddr}}
     inherit peer spines
 {% endfor %}
-{% for vrf in vrf_params.vrfs[vrf] %}  
-  vrf {{ vrf_params.vrfs.name }}
+{% for vrf in service_params.vrfs %}
+  vrf {{ service_params.vrfs[vrf].name }}
     address-family ipv4 unicast
       advertise l2vpn evpn
-{% endfor %}	  
+{% endfor %}  
 
 evpn
 
 ip tcp path-mtu-discovery
 
-logging server {{ syslog_global_params.servers.ipaddr }} 5 use-vrf {{ mng_params.vrf }}
+logging server {{ syslog_global_params.servers.ipaddr | ipaddr}} 5 use-vrf {{ mng_params.vrf }}
 logging module 6
 logging source-interface {{ mng_params.ifname }}
 logging timestamp milliseconds

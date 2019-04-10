@@ -1,0 +1,276 @@
+hostname {{ generic_global_params.hostname }}
+!
+{% for item in global_features %}
+feature {{ item.name }}
+{% endfor %}
+!
+cfs eth distribute
+nv overlay evpn
+!
+hardware access-list tcam region ifacl {{ generic_global_params.tcam_acl_size | int }}
+hardware access-list tcam region arp-ether {{ generic_global_params.tcam_arp_size | int }}
+!
+clock timezone {{ ntp_global_params.timezone }}
+clock summer-time {{ ntp_global_params.summertime }}
+!
+power redundancy-mode combined force
+!
+no password strength-check
+!
+{% for user in global_users %}
+username {{ user.username }} password 5 {{ user.pwd }}  role {{ user.role }}
+{% if user.ssh_key is defined %}
+username {{ user.username }} sshkey file bootflash:{{ user.username }}_id_rsa.pub
+{% endif %}
+{% endfor %}
+!
+no ip domain-lookup
+!
+spanning-tree mode mst
+no system default switchport
+!
+errdisable recovery cause link-flap
+errdisable recovery cause udld
+errdisable recovery cause loopback
+!
+copp profile strict
+!
+login on-success log 
+!
+fabric forwarding anycast-gateway-mac {{ generic_global_params.anycast_gateway_mac }}
+!
+ip pim rp-address {{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(pim_global_params.rp_id*3+2) | ipaddr('address')  | ipv4 }} group-list {{ pim_global_params.rp_multicast_group }}
+ip pim ssm range {{ pim_global_params.ssm_multicast_group }}
+!
+udld aggressive
+!
+vrf context {{ mng_params.vrf }}
+  ip route 0.0.0.0/0 {{ mng_params.default_gw }}
+!
+{% for vrf in services_params.vrfs %}
+{% if vrf.name != "GLOBAL" %}
+vrf context {{ vrf.name }}
+  vni {{ vrf.id | int + 1000 }}
+  ip pim ssm range {{ pim_global_params.ssm_multicast_group }}
+  rd 1:{{ vrf.id }}
+  address-family ipv4 unicast
+    route-target both 1:{{ vrf.id }}
+    route-target both 1:{{ vrf.id }} evpn
+!
+{% endif %}
+{% endfor %}
+!
+{% for vrf in services_params.vrfs %}
+{% if vrf.name != "GLOBAL" %}
+vlan {{ vrf.id | int + 1000 }}
+ name l3-{{ vrf.name}}
+ vn-segment {{ vrf.id | int + 1000 }}
+!
+{% endif %}
+{% for vlan in vrf.vlans %}
+vlan {{ vlan.id | int }}
+  name {{ vlan.name }}
+  vn-segment {{ vlan.id | int + 10000}}
+!
+{% endfor %}
+{% endfor %}
+!
+{% for vrf in services_params.vrfs %}
+{% if vrf.name != "GLOBAL" %}
+interface Vlan{{ vrf.id | int + 1000 }}
+  description l3-{{ vrf.name }}
+  no shutdown
+  mtu {{ phyif_global_params.mtu | int }}
+  vrf member {{ vrf.name }}
+  no ip redirects
+  ip forward
+  no ipv6 redirects
+!
+{% endif %}
+{% for vlan in vrf.vlans %}
+{% if vlan.ipaddr is defined %}
+interface Vlan{{ vlan.id | int }}
+  description {{ vlan.description }}
+  no shutdown
+  mtu {{ vlanif_global_params.mtu | int }}
+  vrf member {{ vrf.name }}
+  ip address {{ vlan.ipaddr | ipaddr }}
+  fabric forwarding mode anycast-gateway
+!
+{%endif%}
+{% endfor %}
+{% endfor %}
+!
+interface nve1
+  no shutdown
+  host-reachability protocol bgp
+  source-interface loopback0
+{% for vrf in services_params.vrfs %}
+{% if vrf.name != "GLOBAL" %}
+  member vni {{ vrf.id | int + 1000 }} associate-vrf
+{% for vlan in vrf.vlans %}
+  member vni {{ vlan.id | int + 10000 }}
+    suppress-arp
+    mcast-group 239.1.0.{{ vrf.id }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+!
+{% for interface in underlay.interfaces.phy %}
+interface Ethernet {{ interface.name }}
+  description {{ interface.description }}
+  mtu {{ phyif_global_params.mtu | int }}
+  ip address {{ interface.ipaddr | ipv4 }}
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf underlay area {{ ospf_global_params.underlay_area }}
+  ip pim sparse-mode
+  no shutdown
+!
+{% endfor %}
+!
+{% for interface in underlay.interfaces.loopback %}
+interface loopback{{  interface.id | int }}
+  ip address {{ interface.ipaddr | ipv4 }}
+  ip router ospf underlay area {{ ospf_global_params.underlay_area }}
+  ip pim sparse-mode
+!
+{% endfor %}
+!
+{% for interface in overlay.interfaces.phy.trunk %}
+interface Ethernet {{ interface.name }}
+  description {{ interface.description }}
+  mtu {{ phyif_global_params.mtu | int }}
+  switchport mode trunk
+  switchport trunk allowed vlan {{ interface.vlan_list }}
+  spanning-tree port type edge
+  spanning-tree bpduguard enable
+  spanning-tree guard root
+  no shutdown
+{% endfor %}
+!
+{% for interface in overlay.interfaces.phy.access %}
+interface Ethernet {{ interface.name }}
+  description {{ interface.description }}
+  mtu {{ phyif_global_params.mtu | int }}
+  switchport mode access
+  switchport access vlan {{ interface.vlan | int }}
+  spanning-tree port type edge
+  spanning-tree bpduguard enable
+  spanning-tree guard root
+  no shutdown
+{% endfor %}
+!
+interface {{ mng_params.ifname }}
+  vrf member {{ mng_params.vrf }}
+  ip address {{ mng_params.ipaddr | ipv4 }}
+!
+router ospf underlay
+  router-id {{underlay.interfaces.loopback[0].ipaddr | ipaddr('address') | ipv4}}
+  passive-interface default
+!
+router bgp {{ bgp_global_params.local_as | int }}
+  router-id {{underlay.interfaces.loopback[0].ipaddr | ipaddr('address') | ipv4}}
+  address-family ipv4 unicast
+  address-family l2vpn evpn
+    nexthop trigger-delay critical 100 non-critical 500
+    retain route-target all
+  template peer spines
+    remote-as {{ bgp_global_params.local_as | int }}
+    update-source loopback0
+    address-family ipv4 unicast
+      next-hop-self
+      soft-reconfiguration inbound always
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      soft-reconfiguration inbound always
+{% for rr in bgp_global_params.reflectors %}
+  neighbor {{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(rr.id*3) | ipaddr('address')  | ipv4 }}
+    inherit peer spines
+  !
+  {% endfor %}
+{% for vrf in services_params.vrfs %}
+{% if vrf.name != "GLOBAL" %}
+  vrf {{ vrf.name }}
+    address-family ipv4 unicast
+      advertise l2vpn evpn
+{% endif %}
+{% endfor %}  
+!
+evpn
+{% for vrf in services_params.vrfs %}
+{% for vlan in vrf.vlans %}
+ vni {{ vlan.id | int + 10000 }} l2
+    rd {{ generic_params.id }}:{{ vlan.id | int + 10000 }}
+    route-target import 1:{{ vlan.id | int + 10000 }}
+    route-target export 1:{{ vlan.id | int + 10000 }}
+{% endfor %}
+{% endfor %}
+!
+ip tcp path-mtu-discovery
+!
+{% for host in radius_global_params.group.servers %}
+radius-host host {{ host.ipaddr | ipv4 }} key 0 {{ host.secret }} authentication accounting 
+{% endfor %}
+radius-server timeout {{ radius_global_params.timeout | int }}
+radius-server retransmit {{ radius_global_params.retransmit | int }}
+radius-server deadtime {{ radius_global_params.deadtime | int }}
+radius-server directed-request 
+ip radius source-interface {{ mng_params.ifname }}
+!
+aaa group server radius {{ radius_global_params.group.name }}
+{% for host in radius_global_params.group.servers%}
+  server {{ host.ipaddr | ipv4 }}
+{% endfor %}
+  use-vrf {{ mng_params.vrf }}
+  source-interface {{ mng_params.ifname }}
+!
+aaa authentication login default group {{ radius_global_params.group.name }}
+aaa accounting default group {{ radius_global_params.group.name }}
+!
+snmp-server contact {{ snmp_global_params.contact }}
+snmp-server location {{ snmp_global_params.location }}
+snmp-server source-interface traps {{ mng_params.ifname }}
+snmp-server source-interface informs {{ mng_params.ifname }}
+{% for user in global_users %}
+snmp-server user {{ user.username }} {{ user.role }} auth md5 {{ user.pwd}} priv {{ user.pwd }} localizedkey
+{% endfor %}
+snmp-server enable traps bgp
+snmp-server enable traps hsrp state-change
+snmp-server enable traps sysmgr cseFailSwCoreNotifyExtended
+snmp-server enable traps config ccmCLIRunningConfigChanged
+snmp-server enable traps snmp authentication
+snmp-server enable traps system Clock-change-notification
+{% for community in snmp_global_params.communities %}
+snmp-server community {{ community.name }} group network-operator
+{% endfor %}
+{% for host in snmp_global_params.servers %}
+snmp-server host {{ host.ipaddr | ipv4 }} use-vrf {{ mng_params.vrf }}
+{% endfor %}
+!
+{% for host in ntp_global_params.servers %}
+ntp server {{ host.ipaddr | ipv4 }} use-vrf {{ mng_params.vrf }}
+{% endfor %}
+ntp source-interface  {{ mng_params.ifname }}
+!
+{% for host in syslog_global_params.servers %}
+logging server {{ host.ipaddr | ipv4 }} 5 use-vrf {{ mng_params.vrf }}
+{% endfor %}
+logging module 6
+logging source-interface {{ mng_params.ifname }}
+logging timestamp milliseconds
+logging monitor 6
+!
+cli alias name wr copy run start
+cli alias name vxlanrt show bgp l2vpn evpn
+cli alias name ipint show ip interf brief vrf all
+cli alias name underlay show ip ospf underlay
+cli alias name overlay show ip ospf overlay
+!
+line console
+line vty
+  session-limit 16
+  exec-timeout 15
+!
+!

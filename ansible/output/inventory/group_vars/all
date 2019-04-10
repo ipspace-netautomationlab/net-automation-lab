@@ -1,0 +1,132 @@
+---
+
+# Generic data used by Ansible
+output_folder: /etc/ansible/output
+
+# Features to be enabled on devices
+global_features:
+  - name: ospf
+  - name: bgp
+  - name: ospfv3
+  - name: pim
+  - name: msdp
+  - name: eigrp
+  - name: private-vlan
+  - name: udld
+  - name: interface-vlan
+  - name: vn-segment-vlan-based
+  - name: hsrp
+  - name: lacp
+  - name: lldp
+  - name: bfd
+  - name: nv overlay
+  - name: ngoam
+
+  
+generic_global_params:
+  hostname: "{{ inventory_hostname }}"
+  anycast_gateway_mac: 025d.7353.2cd7
+  tcam_acl_size: 0
+  tcam_arp_size: 512
+  mng_net: 172.16.1.0/24
+  mng_ip_offset: 9
+  loopback_net: 192.168.0.0/24
+  uplink1_net: 10.0.1.0/24
+  uplink2_net: 10.0.2.0/24
+
+# Local users database (used also for SNMP config data)
+global_users: 
+  - username: netadmin
+    role: network-admin
+    #encrypted password
+    pwd:  $5$emOkY3RY$cuBIqbRTRyVwfmOhcL4UbMF95r2CQKvQ8rQjdFy9wx.
+    ssh_key: netadmin_id_rsa.pub
+  - username: netoperator
+    role: network-operator
+    #encrypted password
+    pwd:  $5$emOkY3RY$cuBIqbRTRyVwfmOhcL4UbMF95r2CQKvQ8rQjdFy9wx. 
+
+# DNS config data
+dns_global_params:
+   domain_name: net-automation-lab.local
+   servers: 
+   - ipaddr: 172.16.1.1
+   - ipaddr: 172.16.1.2
+
+
+# AAA config data
+radius_global_params:
+  group:
+    name: MYRADIUS
+    servers: 
+    - ipaddr: 172.16.1.1
+      secret: mysecret
+    - ipaddr: 172.16.1.2
+      secret: mysecret
+  timeout: 1
+  retransmit: 2
+  deadtime: 5
+
+
+# SNMP config data
+snmp_global_params:
+  servers: 
+  - ipaddr: 172.16.1.1
+  - ipaddr: 172.16.1.2
+  communities: 
+  - name: myRWcommunity
+    type: read-write
+  - name: myROcommunity
+    type: read-only
+  contact: admin@net-automation-lab.local
+  location: 170 West Tasman Drive - San Jose, CA 95134-170 USA
+
+
+# Syslog config data
+syslog_global_params:
+  servers: 
+  - ipaddr: 172.16.1.1
+  - ipaddr: 172.16.1.2
+
+
+# NTP config data
+ntp_global_params:
+  timezone: CET 1 0
+  summertime: CEST 5 sun mar 2:00 5 sun oct 3:00 60
+  servers: 
+  - ipaddr: 172.16.1.1
+  - ipaddr: 172.16.1.2
+
+  
+# Physical interfaces config data
+phyif_global_params:
+  mtu: 9216
+
+# Vlan interfaces config data
+vlanif_global_params:
+  mtu: 9100
+  
+# OSPF config data
+ospf_global_params:
+  underlay_area: 0.0.0.1
+
+# BGP config data
+bgp_global_params:
+  local_as: 65003
+  reflectors:
+  - id: 1
+  - id: 2
+  clients:
+  - id: 3
+  - id: 4
+  - id: 5
+  - id: 6
+
+# PIM config data
+pim_global_params:
+  rp_id: 0
+  rp_multicast_group: 239.0.0.0/8
+  ssm_multicast_group: 232.0.0.0/8
+  anycastrp:
+  - id: 1
+  - id: 2  
