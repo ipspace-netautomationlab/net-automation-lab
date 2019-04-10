@@ -1,0 +1,59 @@
+---
+
+- name: get username running Ansible
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: print username
+      debug: msg="{{ lookup('env','USER') }}"
+      tags: 
+      - prova0
+
+- name: show VRF parameters
+  hosts: leaf
+  gather_facts: false
+  vars_files: ../inventory/vars/services.yml
+  tasks:
+    - name: print values
+      debug: 
+        msg: "{{ item.l3vni }}"
+      with_items: "{{ services_params.vrfs }}"
+      tags:
+      - prova1
+
+- name: show snmp communities
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: print values
+      vars:
+        msg: |
+             "Community = {{ item.name }}"
+             "Type      = {{ item.type }}"
+      debug: 
+        msg: "{{ msg.split('|\n') }}"
+      with_items: "{{ snmp_global_params.communities }}"
+      tags:
+      - prova2
+
+- name: show snmp contact
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: print values
+      debug:
+        msg: "{{ snmp_global_params.contact }}"
+      tags:
+      - prova3
+
+- name: show hostname
+  hosts: leaf
+  gather_facts: false
+  tasks:
+    - name: print values
+      debug:
+        msg: "{{ generic_params.hostname }}"
+      tags:
+      - prova4
+
+

@@ -1,0 +1,20 @@
+---
+
+- name: basic configuration for fabric devices
+  gather_facts: no
+  hosts: leaf
+
+
+  tasks:
+   - name: reboot
+     cli_command:
+       command: reload
+       prompt:
+       - "This command will reboot the system. (y/n)?  [n] "
+       answer: 
+       - y
+     register: command_output
+
+   - name: PRINT TO TERMINAL WINDOW
+     debug:
+       msg: "{{command_output.stdout}}"
