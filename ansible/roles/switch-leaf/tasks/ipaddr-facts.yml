@@ -4,4 +4,5 @@
   template:
     src: report_ipaddr.j2
     dest: "{{output_folder}}/web/{{inventory_hostname}}_ipaddr.html"
-  tags: info
+  tags:
+  - info
