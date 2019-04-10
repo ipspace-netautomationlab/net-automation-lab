@@ -89,7 +89,7 @@ interface Vlan{{ vrf.id | int + 1000 }}
 {% endif %}
 {% for vlan in vrf.vlans %}
 {% if vlan.ipaddr is defined %}
-int Vlan{{ vlan.id | int }}
+interface Vlan{{ vlan.id | int }}
   description {{ vlan.description }}
   no shutdown
   mtu {{ vlanif_global_params.mtu | int }}
