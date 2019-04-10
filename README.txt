@@ -92,3 +92,19 @@ variables:
 *	username and password for device access;
 *	connection module = network_cli;
 *	device OS = nxos.
+
+- SECOND ASSIGNMENT: EASY WINS
+
+The second assignment has been implemented by "info-collection.yml" playbook. It collects 
+nxos system info by using nxos_facts module. The retrieved data is presented in HTML files
+inside the "output/web" folder. The pages display ip addresses, net interfaces and system data.
+Moreover all information has been stored into "output/json" folder as JSON files.
+
+- THIRD ASSIGNMENT: DATA MODEL
+
+The third assignment has been implemented by "config.yml" playbook with the use of "--tags=config" CLI switch.
+You can still use the previous playbook "info-collection.yml" with the use of "--tags=info" CLI switch.
+The main part of data model has been implemented in "group_vars/all" file, moreover some device specific data
+has been implemented in "host_vars/{{inventory_hostname" files.
+Customer services (VLANs and VRFs) can be declared into "inventory/vars/services.yml" file.
+The config file for each device has been stored in "output/config" folder.
