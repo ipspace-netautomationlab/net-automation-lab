@@ -4,12 +4,14 @@
   hosts: localhost
   connection: local
   gather_facts: no
+
   tasks:
   - name: deleting output folder
     file: 
       path: '{{output_folder}}/'
       state: absent
     run_once: true
+
   - name: creating output folder
     file: 
       owner: netadmin
@@ -17,6 +19,7 @@
       state: directory
       mode: 0777
     run_once: true
+
   - name: creating web folder
     file: 
       owner: netadmin
@@ -24,6 +27,7 @@
       state: directory
       mode: 0777
     run_once: true
+
   - name: creating json folder
     file: 
       owner: netadmin
@@ -31,6 +35,7 @@
       state: directory
       mode: 0777
     run_once: true
+
   - name: creating CSS folder
     file: 
       owner: netadmin
@@ -38,6 +43,7 @@
       state: directory
       mode: 0777
     run_once: true
+
   - name: copy CSS into web folder
     copy:
       src: "/home/netadmin/css/"
