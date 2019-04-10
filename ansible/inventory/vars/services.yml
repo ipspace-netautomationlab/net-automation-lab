@@ -6,14 +6,14 @@ services_params:
   - name: GLOBAL
     vlans:
     - id: 3801
-      name: CUSTOMER-01-3801
-      description: CUSTOMER-01 - LINK
-  - name: CUSTOMER-01
+      name: L2-CUSTOMER-01
+      description: CUSTOMER-01 - VLAN
+  - name: CUSTOMER-02
     id: 1
     l3vlan: 
       name: 1
     vlans:
-    - id: 3801
-      name: CUSTOMER-01-3801
-      description: CUSTOMER-01 - LINK
-      ipaddr: 1.1.1.1/24
+    - id: 3802
+      name: L3-CUSTOMER-02
+      description: CUSTOMER-02 - VLAN
+      ipaddr: 192.168.0.1/24
