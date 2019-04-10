@@ -1,0 +1,19 @@
+---
+
+# Service config data
+services_params:
+  vrfs:
+  - name: GLOBAL
+    vlans:
+    - id: 3801
+      name: CUSTOMER-01-3801
+      description: CUSTOMER-01 - LINK
+  - name: CUSTOMER-01
+    id: 1
+    l3vlan: 
+      name: 1
+    vlans:
+    - id: 3801
+      name: CUSTOMER-01-3801
+      description: CUSTOMER-01 - LINK
+      ipaddr: 1.1.1.1/24

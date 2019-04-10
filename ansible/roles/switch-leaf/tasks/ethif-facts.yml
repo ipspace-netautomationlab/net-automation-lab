@@ -1,0 +1,7 @@
+---
+
+- name: write Ethernet interfaces to HTML report file
+  template:
+    src: report_ethif.j2
+    dest: "{{output_folder}}/web/{{inventory_hostname}}_ethif.html"
+  tags: info

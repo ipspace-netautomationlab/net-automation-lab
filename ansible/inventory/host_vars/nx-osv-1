@@ -1,0 +1,33 @@
+---
+
+# Generic config data
+generic_params:
+  id: 1
+
+# Management config data
+mng_params:
+  ifname: mgmt0
+  vrf: management
+  ipaddr: "{{ generic_global_params.mng_net | ipaddr('net') | ipaddr(generic_params.id) | ipaddr('address') | ipmath(generic_global_params.mng_ip_offset) }}/{{ generic_global_params.mng_net | ipaddr('net') | ipaddr('prefix') }}"
+  default_gw: "{{ generic_global_params.mng_net | ipaddr('net') | ipaddr('1') | ipaddr('address') }}"
+
+# Underlay interfaces config data
+underlay:
+  interfaces:
+    phy:
+    - name: 1/50
+      description: Link to Spine-1
+      ipaddr: "{{ generic_global_params.uplink1_net | ipsubnet(31, generic_params.id) | ipaddr('1') }}"
+    - name: 1/51
+      description: Link to Spine-2
+      ipaddr: "{{ generic_global_params.uplink2_net | ipsubnet(31, generic_params.id) | ipaddr('1') }}"
+    loopback:
+    - id: 0
+      description: router-id
+      ipaddr: "{{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(generic_params.id*3) }}"
+    - id: 1
+      description: anycast-rp
+      ipaddr: "{{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(generic_params.id*3+1) }}"
+    - id: 2
+      description: anycast-rp-address
+      ipaddr: "{{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(pim_global_params.rp_id*3+2) }}"
