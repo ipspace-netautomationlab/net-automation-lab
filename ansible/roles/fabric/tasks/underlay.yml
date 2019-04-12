@@ -1,0 +1,9 @@
+---
+
+- name: underlay config file
+  template:
+    src: underlay_conf.j2
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_underlay.conf"
+  tags:
+  - config
+  - underlay

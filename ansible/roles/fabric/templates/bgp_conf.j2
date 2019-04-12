@@ -1,0 +1,61 @@
+{% set route_reflector = 'false' %}
+{% for rr in bgp_global_params.reflectors %}
+{%if rr.id == generic_params.id%}
+{% set route_reflector = 'true' %}
+{% endif %}
+{% endfor %}
+!
+router bgp {{ bgp_global_params.local_as | int }}
+  router-id {{underlay.interfaces.loopback[0].ipaddr | ipaddr('address') | ipv4}}
+  address-family ipv4 unicast
+  address-family l2vpn evpn
+    nexthop trigger-delay critical 100 non-critical 500
+    retain route-target all
+{%if route_reflector == 'true' %}
+  template peer leaves
+    remote-as {{ bgp_global_params.local_as | int }}
+    update-source loopback0
+    address-family ipv4 unicast
+      route-reflector-client
+      soft-reconfiguration inbound always
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-reflector-client
+      soft-reconfiguration inbound always
+{%endif%}
+  template peer spines
+    remote-as {{ bgp_global_params.local_as | int }}
+    update-source loopback0
+    address-family ipv4 unicast
+      soft-reconfiguration inbound always
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      soft-reconfiguration inbound always
+{% for rr in bgp_global_params.reflectors %}
+{%if rr.id != generic_params.id%}
+  neighbor {{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(rr.id*3) | ipaddr('address')  | ipv4 }}
+    inherit peer spines
+  !
+{%endif%}
+{% endfor %}
+{%if route_reflector == 'true' %}
+{% for client in bgp_global_params.clients %}  
+{%if client.id != generic_params.id%}
+  neighbor {{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(client.id*3) | ipaddr('address')  | ipv4 }}
+    inherit peer leaves
+  !
+{%endif%}
+{% endfor %}
+{%endif%}
+{%if group_names=="leaf" %}
+{% for vrf in services_params.vrfs %}
+{% if vrf.name != "GLOBAL" %}
+  vrf {{ vrf.name }}
+    address-family ipv4 unicast
+      advertise l2vpn evpn
+{% endif %}
+{% endfor %}
+{% endif %}
+!

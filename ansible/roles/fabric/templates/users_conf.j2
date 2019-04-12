@@ -1,0 +1,8 @@
+!
+{% for user in global_users %}
+username {{ user.username }} password 5 {{ user.pwd }}  role {{ user.role }}
+{% if user.ssh_key is defined %}
+username {{ user.username }} sshkey file bootflash:{{ user.username }}_id_rsa.pub
+{% endif %}
+{% endfor %}
+!

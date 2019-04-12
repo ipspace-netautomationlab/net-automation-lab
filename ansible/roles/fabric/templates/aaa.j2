@@ -1,0 +1,11 @@
+!
+aaa group server radius {{ radius_global_params.group.name }}
+{% for host in radius_global_params.group.servers%}
+  server {{ host.ipaddr | ipv4 }}
+{% endfor %}
+  use-vrf {{ mng_params.vrf }}
+  source-interface {{ mng_params.ifname }}
+!
+aaa authentication login default group {{ radius_global_params.group.name }}
+aaa accounting default group {{ radius_global_params.group.name }}
+!
