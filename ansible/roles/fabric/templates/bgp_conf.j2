@@ -1,9 +1,3 @@
-{% set route_reflector = 'false' %}
-{% for rr in bgp_global_params.reflectors %}
-{%if rr.id == generic_params.id%}
-{% set route_reflector = 'true' %}
-{% endif %}
-{% endfor %}
 !
 router bgp {{ bgp_global_params.local_as | int }}
   router-id {{underlay.interfaces.loopback[0].ipaddr | ipaddr('address') | ipv4}}
@@ -11,6 +5,10 @@ router bgp {{ bgp_global_params.local_as | int }}
   address-family l2vpn evpn
     nexthop trigger-delay critical 100 non-critical 500
     retain route-target all
+{% for rr in bgp_global_params.reflectors %}
+{% set route_reflector = 'false' %}
+{% if rr.id == generic_params.id%}
+{% set route_reflector = 'true' %}
 {%if route_reflector == 'true' %}
   template peer leaves
     remote-as {{ bgp_global_params.local_as | int }}
@@ -24,6 +22,8 @@ router bgp {{ bgp_global_params.local_as | int }}
       route-reflector-client
       soft-reconfiguration inbound always
 {%endif%}
+{%endif%}
+{%endfor%}
   template peer spines
     remote-as {{ bgp_global_params.local_as | int }}
     update-source loopback0
@@ -40,6 +40,10 @@ router bgp {{ bgp_global_params.local_as | int }}
   !
 {%endif%}
 {% endfor %}
+{% for rr in bgp_global_params.reflectors %}
+{% set route_reflector = 'false' %}
+{% if rr.id == generic_params.id%}
+{% set route_reflector = 'true' %}
 {%if route_reflector == 'true' %}
 {% for client in bgp_global_params.clients %}  
 {%if client.id != generic_params.id%}
@@ -49,6 +53,8 @@ router bgp {{ bgp_global_params.local_as | int }}
 {%endif%}
 {% endfor %}
 {%endif%}
+{%endif%}
+{%endfor%}
 {%if group_names=="leaf" %}
 {% for vrf in services_params.vrfs %}
 {% if vrf.name != "GLOBAL" %}
