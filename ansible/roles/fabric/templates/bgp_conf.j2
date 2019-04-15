@@ -55,7 +55,7 @@ router bgp {{ bgp_global_params.local_as | int }}
 {%endif%}
 {%endif%}
 {%endfor%}
-{%if group_names=="leaf" %}
+{% if 'leaf' in group_names %}
 {% for vrf in services_params.vrfs %}
 {% if vrf.name != "GLOBAL" %}
   vrf {{ vrf.name }}

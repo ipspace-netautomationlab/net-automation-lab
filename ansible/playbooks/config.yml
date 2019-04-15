@@ -55,3 +55,17 @@
   vars_files: ../inventory/vars/services.yml
   roles:
     - switch-spine
+
+- name: create complete config file
+  connection: local
+  gather_facts: no
+  hosts: nexus-switch
+#  vars_files: ../inventory/vars/services.yml
+  tasks:
+  - name: Assembling configurations
+    assemble:
+     src: "{{output_folder}}/config"
+     regexp: '{{inventory_hostname}}'
+     dest: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
+    tags:
+    - config

@@ -16,6 +16,13 @@ interface Ethernet {{ interface.name }}
 !
 {% endfor %}
 !
+{% if 'leaf' in group_names %}
+interface loopback{{  underlay.interfaces.loopback[0].id | int }}
+  ip address {{ underlay.interfaces.loopback[0].ipaddr | ipv4 }}
+  ip router ospf underlay area {{ ospf_global_params.underlay_area }}
+  ip pim sparse-mode
+!
+{% else %}
 {% for interface in underlay.interfaces.loopback %}
 interface loopback{{  interface.id | int }}
   ip address {{ interface.ipaddr | ipv4 }}
@@ -23,6 +30,7 @@ interface loopback{{  interface.id | int }}
   ip pim sparse-mode
 !
 {% endfor %}
+{%endif%}
 !
 router ospf underlay
   router-id {{underlay.interfaces.loopback[0].ipaddr | ipaddr('address') | ipv4}}
