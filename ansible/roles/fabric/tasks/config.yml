@@ -1,0 +1,8 @@
+---
+
+- name: write config file
+  template:
+    src: config.j2
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}.conf"
+  tags:
+  - config

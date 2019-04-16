@@ -1,0 +1,9 @@
+!
+clock timezone {{ ntp_global_params.timezone }}
+clock summer-time {{ ntp_global_params.summertime }}
+!
+{% for host in ntp_global_params.servers %}
+ntp server {{ host.ipaddr | ipv4 }} use-vrf {{ mng_params.vrf }}
+{% endfor %}
+ntp source-interface  {{ mng_params.ifname }}
+!

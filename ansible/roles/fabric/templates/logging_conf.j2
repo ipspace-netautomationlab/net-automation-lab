@@ -1,0 +1,9 @@
+!
+{% for host in syslog_global_params.servers %}
+logging server {{ host.ipaddr | ipv4 }} 5 use-vrf {{ mng_params.vrf }}
+{% endfor %}
+logging module 6
+logging source-interface {{ mng_params.ifname }}
+logging timestamp milliseconds
+logging monitor 6
+!
