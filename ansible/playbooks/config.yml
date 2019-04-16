@@ -60,7 +60,6 @@
   connection: local
   gather_facts: no
   hosts: nexus-switch
-#  vars_files: ../inventory/vars/services.yml
   tasks:
   - name: Assembling configurations
     assemble:
