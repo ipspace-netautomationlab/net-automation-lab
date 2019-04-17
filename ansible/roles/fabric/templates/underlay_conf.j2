@@ -1,0 +1,49 @@
+!
+ip pim rp-address {{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(pim_global_params.rp_id*3+2) | ipaddr('address')  | ipv4 }} group-list {{ pim_global_params.rp_multicast_group }}
+ip pim ssm range {{ pim_global_params.ssm_multicast_group }}
+!
+!
+{% if 'leaf' in group_names %}
+{% for interface in underlay.interfaces.phy %}
+interface Ethernet {{ interface.name }}
+  description {{ interface.description }}
+  mtu {{ phyif_global_params.mtu | int }}
+  ip address {{ generic_global_params.uplink[loop.index-1].net | ipsubnet(31, generic_params.id) | ipaddr('1') }}
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf underlay area {{ ospf_global_params.underlay_area }}
+  ip pim sparse-mode
+  no shutdown
+!
+{% endfor %}
+interface loopback{{  underlay_global_params.interfaces.loopback[0].id | int }}
+  ip address {{ underlay_global_params.interfaces.loopback[0].ipaddr | ipv4 }}
+  ip router ospf underlay area {{ ospf_global_params.underlay_area }}
+  ip pim sparse-mode
+!
+{%elif 'spine' in group_names %}
+{% for leaf in groups['leaf'] %}
+interface Ethernet {{ underlay.interfaces.phy[loop.index-1].name }}
+  description {{ underlay.interfaces.phy[loop.index-1].description }}
+  mtu {{ phyif_global_params.mtu | int }}
+  ip address {{ generic_global_params.uplink[groups.spine.index(inventory_hostname)].net | ipsubnet(31, hostvars[leaf].generic_params.id) | ipaddr('0') }}
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf underlay area {{ ospf_global_params.underlay_area }}
+  ip pim sparse-mode
+  no shutdown
+!
+{% endfor %}
+{% for interface in underlay_global_params.interfaces.loopback %}
+interface loopback{{  interface.id | int }}
+  ip address {{ interface.ipaddr | ipv4 }}
+  ip router ospf underlay area {{ ospf_global_params.underlay_area }}
+  ip pim sparse-mode
+!
+{% endfor %}
+{%endif%}
+!
+router ospf underlay
+  router-id {{underlay_global_params.interfaces.loopback[0].ipaddr | ipaddr('address') | ipv4}}
+  passive-interface default
+!

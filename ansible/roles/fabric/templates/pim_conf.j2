@@ -1,0 +1,4 @@
+!
+ip pim rp-address {{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(pim_global_params.rp_id*3+2) | ipaddr('address')  | ipv4 }} group-list {{ pim_global_params.rp_multicast_group }}
+ip pim ssm range {{ pim_global_params.ssm_multicast_group }}
+!

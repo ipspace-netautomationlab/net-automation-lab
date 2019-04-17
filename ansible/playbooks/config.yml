@@ -35,6 +35,13 @@
       - config
       - info
 
+- name: create basic device config files
+  gather_facts: no
+  hosts: nexus-switch
+  vars_files: ../inventory/vars/services.yml
+  roles:
+    - fabric
+      
 - name: create leaf device config files
   gather_facts: no
   hosts: leaf
@@ -48,3 +55,16 @@
   vars_files: ../inventory/vars/services.yml
   roles:
     - switch-spine
+
+- name: create complete config file
+  connection: local
+  gather_facts: no
+  hosts: nexus-switch
+  tasks:
+  - name: Assembling configurations
+    assemble:
+     src: "{{output_folder}}/config"
+     regexp: '{{inventory_hostname}}'
+     dest: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
+    tags:
+    - config

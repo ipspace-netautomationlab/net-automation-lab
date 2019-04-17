@@ -1,0 +1,21 @@
+!
+snmp-server contact {{ snmp_global_params.contact }}
+snmp-server location {{ snmp_global_params.location }}
+snmp-server source-interface traps {{ mng_params.ifname }}
+snmp-server source-interface informs {{ mng_params.ifname }}
+{% for user in global_users %}
+snmp-server user {{ user.username }} {{ user.role }} auth md5 {{ user.pwd}} priv {{ user.pwd }} localizedkey
+{% endfor %}
+snmp-server enable traps bgp
+snmp-server enable traps hsrp state-change
+snmp-server enable traps sysmgr cseFailSwCoreNotifyExtended
+snmp-server enable traps config ccmCLIRunningConfigChanged
+snmp-server enable traps snmp authentication
+snmp-server enable traps system Clock-change-notification
+{% for community in snmp_global_params.communities %}
+snmp-server community {{ community.name }} group network-operator
+{% endfor %}
+{% for host in snmp_global_params.servers %}
+snmp-server host {{ host.ipaddr | ipv4 }} use-vrf {{ mng_params.vrf }}
+{% endfor %}
+!
