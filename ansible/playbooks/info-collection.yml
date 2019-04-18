@@ -6,19 +6,21 @@
   gather_facts: no
 
   tasks:
-  - name: deleting output folder
+  - name: deleting web folder
     file: 
-      path: '{{output_folder}}/'
+      path: '{{output_folder}}/web'
       state: absent
     run_once: true
+    tags:
+      - info
 
-  - name: creating output folder
+  - name: deleting json folder
     file: 
-      owner: netadmin
-      path: '{{output_folder}}/'
-      state: directory
-      mode: 0777
+      path: '{{output_folder}}/json'
+      state: absent
     run_once: true
+    tags:
+      - info
 
   - name: creating web folder
     file: 
@@ -27,6 +29,8 @@
       state: directory
       mode: 0777
     run_once: true
+    tags:
+      - info
 
   - name: creating json folder
     file: 
@@ -35,6 +39,8 @@
       state: directory
       mode: 0777
     run_once: true
+    tags:
+      - info
 
   - name: creating CSS folder
     file: 
@@ -43,23 +49,20 @@
       state: directory
       mode: 0777
     run_once: true
+    tags:
+      - info
 
   - name: copy CSS into web folder
     copy:
       src: "/home/netadmin/css/"
       dest: "{{output_folder}}/web/css/"
       directory_mode: yes
+    tags:
+      - info
 
-- name: gathering complete spine device info collection
+- name: gathering complete fabric device info collection
   gather_facts: no
-  hosts: spine
+  hosts: nexus-switch
 
   roles:
-    - switch-spine
-
-- name: gathering complete leaf device info collection
-  gather_facts: no
-  hosts: leaf
-
-  roles:
-    - switch-leaf
+    - fabric

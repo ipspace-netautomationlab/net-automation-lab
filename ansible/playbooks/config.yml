@@ -5,25 +5,13 @@
   connection: local
   gather_facts: no
   tasks:
-  - name: deleting output folder
+  - name: deleting config folder
     file: 
-      path: '{{output_folder}}/'
+      path: '{{output_folder}}/config'
       state: absent
     run_once: true
     tags:
       - config
-      - info
-  - name: creating output folder
-    file: 
-      owner: netadmin
-      path: '{{output_folder}}/'
-      state: directory
-      mode: 0777
-    run_once: true
-    tags:
-      - config
-      - info
-
   - name: creating config folder
     file: 
       owner: netadmin
@@ -33,8 +21,14 @@
     run_once: true
     tags:
       - config
-      - info
 
+- name: create basic device config files
+  gather_facts: no
+  hosts: nexus-switch
+  vars_files: ../inventory/vars/services.yml
+  roles:
+    - fabric
+      
 - name: create leaf device config files
   gather_facts: no
   hosts: leaf
@@ -48,3 +42,16 @@
   vars_files: ../inventory/vars/services.yml
   roles:
     - switch-spine
+
+- name: create complete config file
+  connection: local
+  gather_facts: no
+  hosts: nexus-switch
+  tasks:
+  - name: Assembling configurations
+    assemble:
+     src: "{{output_folder}}/config"
+     regexp: '{{inventory_hostname}}'
+     dest: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
+    tags:
+    - config

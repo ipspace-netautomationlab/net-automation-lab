@@ -1,0 +1,10 @@
+!
+{% for host in radius_global_params.group.servers %}
+radius-host host {{ host.ipaddr | ipv4 }} key 0 {{ host.secret }} authentication accounting 
+{% endfor %}
+radius-server timeout {{ radius_global_params.timeout | int }}
+radius-server retransmit {{ radius_global_params.retransmit | int }}
+radius-server deadtime {{ radius_global_params.deadtime | int }}
+radius-server directed-request 
+ip radius source-interface {{ mng_params.ifname }}
+!

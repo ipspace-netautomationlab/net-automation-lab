@@ -1,0 +1,108 @@
+!
+fabric forwarding anycast-gateway-mac {{ generic_global_params.anycast_gateway_mac }}
+!
+!
+{% for vrf in services_params.vrfs %}
+{% if vrf.name != "GLOBAL" %}
+vrf context {{ vrf.name }}
+  vni {{ vrf.id | int + 1000 }}
+  ip pim ssm range {{ pim_global_params.ssm_multicast_group }}
+  rd 1:{{ vrf.id }}
+  address-family ipv4 unicast
+    route-target both 1:{{ vrf.id }}
+    route-target both 1:{{ vrf.id }} evpn
+!
+{% endif %}
+{% endfor %}
+!
+{% for vrf in services_params.vrfs %}
+{% if vrf.name != "GLOBAL" %}
+vlan {{ vrf.id | int + 1000 }}
+ name l3-{{ vrf.name}}
+ vn-segment {{ vrf.id | int + 1000 }}
+!
+{% endif %}
+{% for vlan in vrf.vlans %}
+vlan {{ vlan.id | int }}
+  name {{ vlan.name }}
+  vn-segment {{ vlan.id | int + 10000}}
+!
+{% endfor %}
+{% endfor %}
+!
+{% for vrf in services_params.vrfs %}
+{% if vrf.name != "GLOBAL" %}
+interface Vlan{{ vrf.id | int + 1000 }}
+  description l3-{{ vrf.name }}
+  no shutdown
+  mtu {{ phyif_global_params.mtu | int }}
+  vrf member {{ vrf.name }}
+  no ip redirects
+  ip forward
+  no ipv6 redirects
+!
+{% endif %}
+{% for vlan in vrf.vlans %}
+{% if vlan.ipaddr is defined %}
+interface Vlan{{ vlan.id | int }}
+  description {{ vlan.description }}
+  no shutdown
+  mtu {{ vlanif_global_params.mtu | int }}
+  vrf member {{ vrf.name }}
+  ip address {{ vlan.ipaddr | ipaddr }}
+  fabric forwarding mode anycast-gateway
+!
+{%endif%}
+{% endfor %}
+{% endfor %}
+!
+interface nve1
+  no shutdown
+  host-reachability protocol bgp
+  source-interface loopback0
+{% for vrf in services_params.vrfs %}
+{% if vrf.name != "GLOBAL" %}
+  member vni {{ vrf.id | int + 1000 }} associate-vrf
+{% for vlan in vrf.vlans %}
+  member vni {{ vlan.id | int + 10000 }}
+    suppress-arp
+    mcast-group 239.1.0.{{ vrf.id }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+!
+evpn
+{% for vrf in services_params.vrfs %}
+{% for vlan in vrf.vlans %}
+ vni {{ vlan.id | int + 10000 }} l2
+    rd {{ generic_params.id }}:{{ vlan.id | int + 10000 }}
+    route-target import 1:{{ vlan.id | int + 10000 }}
+    route-target export 1:{{ vlan.id | int + 10000 }}
+{% endfor %}
+{% endfor %}
+!
+!
+{% for interface in overlay.interfaces.phy.trunk %}
+interface Ethernet {{ interface.name }}
+  description {{ interface.description }}
+  mtu {{ phyif_global_params.mtu | int }}
+  switchport mode trunk
+  switchport trunk allowed vlan {{ interface.vlan_list }}
+  spanning-tree port type edge
+  spanning-tree bpduguard enable
+  spanning-tree guard root
+  no shutdown
+{% endfor %}
+!
+{% for interface in overlay.interfaces.phy.access %}
+interface Ethernet {{ interface.name }}
+  description {{ interface.description }}
+  mtu {{ phyif_global_params.mtu | int }}
+  switchport mode access
+  switchport access vlan {{ interface.vlan | int }}
+  spanning-tree port type edge
+  spanning-tree bpduguard enable
+  spanning-tree guard root
+  no shutdown
+{% endfor %}
+!
