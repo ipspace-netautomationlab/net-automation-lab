@@ -1,0 +1,9 @@
+---
+
+- name: generic config file
+  template:
+    src: generic_conf.j2
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_generic.conf"
+  tags:
+  - config
+  - generic

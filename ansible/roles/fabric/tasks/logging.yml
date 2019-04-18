@@ -1,0 +1,9 @@
+---
+
+- name: logging config file
+  template:
+    src: logging_conf.j2
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_logging.conf"
+  tags:
+  - config
+  - logging

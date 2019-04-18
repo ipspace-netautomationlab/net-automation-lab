@@ -31,8 +31,9 @@ generic_global_params:
   mng_net: 172.16.1.0/24
   mng_ip_offset: 9
   loopback_net: 192.168.0.0/24
-  uplink1_net: 10.0.1.0/24
-  uplink2_net: 10.0.2.0/24
+  uplink:
+  - net: 10.0.1.0/24
+  - net: 10.0.2.0/24
 
 # Local users database (used also for SNMP config data)
 global_users: 
@@ -109,6 +110,27 @@ vlanif_global_params:
 # OSPF config data
 ospf_global_params:
   underlay_area: 0.0.0.1
+  
+# Management config data
+mng_params:
+  ifname: mgmt0
+  vrf: management
+  ipaddr: "{{ generic_global_params.mng_net | ipaddr('net') | ipaddr(generic_params.id) | ipaddr('address') | ipmath(generic_global_params.mng_ip_offset) }}/{{ generic_global_params.mng_net | ipaddr('net') | ipaddr('prefix') }}"
+  default_gw: "{{ generic_global_params.mng_net | ipaddr('net') | ipaddr('1') | ipaddr('address') }}"
+
+# Underlay interfaces config data
+underlay_global_params:
+  interfaces:
+    loopback:
+    - id: 0
+      description: router-id
+      ipaddr: "{{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(generic_params.id*3) }}"
+    - id: 1
+      description: anycast-rp
+      ipaddr: "{{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(generic_params.id*3+1) }}"
+    - id: 2
+      description: anycast-rp-address
+      ipaddr: "{{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(pim_global_params.rp_id*3+2) }}"
 
 # BGP config data
 bgp_global_params:

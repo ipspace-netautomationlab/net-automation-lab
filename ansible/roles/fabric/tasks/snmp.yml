@@ -1,0 +1,9 @@
+---
+
+- name: snmp config file
+  template:
+    src: snmp_conf.j2
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_snmp.conf"
+  tags:
+  - config
+  - snmp

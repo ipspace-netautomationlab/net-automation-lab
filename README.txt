@@ -1,17 +1,17 @@
 #############################################################
-#															#
-#	IP.SPACE - Building Network Automation Solutions		#
-#															#
-#					February-May 2019						#
-#															#
+#                                                           #
+#     IP.SPACE - Building Network Automation Solutions      #
+#                                                           #
+#                    February-May 2019                      #
+#                                                           #
 #############################################################
-#															#
-#	Authors	:	Emanuele Ballarini and Valter Milanese		#
-#															#
-#	Date	:	09/03/2019									#
-#															#
-#	Ref.	:	virl-lab-scheme.pdf							#
-#															#
+#                                                           #
+# Authors : Emanuele Ballarini and Valter Milanese          #
+#                                                           #
+# Date    : 09/03/2019                                      #
+#                                                           #
+# Ref.    : virl-lab-scheme.pdf                             #
+#                                                           #
 #############################################################
 
 
@@ -111,3 +111,9 @@ To create and validate the data model a playbook named "config.yml" has been imp
 You can still use the previous playbook "info-collection.yml" with the use of "--tags=info" CLI switch. The use of tags is a requirement for a future merge of the two playbook files.
 
 The config file for each device is stored in "output/config" folder.
+
+To create common config parts a role named "fabric" has been created with all the common config tasks. 
+The specific tasks for leaves and spines are included in the "spine" and "leaf" roles.
+Each task creates a single config file in the output config folder, the file name is composed by "inventory_hostname" and feature name.
+
+A final task in the playbook assembles the single files in a "complete" config file for each device which is named {{inventory_hostname}}_complete.conf.
