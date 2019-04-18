@@ -5,25 +5,13 @@
   connection: local
   gather_facts: no
   tasks:
-  - name: deleting output folder
+  - name: deleting config folder
     file: 
-      path: '{{output_folder}}/'
+      path: '{{output_folder}}/config'
       state: absent
     run_once: true
     tags:
       - config
-      - info
-  - name: creating output folder
-    file: 
-      owner: netadmin
-      path: '{{output_folder}}/'
-      state: directory
-      mode: 0777
-    run_once: true
-    tags:
-      - config
-      - info
-
   - name: creating config folder
     file: 
       owner: netadmin
@@ -33,7 +21,6 @@
     run_once: true
     tags:
       - config
-      - info
 
 - name: create basic device config files
   gather_facts: no
