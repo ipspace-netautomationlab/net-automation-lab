@@ -1,16 +1,16 @@
 #############################################################
 #                                                           #
-#	IP.SPACE - Building Network Automation Solutions          #
+#     IP.SPACE - Building Network Automation Solutions      #
 #                                                           #
-#					February-May 2019                                 #
+#                    February-May 2019                      #
 #                                                           #
 #############################################################
 #                                                           #
-#	Authors	:	Emanuele Ballarini and Valter Milanese          #
+# Authors : Emanuele Ballarini and Valter Milanese          #
 #                                                           #
-#	Date	:	09/03/2019                                        #
+# Date    : 09/03/2019                                      #
 #                                                           #
-#	Ref.	:	virl-lab-scheme.pdf                               #
+# Ref.    : virl-lab-scheme.pdf                             #
 #                                                           #
 #############################################################
 
