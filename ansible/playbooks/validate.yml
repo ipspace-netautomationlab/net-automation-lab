@@ -3,49 +3,65 @@
 - name: Validate fabric configuration
   gather_facts: no
   hosts: spine
+  remote_user: netadmin
   tasks:
-  - name: Trying to ping leaf devices
-    nxos_command:
-      commands: 
-        - command: show vrf
-          output: json
-    register: nxosping_out
-    tags:
-    - validate
-
-- name: Validate leaf device configuration
-  gather_facts: no
-  hosts: leaf
-  vars_files: ../inventory/vars/services.yml
-  tasks:
-  - name: Gathering leaf info
-    register: nxosfacts_out
+  - name: Gathering spine info
+    register: nxosfacts_spine_out
     nxos_facts:
       gather_subset: all
     tags:
     - validate
 
-  - name: Running 'show vrf' on remote devices
+  - name: Trying to ping leaf devices
     nxos_command:
       commands: 
-        - command: show vrf
-          output: json
-    register: nxosvrf_out
+        - command: ping {{item}}
+    register: nxosping_spine_out
+    with_items: "{{nxosfacts_spine_out}}"
     tags:
     - validate
 
-  - name: Checking for VRFs
+  - name: Trying to ping leaf devices
     debug:
-      msg: "WARNING: VRF '{{item.name}}' not found within device '{{inventory_hostname}}'"
-    with_items: "{{services_params.vrfs}}"
-    when: "item.name not in nxosvrf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list"
+      msg: "WARNING: Cannot ping '{{item.name}}' from device '{{inventory_hostname}}'"
+    with_items: "{{nxosping_spine_out}}"
+#    when: "item.name not in nxosvrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list"
     tags:
     - validate
 
-  - name: Checking for VLANs
-    debug:
-      msg: "WARNING: VLAN id '{{item.vlans.0.id}}' not found within device '{{inventory_hostname}}'"
-    with_items: "{{services_params.vrfs}}"
-    when: "item.vlans.0.id not in vlan_list"
-    tags:
-    - validate
+#- name: Validate leaf device configuration
+#  gather_facts: no
+#  hosts: leaf
+#  vars_files: ../inventory/vars/services.yml
+#  tasks:
+#  - name: Gathering leaf info
+#    register: nxosfacts_leaf_out
+#    nxos_facts:
+#      gather_subset: all
+#    tags:
+#    - validate
+#
+#  - name: Running 'show vrf' on remote devices
+#    nxos_command:
+#      commands: 
+#        - command: show vrf
+#          output: json
+#    register: nxosvrf_leaf_out
+#    tags:
+#    - validate
+#
+#  - name: Checking for VRFs
+#    debug:
+#      msg: "WARNING: VRF '{{item.name}}' not found within device '{{inventory_hostname}}'"
+#    with_items: "{{services_params.vrfs}}"
+#    when: "item.name not in nxosvrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list"
+#    tags:
+#    - validate
+#
+#  - name: Checking for VLANs
+#    debug:
+#      msg: "WARNING: VLAN id '{{item.vlans.0.id}}' not found within device '{{inventory_hostname}}'"
+#    with_items: "{{services_params.vrfs}}"
+#    when: "item.vlans.0.id not in vlan_list"
+#    tags:
+#    - validate

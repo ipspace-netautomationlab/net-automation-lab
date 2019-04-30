@@ -25,6 +25,7 @@
 
 # Second block of tasks: creating device config files
 - name: create basic device config files
+  connection: local
   gather_facts: no
   hosts: nexus-switch
   vars_files: ../inventory/vars/services.yml
@@ -32,6 +33,7 @@
   - fabric
       
 - name: create leaf device config files
+  connection: local
   gather_facts: no
   hosts: leaf
   vars_files: ../inventory/vars/services.yml
@@ -39,6 +41,7 @@
   - switch-leaf
 
 - name: create spine device config files
+  connection: local
   gather_facts: no
   hosts: spine
   vars_files: ../inventory/vars/services.yml
