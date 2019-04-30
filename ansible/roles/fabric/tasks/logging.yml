@@ -3,7 +3,7 @@
 - name: logging config file
   template:
     src: logging_conf.j2
-    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_logging.conf"
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_11_logging.conf"
   tags:
   - config
   - logging

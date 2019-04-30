@@ -1,0 +1,54 @@
+---
+
+- name: 
+  gather_facts: no
+  hosts: nexus-switch
+  vars: 
+    - user: "{{lookup('env','USER')}}"
+  tasks:
+  - name: Enable feature scp-server
+    nxos_feature:
+      feature: scp-server
+      state: enabled
+    tags:
+    - deploy
+
+  - name: Copying user's RSA key file into devices
+    nxos_file_copy:
+      local_file: "/home/{{user}}/.ssh/{{user}}_id_rsa.pub"
+      remote_file: "{{user}}_id_rsa.pub"
+    tags:
+    - deploy
+
+  - name: Copying complete config file into devices
+    nxos_file_copy:
+      local_file: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
+      remote_file: "config.txt"
+    tags:
+    - deploy
+
+  - name: Enable temporary license on devices
+    nxos_config:
+      lines: license grace-period
+      save_when: modified
+    tags:
+    - deploy
+
+  - name: Replacing running config with a provided config file
+    vars:
+      ansible_command_timeout: 40
+    nxos_command:
+      commands:
+        - command: copy config.txt running-config
+      retries: 1
+    ignore_errors: True
+    tags:
+    - deploy
+
+#  - name: Replacing running config with a provided config file (supported on N9K platform only)
+#    nxos_config:
+#      replace_src: config.txt
+#      replace: config
+#      save_when: modified
+#    tags:
+#    - deploy

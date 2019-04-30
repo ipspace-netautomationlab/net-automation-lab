@@ -48,7 +48,7 @@ vrf context {{ mng_params.vrf }}
   ip route 0.0.0.0/0 {{ mng_params.default_gw }}
 !
 {% for vrf in services_params.vrfs %}
-{% if vrf.name != "GLOBAL" %}
+{% if vrf.name != "default" %}
 vrf context {{ vrf.name }}
   vni {{ vrf.id | int + 1000 }}
   ip pim ssm range {{ pim_global_params.ssm_multicast_group }}
@@ -61,7 +61,7 @@ vrf context {{ vrf.name }}
 {% endfor %}
 !
 {% for vrf in services_params.vrfs %}
-{% if vrf.name != "GLOBAL" %}
+{% if vrf.name != "default" %}
 vlan {{ vrf.id | int + 1000 }}
  name l3-{{ vrf.name}}
  vn-segment {{ vrf.id | int + 1000 }}
@@ -76,7 +76,7 @@ vlan {{ vlan.id | int }}
 {% endfor %}
 !
 {% for vrf in services_params.vrfs %}
-{% if vrf.name != "GLOBAL" %}
+{% if vrf.name != "default" %}
 interface Vlan{{ vrf.id | int + 1000 }}
   description l3-{{ vrf.name }}
   no shutdown
@@ -106,7 +106,7 @@ interface nve1
   host-reachability protocol bgp
   source-interface loopback0
 {% for vrf in services_params.vrfs %}
-{% if vrf.name != "GLOBAL" %}
+{% if vrf.name != "default" %}
   member vni {{ vrf.id | int + 1000 }} associate-vrf
 {% for vlan in vrf.vlans %}
   member vni {{ vlan.id | int + 10000 }}
@@ -191,7 +191,7 @@ router bgp {{ bgp_global_params.local_as | int }}
   !
   {% endfor %}
 {% for vrf in services_params.vrfs %}
-{% if vrf.name != "GLOBAL" %}
+{% if vrf.name != "default" %}
   vrf {{ vrf.name }}
     address-family ipv4 unicast
       advertise l2vpn evpn
