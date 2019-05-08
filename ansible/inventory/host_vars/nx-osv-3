@@ -9,20 +9,22 @@ generic_params:
 underlay:
   interfaces:
     phy:
-    - name: 1/50
+    - name: 2/1
       description: Link to Spine-1
-    - name: 1/51
+#      ipaddr: "{{ generic_global_params.uplink1_net | ipsubnet(31, generic_params.id) | ipaddr('1') }}"
+    - name: 2/2
       description: Link to Spine-2
+#      ipaddr: "{{ generic_global_params.uplink2_net | ipsubnet(31, generic_params.id) | ipaddr('1') }}"
      
 # Overlay interfaces config data
 overlay:
   interfaces:
     phy:
       trunk:
-      - name: 1/1
+      - name: 2/3
         description: ESX1
         vlan_list: 1-50,100
       access:
-      - name: 1/2
+      - name: 2/4
         description: Backup
         vlan: 10

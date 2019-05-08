@@ -1,5 +1,6 @@
 ---
-  
+
+# First block of tasks: cleaning up the config folder
 - name: output folder reset
   hosts: localhost
   connection: local
@@ -20,29 +21,34 @@
       mode: 0777
     run_once: true
     tags:
-      - config
+    - config
 
+# Second block of tasks: creating device config files
 - name: create basic device config files
+  connection: local
   gather_facts: no
   hosts: nexus-switch
   vars_files: ../inventory/vars/services.yml
   roles:
-    - fabric
+  - fabric
       
 - name: create leaf device config files
+  connection: local
   gather_facts: no
   hosts: leaf
   vars_files: ../inventory/vars/services.yml
   roles:
-    - switch-leaf
+  - switch-leaf
 
 - name: create spine device config files
+  connection: local
   gather_facts: no
   hosts: spine
   vars_files: ../inventory/vars/services.yml
   roles:
-    - switch-spine
+  - switch-spine
 
+# Third block of tasks: merging all specific config files into one
 - name: create complete config file
   connection: local
   gather_facts: no

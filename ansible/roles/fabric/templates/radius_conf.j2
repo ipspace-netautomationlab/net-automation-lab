@@ -1,6 +1,6 @@
 !
 {% for host in radius_global_params.group.servers %}
-radius-host host {{ host.ipaddr | ipv4 }} key 0 {{ host.secret }} authentication accounting 
+radius-server host {{ host.ipaddr | ipv4 }} key 0 {{ host.secret }} authentication accounting 
 {% endfor %}
 radius-server timeout {{ radius_global_params.timeout | int }}
 radius-server retransmit {{ radius_global_params.retransmit | int }}
