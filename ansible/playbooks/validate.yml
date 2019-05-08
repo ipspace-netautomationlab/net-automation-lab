@@ -1,0 +1,75 @@
+---
+
+- name: validate fabric configuration
+  gather_facts: no
+  hosts: spine
+  remote_user: netadmin
+  vars:
+    offset: 100
+    string: 100.00% packet loss
+  tasks:
+  - name: Gathering spine info
+    nxos_facts:
+      gather_subset: all
+    register: nxosfacts_spine_out
+    tags:
+    - validate
+
+  - name: trying to ping leaf devices
+    nxos_command:
+      commands: 
+        - command: ping {{ item | ipmath(offset) }} timeout 1
+    register: nxosping_spine_out
+    failed_when: "'100.00% packet loss' in nxosping_spine_out['results']['stdout']"
+    with_items: "{{ nxosfacts_spine_out.ansible_facts.ansible_net_all_ipv4_addresses }}"
+    when: item | ipaddr(generic_global_params.uplink[0].net) == item or item | ipaddr(generic_global_params.uplink[1].net) == item
+    tags:
+    - validate
+
+  - name: displaying ping results
+    debug:
+#      msg: "WARNING: Cannot ping {{ item['item'] | ipmath(offset) }} from device {{ inventory_hostname }}"
+      msg: "{{ nxosping_spine_out.results }}"
+#   with_items: "{{ nxosping_spine_out.results }}"
+#   when: 
+#     - item['skipped'] is not defined
+#     - "{{ (item['stdout'] | regex_search(string, multiline=True, ignorecase=True)) }} == {{ string }}"
+    tags:
+    - validate
+
+#- name: Validate leaf device configuration
+#  gather_facts: no
+#  hosts: leaf
+#  vars_files: ../inventory/vars/services.yml
+#  tasks:
+#  - name: Gathering leaf info
+#    register: nxosfacts_leaf_out
+#    nxos_facts:
+#      gather_subset: all
+#    tags:
+#    - validate
+#
+#  - name: Running 'show vrf' on remote devices
+#    nxos_command:
+#      commands: 
+#        - command: show vrf
+#          output: json
+#    register: nxosvrf_leaf_out
+#    tags:
+#    - validate
+#
+#  - name: Checking for VRFs
+#    debug:
+#      msg: "WARNING: VRF '{{item.name}}' not found within device '{{inventory_hostname}}'"
+#    with_items: "{{services_params.vrfs}}"
+#    when: "item.name not in nxosvrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list"
+#    tags:
+#    - validate
+#
+#  - name: Checking for VLANs
+#    debug:
+#      msg: "WARNING: VLAN id '{{item.vlans.0.id}}' not found within device '{{inventory_hostname}}'"
+#    with_items: "{{services_params.vrfs}}"
+#    when: "item.vlans.0.id not in vlan_list"
+#    tags:
+#    - validate

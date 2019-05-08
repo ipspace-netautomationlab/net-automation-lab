@@ -33,7 +33,8 @@
           <div class="table100-body js-pscroll">
             <table>
               <tbody>
-                {% for iface in ansible_net_interfaces | sort %}				
+                {% for iface in ansible_net_interfaces | sort %}
+                {% if ansible_net_interfaces[iface]['type'] == "Ethernet" %}				
                   <tr class="row100 body">
                     <td class="cell100 column1">{{iface}}</td>
                     <td class="cell100 column2">{{ansible_net_interfaces[iface]['state']}}</td>
@@ -42,6 +43,7 @@
 					<td class="cell100 column5">{{ansible_net_interfaces[iface]['speed']}}</td>
 					<td class="cell100 column6">{{ansible_net_interfaces[iface]['duplex']}}</td>
                   </tr>
+                {% endif %}
                 {% endfor %}
               </tbody>
             </table>
