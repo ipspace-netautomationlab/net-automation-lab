@@ -1,90 +1,123 @@
 ---
-
+# First playbook handles the validation tasks related to fabric (P2P interfaces, OSPF neighborships, BGP neighborships, etc.)
 - name: validate fabric configuration
   gather_facts: no
   hosts: spine
   remote_user: netadmin
   vars:
     offset: 1
-    string: 100.00% packet loss
+    leaf_count: "{{ groups['leaf'] | length }}"
+    spine_count: "{{ groups['spine'] | length }}"
   tasks:
+  # Gathering generic facts in order to get info about interfaces and VLAN list
   - name: Gathering spine info
     nxos_facts:
       gather_subset: all
     register: nxos_facts_spine_out
     tags:
     - validate
-
-#  - name: trying to ping leaf devices
-#    nxos_command:
-#      commands: 
-#        - command: ping {{ item | ipmath(offset) }} timeout 1 count 3
-#    register: nxos_ping_spine_out
-#    with_items: "{{ nxos_facts_spine_out.ansible_facts.ansible_net_all_ipv4_addresses }}"
-#    when: item | ipaddr(generic_global_params.uplink[0].net) == item or item | ipaddr(generic_global_params.uplink[1].net) == item
-#    tags:
-#    - validate
-#
-#  - name: displaying ping results
-#    fail:
-#      msg: "WARNING: Cannot ping {{ item['item'] | ipmath(offset) }} from device {{ inventory_hostname }}"
-#    with_items: "{{ nxos_ping_spine_out.results }}"
-#    when: 
-#      - item['skipped'] is not defined
-#      - item['stdout'][0] is regex(string)
-#    tags:
-#    - validate
-
-  - name: checking OSPF Underlay neighborship
+    - underlay
+  # At the beginning let's try to check if leaf device point-to-point interfaces are "pingable"
+  - name: trying to ping leaf devices
+    nxos_command:
+      commands: 
+        - command: ping {{ item | ipmath(offset) }} timeout 1 count 3
+    register: nxos_ping_spine_out
+    with_items: "{{ nxos_facts_spine_out.ansible_facts.ansible_net_all_ipv4_addresses }}"
+    when: item | ipaddr(generic_global_params.uplink[0].net) == item or item | ipaddr(generic_global_params.uplink[1].net) == item
+    tags:
+    - validate
+    - underlay
+  # The task fails if one or more P2P interfaces are unreachable
+  - name: displaying ping results
+    vars:
+    -  regex_pattern: 100.00% packet loss
+    fail:
+      msg: "WARNING: Cannot ping {{ item['item'] | ipmath(offset) }} from device {{ inventory_hostname }}"
+    with_items: "{{ nxos_ping_spine_out.results }}"
+    when: 
+      # Skipping check related to not point-to-point interfaces
+      - item['skipped'] is not defined
+      # Errors triggered if 'regex_pattern' is found within the results
+      - item['stdout'][0] is regex(regex_pattern)
+    tags:
+    - validate
+    - underlay
+  # Checking for OSPF neighborship on spine devices
+  - name: gathering info about OSPF Underlay neighborship
     nxos_command:
       commands: 
         - command: show ip ospf underlay neighbors
     register: nxos_ospf_spine_out
     tags:
     - validate
-
-  - name: displaying OSPF Underlay neighborship status
+    - underlay
+  # The task fails if the amount of OSPF neighboship doesn't match the amount of leaf devices
+  - name: verifying OSPF Underlay neighborship count
+    vars:
+    -  neighborship: "{{ nxos_ospf_spine_out.stdout_lines | flatten | length - 3 }}"
     fail:
-      msg: "WARNING: Cannot establish OSPF neighborship on interface {{ item.split(' ')[-2] }} of {{ inventory_hostname }}"
-    with_items: "{{ nxos_ospf_spine_out.stdout_lines }}"
-    when: item is regex('INIT') or item is regex('2-WAY') or item is regex('EXSTART')
+      msg: "WARNING: OSPF neighborship missing on {{ inventory_hostname }}"
+    when: neighborship != leaf_count
     tags:
     - validate
+    - underlay
+  # The task fails if one or more OSPF neighboships are not in 'FULL' state
+  - name: verifying OSPF Underlay neighborship status
+    vars:
+    -  regex_pattern: (?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}?(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)
+    fail:
+      msg: "WARNING: Cannot establish OSPF neighborship on interface {{ item.split(' ')[-2] }} of {{ inventory_hostname }}"
+    with_items: "{{ nxos_ospf_spine_out.stdout_lines | flatten }}"
+    when:
+      # Errors triggered if any not full neighborship is found
+      - item is not regex('FULL')
+      # Skipping check related to table header items which don't contain IP addresses
+      - item is regex(regex_pattern)
+    tags:
+    - validate
+    - underlay
 
-#- name: Validate leaf device configuration
-#  gather_facts: no
-#  hosts: leaf
-#  remote_user: netadmin
-#  vars_files: ../inventory/vars/services.yml
-#  tasks:
-#  - name: Gathering leaf info
-#    register: nxos_facts_leaf_out
-#    nxos_facts:
-#      gather_subset: all
-#    tags:
-#    - validate
-#
-#  - name: Running 'show vrf' on remote devices
-#    nxos_command:
-#      commands: 
-#        - command: show vrf
-#          output: json
-#    register: nxos_vrf_leaf_out
-#    tags:
-#    - validate
-#
-#  - name: Checking for VRFs
-#    fail:
-#      msg: "WARNING: VRF '{{item.name}}' not found within device '{{inventory_hostname}}'"
-#    with_items: "{{services_params.vrfs}}"
-#    when: "item.name not in nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list"
-#    tags:
-#    - validate
-#
-#  - name: Checking for VLANs
-#    fail:
-#      msg: "WARNING: VLAN id '{{item.vlans.0.id}}' not found within device '{{inventory_hostname}}'"
-#    with_items: "{{services_params.vrfs}}"
-#    when: "item.vlans.0.id not in vlan_list"
-#    tags:
-#    - validate
+# Second playbook handles the validation tasks related to services (VRFs, VLANs, etc.)
+- name: Validate leaf device configuration
+  gather_facts: no
+  hosts: leaf
+  remote_user: netadmin
+  vars_files: ../inventory/vars/services.yml
+  tasks:
+  # Gathering generic facts in order to get info about interfaces and VLAN list
+  - name: Gathering leaf info
+    register: nxos_facts_leaf_out
+    nxos_facts:
+      gather_subset: all
+    tags:
+    - validate
+    - services
+  # Gathering info about VRFs
+  - name: Running 'show vrf' on remote devices
+    nxos_command:
+      commands: 
+        - command: show vrf
+          output: json
+    register: nxos_vrf_leaf_out
+    tags:
+    - validate
+    - services
+  #  The task fails if one or more VRFs (defined in services.yml) are not found
+  - name: Checking for VRFs
+    fail:
+      msg: "WARNING: VRF '{{item.name}}' not found within device '{{inventory_hostname}}'"
+    with_items: "{{services_params.vrfs}}"
+    when: "item.name not in nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list"
+    tags:
+    - validate
+    - services
+  #  The task fails if one or more VLANs (defined in services.yml) are not found
+  - name: Checking for VLANs
+    fail:
+      msg: "WARNING: VLAN id '{{item.vlans.0.id}}' not found within device '{{inventory_hostname}}'"
+    with_items: "{{services_params.vrfs}}"
+    when: "item.vlans.0.id not in vlan_list"
+    tags:
+    - validate
+    - services

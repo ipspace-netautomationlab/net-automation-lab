@@ -1,38 +1,40 @@
 ---
 
-- name: 
+- name: First Deploy
   gather_facts: no
   hosts: nexus-switch
   vars: 
     - user: "{{lookup('env','USER')}}"
+    - ansible_ssh_user: admin
+    - ansible_ssh_pass: admin
   tasks:
   - name: Enable feature scp-server
     nxos_feature:
       feature: scp-server
       state: enabled
     tags:
-    - deploy
+    - first_deploy
 
   - name: Copying user's RSA key file into devices
     nxos_file_copy:
       local_file: "/home/{{user}}/.ssh/{{user}}_id_rsa.pub"
       remote_file: "{{user}}_id_rsa.pub"
     tags:
-    - deploy
-
-  - name: Copying complete config file into devices
-    nxos_file_copy:
-      local_file: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
-      remote_file: "config.txt"
-    tags:
-    - deploy
+    - first_deploy
 
   - name: Enable temporary license on devices
     nxos_config:
       lines: license grace-period
       save_when: modified
     tags:
-    - deploy
+    - first_deploy
+    
+  - name: Copying complete config file into devices
+    nxos_file_copy:
+      local_file: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
+      remote_file: "config.txt"
+    tags:
+    - first_deploy
 
   - name: Replacing running config with a provided config file
     vars:
@@ -43,12 +45,79 @@
       retries: 1
     ignore_errors: True
     tags:
-    - deploy
+    - first_deploy
+
+- name: Complete Deploy
+  gather_facts: no
+  hosts: nexus-switch 
+  vars: 
+   - scp_opts: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /home/{{ ansible_ssh_user }}/.ssh/{{ ansible_ssh_user }}_id_rsa"
+
+#nxos_file_copy is not working with ssh key (found an issue to be solved in the module!) and therefore we are using simple scp scripts
+
+  tasks:
+  - name: delete config file on devices
+    cli_command:
+     command: delete bootflash:config.txt
+     prompt:
+      - "[y]"
+     answer:
+      - 'y'
+    tags:
+    - basic
+    - underlay
+    - overlay
+    - services
+  
+  - name: Copying basic config file into devices
+    connection: local
+    command: scp {{scp_opts}} {{output_folder}}/config/{{inventory_hostname}}_basic.conf {{ ansible_ssh_user }}@{{ansible_host}}:/config.txt
+    tags:
+    - basic 
+
+  - name: Copying Underlay config file into devices
+    connection: local
+    command: scp {{scp_opts}} {{output_folder}}/config/{{inventory_hostname}}_underlay.conf {{ ansible_ssh_user }}@{{ansible_host}}:/config.txt
+    tags:
+    - underlay 
+
+  - name: Copying Overlay config file into devices
+    connection: local
+    command: scp {{scp_opts}} {{output_folder}}/config/{{inventory_hostname}}_overlay.conf {{ ansible_ssh_user }}@{{ansible_host}}:/config.txt
+    tags:
+    - overlay
+    
+  - name: Copying services config file into devices
+    connection: local
+    command: scp {{scp_opts}} {{output_folder}}/config/{{inventory_hostname}}_services.conf {{ ansible_ssh_user }}@{{ansible_host}}:/config.txt
+    tags:
+    - services
+
+# Deploy version with copy
+    
+  - name: Replacing running config with a provided config file
+    vars:
+      ansible_command_timeout: 40
+    nxos_command:
+      commands:
+        - command: copy config.txt running-config
+      retries: 1
+    ignore_errors: True
+    tags:
+    - basic
+    - underlay
+    - overlay
+    - services
+
+# Deploy version with replace
 
 #  - name: Replacing running config with a provided config file (supported on N9K platform only)
 #    nxos_config:
-#      replace_src: config.txt
+#      replace_src: bootflash:config.txt
 #      replace: config
 #      save_when: modified
 #    tags:
-#    - deploy
+#    - basic
+#    - underlay
+#    - overlay
+#    - services

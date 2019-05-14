@@ -6,7 +6,7 @@
         <entry key="management_network" type="String">flat</entry>
         <entry key="AutoNetkit.infrastructure_only" type="Boolean">true</entry>
     </extensions>
-    <node name="nx-osv-1" type="SIMPLE" subtype="NX-OSv" location="291,104">
+    <node name="nx-osv-1" type="SIMPLE" subtype="NX-OSv 9000" location="291,104">
         <extensions>
             <entry key="static_ip" type="String">172.16.1.10</entry>
             <entry key="config" type="String">! NX-OSv Config generated on 2019-04-30 10:05
@@ -101,12 +101,12 @@ line vty
         </entry>
             <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
         </extensions>
-        <interface id="0" name="Ethernet2/1"/>
-        <interface id="1" name="Ethernet2/2"/>
-        <interface id="2" name="Ethernet2/3"/>
-        <interface id="3" name="Ethernet2/4"/>
+        <interface id="0" name="Ethernet1/1"/>
+        <interface id="1" name="Ethernet1/2"/>
+        <interface id="2" name="Ethernet1/3"/>
+        <interface id="3" name="Ethernet1/4"/>
     </node>
-    <node name="nx-osv-2" type="SIMPLE" subtype="NX-OSv" location="285,314">
+    <node name="nx-osv-2" type="SIMPLE" subtype="NX-OSv 9000" location="285,314">
         <extensions>
             <entry key="static_ip" type="String">172.16.1.11</entry>
             <entry key="config" type="String">! NX-OSv Config generated on 2019-04-30 10:05
@@ -201,12 +201,12 @@ line vty
         </entry>
             <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
         </extensions>
-        <interface id="0" name="Ethernet2/1"/>
-        <interface id="1" name="Ethernet2/2"/>
-        <interface id="2" name="Ethernet2/3"/>
-        <interface id="3" name="Ethernet2/4"/>
+        <interface id="0" name="Ethernet1/1"/>
+        <interface id="1" name="Ethernet1/2"/>
+        <interface id="2" name="Ethernet1/3"/>
+        <interface id="3" name="Ethernet1/4"/>
     </node>
-    <node name="nx-osv-3" type="SIMPLE" subtype="NX-OSv" location="562,44">
+    <node name="nx-osv-3" type="SIMPLE" subtype="NX-OSv 9000" location="562,44">
         <extensions>
             <entry key="static_ip" type="String">172.16.1.12</entry>
             <entry key="config" type="String">! NX-OSv Config generated on 2019-04-30 10:05
@@ -294,11 +294,11 @@ line vty
         </entry>
             <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
         </extensions>
-        <interface id="0" name="Ethernet2/1"/>
-        <interface id="1" name="Ethernet2/2"/>
-        <interface id="2" name="Ethernet2/3"/>
+        <interface id="0" name="Ethernet1/1"/>
+        <interface id="1" name="Ethernet1/2"/>
+        <interface id="2" name="Ethernet1/3"/>
     </node>
-    <node name="nx-osv-4" type="SIMPLE" subtype="NX-OSv" location="561,176">
+    <node name="nx-osv-4" type="SIMPLE" subtype="NX-OSv 9000" location="561,176">
         <extensions>
             <entry key="static_ip" type="String">172.16.1.13</entry>
             <entry key="config" type="String">! NX-OSv Config generated on 2019-04-30 10:05
@@ -386,9 +386,9 @@ line vty
         </entry>
             <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
         </extensions>
-        <interface id="0" name="Ethernet2/1"/>
-        <interface id="1" name="Ethernet2/2"/>
-        <interface id="2" name="Ethernet2/3"/>
+        <interface id="0" name="Ethernet1/1"/>
+        <interface id="1" name="Ethernet1/2"/>
+        <interface id="2" name="Ethernet1/3"/>
     </node>
     <node name="server-1" type="SIMPLE" subtype="server" location="687,45">
         <extensions>
@@ -494,7 +494,7 @@ write_files:
         </extensions>
         <interface id="0" name="eth1"/>
     </node>
-    <node name="nx-osv-5" type="SIMPLE" subtype="NX-OSv" location="558,310">
+    <node name="nx-osv-5" type="SIMPLE" subtype="NX-OSv 9000" location="558,310">
         <extensions>
             <entry key="static_ip" type="String">172.16.1.14</entry>
             <entry key="config" type="String">! NX-OSv Config generated on 2019-04-30 10:05
@@ -582,11 +582,11 @@ line vty
         </entry>
             <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
         </extensions>
-        <interface id="0" name="Ethernet2/1"/>
-        <interface id="1" name="Ethernet2/2"/>
-        <interface id="2" name="Ethernet2/3"/>
+        <interface id="0" name="Ethernet1/1"/>
+        <interface id="1" name="Ethernet1/2"/>
+        <interface id="2" name="Ethernet1/3"/>
     </node>
-    <node name="nx-osv-6" type="SIMPLE" subtype="NX-OSv" location="561,463">
+    <node name="nx-osv-6" type="SIMPLE" subtype="NX-OSv 9000" location="561,463">
         <extensions>
             <entry key="static_ip" type="String">172.16.1.15</entry>
             <entry key="config" type="String">! NX-OSv Config generated on 2019-04-30 10:05
@@ -674,9 +674,9 @@ line vty
         </entry>
             <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
         </extensions>
-        <interface id="0" name="Ethernet2/1"/>
-        <interface id="1" name="Ethernet2/2"/>
-        <interface id="2" name="Ethernet2/3"/>
+        <interface id="0" name="Ethernet1/1"/>
+        <interface id="1" name="Ethernet1/2"/>
+        <interface id="2" name="Ethernet1/3"/>
     </node>
     <node name="server-3" type="SIMPLE" subtype="server" location="682,305">
         <extensions>
