@@ -161,4 +161,6 @@ Examples:
 * $> ansible-playbook playbooks/netexec.yml --tags=validate,rollback (validating and rolling back in event of errors found)
 
 
-NOTES: Some NXOS modules didn't work in our case, so we didn't manage to implement them (i.e. "nxos_file_copy")! We used alternative modules. We have embedded inside deployment process a rollback stage to revert syntax errors, this feature allows the system to make deterministic atomic changes and allows the developer to check any error inside templates. 
+NOTES: Some NXOS modules didn't work in our case, so we didn't manage to implement them (i.e. "nxos_file_copy")! We used alternative modules. 
+We have embedded inside deployment process a rollback stage to revert syntax errors, 
+this feature allows the system to make deterministic atomic changes and allows the developer to check any error inside templates. 
