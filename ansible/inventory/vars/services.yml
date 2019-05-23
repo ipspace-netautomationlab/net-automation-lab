@@ -3,7 +3,7 @@
 # Service config data
 services_params:
   vrfs:
-  - name: GLOBAL
+  - name: default
     vlans:
     - id: 3801
       name: L2-CUSTOMER-01
@@ -13,7 +13,7 @@ services_params:
     l3vlan: 
       name: 1
     vlans:
-    - id: 3802
+    - id: 3803
       name: L3-CUSTOMER-02
       description: CUSTOMER-02 - VLAN
       ipaddr: 192.168.0.1/24

@@ -1,5 +1,6 @@
 ---
-  
+
+# First block of tasks: cleaning up the config folder
 - name: output folder reset
   hosts: localhost
   connection: local
@@ -20,38 +21,71 @@
       mode: 0777
     run_once: true
     tags:
-      - config
+    - config
 
+# Second block of tasks: creating device config files
 - name: create basic device config files
+  connection: local
   gather_facts: no
-  hosts: nexus-switch
+  hosts: nexus_switch
   vars_files: ../inventory/vars/services.yml
   roles:
-    - fabric
+  - fabric
       
 - name: create leaf device config files
+  connection: local
   gather_facts: no
   hosts: leaf
   vars_files: ../inventory/vars/services.yml
   roles:
-    - switch-leaf
+  - switch-leaf
 
 - name: create spine device config files
+  connection: local
   gather_facts: no
   hosts: spine
   vars_files: ../inventory/vars/services.yml
   roles:
-    - switch-spine
+  - switch-spine
 
-- name: create complete config file
+# Third block of tasks: merging all specific config files into one
+- name: create config files
   connection: local
   gather_facts: no
-  hosts: nexus-switch
+  hosts: nexus_switch
   tasks:
-  - name: Assembling configurations
+  - name: Assembling basic configurations
     assemble:
      src: "{{output_folder}}/config"
-     regexp: '{{inventory_hostname}}'
+     regexp: '{{inventory_hostname}}_1_'
+     dest: "{{output_folder}}/config/{{inventory_hostname}}_basic.conf"
+    tags:
+    - config
+  - name: Assembling underlay configurations
+    assemble:
+     src: "{{output_folder}}/config"
+     regexp: '{{inventory_hostname}}_2_'
+     dest: "{{output_folder}}/config/{{inventory_hostname}}_underlay.conf"
+    tags:
+    - config
+  - name: Assembling overlay configurations
+    assemble:
+     src: "{{output_folder}}/config"
+     regexp: '{{inventory_hostname}}_3_'
+     dest: "{{output_folder}}/config/{{inventory_hostname}}_overlay.conf"
+    tags:
+    - config
+  - name: Assembling services configurations
+    assemble:
+     src: "{{output_folder}}/config"
+     regexp: '{{inventory_hostname}}_4_'
+     dest: "{{output_folder}}/config/{{inventory_hostname}}_services.conf"
+    tags:
+    - config
+  - name: Assembling complete configurations
+    assemble:
+     src: "{{output_folder}}/config"
+     regexp: '{{inventory_hostname}}_\d_'
      dest: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
     tags:
     - config

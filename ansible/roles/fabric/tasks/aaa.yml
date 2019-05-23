@@ -3,7 +3,7 @@
 - name: aaa config file
   template:
     src: aaa.j2
-    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_aaa.conf"
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_1_6_aaa.conf"
   tags:
   - config
   - aaa

@@ -3,7 +3,7 @@
 - name: config anycast RP
   template:
     src: anycast_rp.j2
-    dest: "{{output_folder}}/config/{{inventory_hostname}}_anycast_rp.conf"
+    dest: "{{output_folder}}/config/{{inventory_hostname}}_2_3_anycast_rp.conf"
   tags:
   - config
   - anycast_rp

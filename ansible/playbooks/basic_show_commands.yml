@@ -1,0 +1,15 @@
+---
+
+- name: basic show commands
+  gather_facts: no
+  hosts: nexus_switch
+
+  tasks:
+   - name: run show version on remote devices
+     nxos_command:
+      commands: 
+       - command: show version
+         output: json
+     register: result
+   - debug:
+      var: result.stdout

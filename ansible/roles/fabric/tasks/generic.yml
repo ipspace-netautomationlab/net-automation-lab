@@ -3,7 +3,7 @@
 - name: generic config file
   template:
     src: generic_conf.j2
-    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_generic.conf"
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_1_1_generic.conf"
   tags:
   - config
   - generic

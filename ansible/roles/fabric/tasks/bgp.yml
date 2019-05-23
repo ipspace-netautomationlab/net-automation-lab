@@ -3,7 +3,7 @@
 - name: bgp config file
   template:
     src: bgp_conf.j2
-    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_bgp.conf"
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_3_1_bgp.conf"
   tags:
   - config
   - bgp

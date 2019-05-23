@@ -3,7 +3,7 @@
 - name: radius config file
   template:
     src: radius_conf.j2
-    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_radius.conf"
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_1_5_radius.conf"
   tags:
   - config
   - radius

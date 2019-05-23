@@ -1,0 +1,6 @@
+---
+
+- import_playbook: config.yml
+- import_playbook: info_collection.yml
+- import_playbook: deploy.yml
+- import_playbook: validate.yml

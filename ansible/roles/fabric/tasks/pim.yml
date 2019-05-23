@@ -3,7 +3,7 @@
 - name: pim config file
   template:
     src: pim_conf.j2
-    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_pim.conf"
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_2_2_pim.conf"
   tags:
   - config
   - pim

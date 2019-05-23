@@ -1,0 +1,68 @@
+---
+  
+- name: output folder reset
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: deleting web folder
+    file: 
+      path: '{{output_folder}}/web'
+      state: absent
+    run_once: true
+    tags:
+      - info
+
+  - name: deleting json folder
+    file: 
+      path: '{{output_folder}}/json'
+      state: absent
+    run_once: true
+    tags:
+      - info
+
+  - name: creating web folder
+    file: 
+      owner: netadmin
+      path: '{{output_folder}}/web'
+      state: directory
+      mode: 0777
+    run_once: true
+    tags:
+      - info
+
+  - name: creating json folder
+    file: 
+      owner: netadmin
+      path: '{{output_folder}}/json'
+      state: directory
+      mode: 0777
+    run_once: true
+    tags:
+      - info
+
+  - name: creating CSS folder
+    file: 
+      owner: netadmin
+      path: '{{output_folder}}/web/css'
+      state: directory
+      mode: 0777
+    run_once: true
+    tags:
+      - info
+
+  - name: copy CSS into web folder
+    copy:
+      src: "/home/netadmin/css/"
+      dest: "{{output_folder}}/web/css/"
+      directory_mode: yes
+    tags:
+      - info
+
+- name: gathering complete fabric device info collection
+  gather_facts: no
+  hosts: nexus_switch
+  vars_files: ../inventory/vars/services.yml
+  roles:
+    - fabric
