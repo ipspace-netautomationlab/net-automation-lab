@@ -1,0 +1,15 @@
+# Declaring datacenter groups
+
+[spine]
+nx-osv-1 ansible_host=172.16.1.10
+nx-osv-2 ansible_host=172.16.1.11
+
+[leaf]
+nx-osv-3 ansible_host=172.16.1.12
+nx-osv-4 ansible_host=172.16.1.13
+nx-osv-5 ansible_host=172.16.1.14
+nx-osv-6 ansible_host=172.16.1.15
+
+[nexus_switch:children]
+spine
+leaf
