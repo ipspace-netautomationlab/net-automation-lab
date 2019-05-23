@@ -1,17 +1,17 @@
 #############################################################
-#                                                           #
-#     IP.SPACE - Building Network Automation Solutions      #
-#                                                           #
-#                    February-May 2019                      #
-#                                                           #
+#															#
+#	IP.SPACE - Building Network Automation Solutions		#
+#															#
+#					February-May 2019						#
+#															#
 #############################################################
-#                                                           #
-# Authors : Emanuele Ballarini and Valter Milanese          #
-#                                                           #
-# Date    : 09/03/2019                                      #
-#                                                           #
-# Ref.    : virl-lab-scheme.pdf                             #
-#                                                           #
+#															#
+#	Authors	:	Emanuele Ballarini and Valter Milanese		#
+#															#
+#	Date	:	09/03/2019									#
+#															#
+#	Ref.	:	virl-lab-scheme.pdf							#
+#															#
 #############################################################
 
 
@@ -117,3 +117,50 @@ The specific tasks for leaves and spines are included in the "spine" and "leaf" 
 Each task creates a single config file in the output config folder, the file name is composed by "inventory_hostname" and feature name.
 
 A final task in the playbook assembles the single files in a "complete" config file for each device which is named {{inventory_hostname}}_complete.conf.
+
+- FOURTH ASSIGNMENT: CHANGING NETWORK CONFIGURATIONS OR STATE
+
+The fourth assignment concerns all the tasks for a complete configuration deployment from scratch or a part of it (i.e. services)
+A new playbook has been released, named "netexec.yml", which import all of the rest playbooks, so you can call just this playbook
+differentiating the tasks to be played by typing different tags. The specific playbook which handles the deployment tasks is named
+"deploy.yml".
+
+Hereby the defined tags up until now:
+  * "info": the playbook gathers all the information related to the 2nd assignment;
+  * "config": the playbook creates the config files as explained in the 3rd assignment;
+  * "first_deploy": the playbook deploys the full-blown configuration file from scratch to a new device;
+  * "basic": the playbook deploys the partial configuration file related to basic info (i.e. management, users, snmp, etc.);
+  * "underlay": the playbook deploys the partial configuration file related to underlay fabric (i.e. P2P interfaces, OSPF, etc.);
+  * "overlay": the playbook deploys the partial configuration file related to overlay fabric (i.e. BGP);
+  * "services": the playbook deploys the partial configuration file related to services (i.e. VRFs, VLANs, etc.).
+
+In case of non first deploy, the playbook copies the current device's configuration into a backup folder on the Ansible server.
+The playbook handles also errors through the block/rescue paradigm. A rollback action to the latest config version will be taken if any error is found.
+
+- FIFTH ASSIGNMENT: VALIDATION, ERROR HANDLING AND UNIT TESTS
+
+The fifth assignment is focused on validating the deployment tasks, handling errors and making some unit tests.
+A new playbook has been released, named "validate.yml", which handles the needed tasks. Furthermore, new tags
+have been added in order to aggregate them into the unique playbook "netexec.yml".
+
+Hereby the brand-new defined tags:
+
+  * "validate": the playbook runs all the tasks except "predeploy";
+  * "predeploy": the playbook checks if requested services, defined in "services.yml" file, already exist on current devices (before deployment);
+  * "postdeploy": the playbook checks if requested services, defined in "services.yml" file, are missing on current devices (after deployment);
+  * "rollback": the playbook rolls back to the latest saved configuration if any error has been found.
+
+The tasks will be run even if you use "basic", "underlay", "overlay" and "services" tags by doing the related checks only.
+We decided to split validation from rollback action in order to let the administrator do the best choice. Anyway, you can
+merge the tasks by running the playbook with more tags.
+
+Examples: 
+
+* $> ansible-playbook playbooks/netexec.yml --tags=validate (validating only)
+
+* $> ansible-playbook playbooks/netexec.yml --tags=validate,rollback (validating and rolling back in event of errors found)
+
+
+NOTES: Some NXOS modules didn't work in our case, so we didn't manage to implement them (i.e. "nxos_file_copy")! We used alternative modules. 
+We have embedded inside deployment process a rollback stage to revert syntax errors, 
+this feature allows the system to make deterministic atomic changes and allows the developer to check any error inside templates. 
