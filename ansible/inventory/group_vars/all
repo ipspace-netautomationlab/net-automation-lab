@@ -2,6 +2,7 @@
 
 # Generic data used by Ansible
 output_folder: /etc/ansible/output
+backup_folder: /etc/ansible/backup
 
 # Features to be enabled on devices
 global_features:
@@ -116,7 +117,7 @@ mng_params:
   ifname: mgmt0
   vrf: management
   ipaddr: "{{ generic_global_params.mng_net | ipaddr('net') | ipaddr(generic_params.id) | ipaddr('address') | ipmath(generic_global_params.mng_ip_offset) }}/{{ generic_global_params.mng_net | ipaddr('net') | ipaddr('prefix') }}"
-  default_gw: "{{ generic_global_params.mng_net | ipaddr('net') | ipaddr('1') | ipaddr('address') }}"
+  default_gw: "{{ generic_global_params.mng_net | ipaddr('net') | next_nth_usable(1) }}"
 
 # Underlay interfaces config data
 underlay_global_params:

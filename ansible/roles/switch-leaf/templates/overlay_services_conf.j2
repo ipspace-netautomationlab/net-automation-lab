@@ -86,6 +86,7 @@ evpn
 interface Ethernet {{ interface.name }}
   description {{ interface.description }}
   mtu {{ phyif_global_params.mtu | int }}
+  switchport
   switchport mode trunk
   switchport trunk allowed vlan {{ interface.vlan_list }}
   spanning-tree port type edge
@@ -98,6 +99,7 @@ interface Ethernet {{ interface.name }}
 interface Ethernet {{ interface.name }}
   description {{ interface.description }}
   mtu {{ phyif_global_params.mtu | int }}
+  switchport
   switchport mode access
   switchport access vlan {{ interface.vlan | int }}
   spanning-tree port type edge

@@ -62,7 +62,7 @@
 
 - name: gathering complete fabric device info collection
   gather_facts: no
-  hosts: nexus-switch
+  hosts: nexus_switch
   vars_files: ../inventory/vars/services.yml
   roles:
     - fabric

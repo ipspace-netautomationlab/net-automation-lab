@@ -11,13 +11,9 @@ underlay:
     phy:
     - name: 2/1
       description: Link to Leaf-1
-#      ipaddr: "{{ generic_global_params.uplink1_net | ipsubnet(31, generic_params.id) | ipaddr('1') }}"
     - name: 2/2
       description: Link to Leaf-2
-#      ipaddr: "{{ generic_global_params.uplink1_net | ipsubnet(31, generic_params.id) | ipaddr('1') }}"
     - name: 2/3
       description: Link to Leaf-3
-#      ipaddr: "{{ generic_global_params.uplink1_net | ipsubnet(31, generic_params.id) | ipaddr('1') }}"
     - name: 2/4
       description: Link to Leaf-4
-#      ipaddr: "{{ generic_global_params.uplink1_net | ipsubnet(31, generic_params.id) | ipaddr('1') }}"
