@@ -4,6 +4,12 @@
 generic_params:
   id: 3
 
+# Management config data
+mng_params:
+  ifname: mgmt0
+  vrf: management
+  ipaddr: "{{ generic_global_params.mng_net | ipaddr('net') | ipaddr(generic_params.id) | ipaddr('address') | ipmath(generic_global_params.mng_ip_offset) }}/{{ generic_global_params.mng_net | ipaddr('net') | ipaddr('prefix') }}"
+  default_gw: "{{ generic_global_params.mng_net | ipaddr('net') | ipaddr('1') | ipaddr('address') }}"
 
 # Underlay interfaces config data
 underlay:
@@ -11,18 +17,24 @@ underlay:
     phy:
     - name: 2/1
       description: Link to Spine-1
-    - name: 2/2
+      ipaddr: "{{ generic_global_params.uplink1_net | ipsubnet(31, generic_params.id) | ipaddr('1') }}"
+    - name: 1/51
       description: Link to Spine-2
-     
+      ipaddr: "{{ generic_global_params.uplink2_net | ipsubnet(31, generic_params.id) | ipaddr('1') }}"
+    loopback:
+    - id: 0
+      description: router-id
+      ipaddr: "{{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(generic_params.id) }}"
+      
 # Overlay interfaces config data
 overlay:
   interfaces:
     phy:
       trunk:
-      - name: 2/3
+      - name: 1/1
         description: ESX1
         vlan_list: 1-50,100
       access:
-      - name: 2/4
+      - name: 1/2
         description: Backup
         vlan: 10
