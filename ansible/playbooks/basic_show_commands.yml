@@ -2,7 +2,7 @@
 
 - name: basic show commands
   gather_facts: no
-  hosts: nexus-switch
+  hosts: nexus_switch
 
   tasks:
    - name: run show version on remote devices

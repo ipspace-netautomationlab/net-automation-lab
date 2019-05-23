@@ -3,7 +3,7 @@
 - name: management config file
   template:
     src: management_conf.j2
-    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_05_management.conf"
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_1_4_management.conf"
   tags:
   - config
   - management

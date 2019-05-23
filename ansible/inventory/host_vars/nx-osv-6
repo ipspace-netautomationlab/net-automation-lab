@@ -10,10 +10,8 @@ underlay:
     phy:
     - name: 2/1
       description: Link to Spine-1
-#      ipaddr: "{{ generic_global_params.uplink1_net | ipsubnet(31, generic_params.id) | ipaddr('1') }}"
     - name: 2/2
       description: Link to Spine-2
-#      ipaddr: "{{ generic_global_params.uplink2_net | ipsubnet(31, generic_params.id) | ipaddr('1') }}"
 
 # Overlay interfaces config data
 overlay:

@@ -1,10 +1,14 @@
 {
     "ansible_facts": {
         "ansible_net_all_ipv4_addresses": [
-            "172.16.1.13"
+            "172.16.1.13",
+            "10.0.1.9",
+            "10.0.2.9",
+            "192.168.0.12",
+            "192.168.0.1"
         ],
         "ansible_net_all_ipv6_addresses": [],
-        "ansible_net_config": "!Command: show running-config\n!Time: Thu Apr 18 08:11:09 2019\n\nversion 7.3(0)D1(1)\npower redundancy-mode redundant\n\nvdc switch id 1\n  limit-resource module-type m1 m1xl m2xl f2e \n  allocate interface Ethernet2/1-48\n  allocate interface Ethernet3/1-48\n  allocate interface Ethernet4/1-48\n  limit-resource vlan minimum 16 maximum 4094\n  limit-resource vrf minimum 2 maximum 4096\n  limit-resource port-channel minimum 0 maximum 768\n  limit-resource u4route-mem minimum 96 maximum 96\n  limit-resource u6route-mem minimum 24 maximum 24\n  limit-resource m4route-mem minimum 58 maximum 58\n  limit-resource m6route-mem minimum 8 maximum 8\nusername admin password 5 $5$Otc7T0NC$K.ulnSZnSyXLrTGNBdtLgZJXEa8EeNx.BrdZ98XyK2C  role network-admin\nno password strength-check\nip domain-lookup\nvlan dot1Q tag native\nsystem default switchport\nsystem jumbomtu 0\nno logging event trunk-status enable\ncopp profile strict\nsnmp-server user admin auth md5 0x328945d53e05e8e7207f8c20b142f0b7 priv 0x328945d53e05e8e7207f8c20b142f0b7 localizedkey engineID 128:0:0:9:3:0:0:0:0:0:0\nrmon event 1 log description FATAL(1) owner PMON@FATAL\nrmon event 2 log description CRITICAL(2) owner PMON@CRITICAL\nrmon event 3 log description ERROR(3) owner PMON@ERROR\nrmon event 4 log description WARNING(4) owner PMON@WARNING\nrmon event 5 log description INFORMATION(5) owner PMON@INFO\nsnmp-server enable traps link\nsnmp-server enable traps link cisco-xcvr-mon-status-chg\n\nvlan 1\n\nvrf context management\n\ninterface mgmt0\n  vrf member management\n  ip address 172.16.1.13/24\n\ninterface Ethernet2/1\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/2\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/3\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/4\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/5\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/6\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/7\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/8\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/9\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/10\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/11\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/12\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/13\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/14\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/15\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/16\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/17\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/18\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/19\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/20\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/21\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/22\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/23\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/24\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/25\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/26\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/27\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/28\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/29\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/30\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/31\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/32\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/33\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/34\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/35\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/36\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/37\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/38\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/39\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/40\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/41\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/42\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/43\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/44\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/45\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/46\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/47\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/48\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/1\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/2\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/3\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/4\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/5\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/6\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/7\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/8\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/9\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/10\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/11\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/12\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/13\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/14\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/15\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/16\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/17\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/18\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/19\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/20\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/21\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/22\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/23\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/24\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/25\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/26\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/27\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/28\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/29\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/30\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/31\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/32\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/33\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/34\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/35\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/36\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/37\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/38\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/39\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/40\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/41\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/42\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/43\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/44\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/45\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/46\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/47\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet3/48\n  shutdown\n  no switchport\n  medium p2p\n\ninterface Ethernet4/1\n  switchport\n  no shutdown\n\ninterface Ethernet4/2\n  switchport\n  no shutdown\n\ninterface Ethernet4/3\n  switchport\n  no shutdown\n\ninterface Ethernet4/4\n  switchport\n  no shutdown\n\ninterface Ethernet4/5\n  switchport\n  no shutdown\n\ninterface Ethernet4/6\n  switchport\n  no shutdown\n\ninterface Ethernet4/7\n  switchport\n  no shutdown\n\ninterface Ethernet4/8\n  switchport\n  no shutdown\n\ninterface Ethernet4/9\n  switchport\n  no shutdown\n\ninterface Ethernet4/10\n  switchport\n  no shutdown\n\ninterface Ethernet4/11\n  switchport\n  no shutdown\n\ninterface Ethernet4/12\n  switchport\n  no shutdown\n\ninterface Ethernet4/13\n  switchport\n  no shutdown\n\ninterface Ethernet4/14\n  switchport\n  no shutdown\n\ninterface Ethernet4/15\n  switchport\n  no shutdown\n\ninterface Ethernet4/16\n  switchport\n  no shutdown\n\ninterface Ethernet4/17\n  switchport\n  no shutdown\n\ninterface Ethernet4/18\n  switchport\n  no shutdown\n\ninterface Ethernet4/19\n  switchport\n  no shutdown\n\ninterface Ethernet4/20\n  switchport\n  no shutdown\n\ninterface Ethernet4/21\n  switchport\n  no shutdown\n\ninterface Ethernet4/22\n  switchport\n  no shutdown\n\ninterface Ethernet4/23\n  switchport\n  no shutdown\n\ninterface Ethernet4/24\n  switchport\n  no shutdown\n\ninterface Ethernet4/25\n  switchport\n  no shutdown\n\ninterface Ethernet4/26\n  switchport\n  no shutdown\n\ninterface Ethernet4/27\n  switchport\n  no shutdown\n\ninterface Ethernet4/28\n  switchport\n  no shutdown\n\ninterface Ethernet4/29\n  switchport\n  no shutdown\n\ninterface Ethernet4/30\n  switchport\n  no shutdown\n\ninterface Ethernet4/31\n  switchport\n  no shutdown\n\ninterface Ethernet4/32\n  switchport\n  no shutdown\n\ninterface Ethernet4/33\n  switchport\n  no shutdown\n\ninterface Ethernet4/34\n  switchport\n  no shutdown\n\ninterface Ethernet4/35\n  switchport\n  no shutdown\n\ninterface Ethernet4/36\n  switchport\n  no shutdown\n\ninterface Ethernet4/37\n  switchport\n  no shutdown\n\ninterface Ethernet4/38\n  switchport\n  no shutdown\n\ninterface Ethernet4/39\n  switchport\n  no shutdown\n\ninterface Ethernet4/40\n  switchport\n  no shutdown\n\ninterface Ethernet4/41\n  switchport\n  no shutdown\n\ninterface Ethernet4/42\n  switchport\n  no shutdown\n\ninterface Ethernet4/43\n  switchport\n  no shutdown\n\ninterface Ethernet4/44\n  switchport\n  no shutdown\n\ninterface Ethernet4/45\n  switchport\n  no shutdown\n\ninterface Ethernet4/46\n  switchport\n  no shutdown\n\ninterface Ethernet4/47\n  switchport\n  no shutdown\n\ninterface Ethernet4/48\n  switchport\n  no shutdown\nline console\nline vty\nboot kickstart bootflash:/titanium-d1-kickstart.7.3.0.D1.1.bin\nboot system bootflash:/titanium-d1.7.3.0.D1.1.bin",
+        "ansible_net_config": "!Command: show running-config\n!Time: Tue Apr 30 13:37:51 2019\n\nversion 7.3(0)D1(1)\npower redundancy-mode combined force\nlicense grace-period\n\nhostname nx-osv-4\nvdc nx-osv-4 id 1\n  limit-resource module-type m1 m1xl m2xl f2e \n  allocate interface Ethernet2/1-48\n  allocate interface Ethernet3/1-48\n  allocate interface Ethernet4/1-48\n  limit-resource vlan minimum 16 maximum 4094\n  limit-resource vrf minimum 2 maximum 4096\n  limit-resource port-channel minimum 0 maximum 768\n  limit-resource u4route-mem minimum 96 maximum 96\n  limit-resource u6route-mem minimum 24 maximum 24\n  limit-resource m4route-mem minimum 58 maximum 58\n  limit-resource m6route-mem minimum 8 maximum 8\n\nfeature telnet\nfeature scp-server\nnv overlay evpn\nfeature ospf\nfeature bgp\nfeature ospfv3\nfeature pim\nfeature msdp\nfeature eigrp\nfeature private-vlan\nfeature interface-vlan\nfeature vn-segment-vlan-based\nfeature hsrp\nfeature lldp\nfeature bfd\nfeature nv overlay\n\nfeature ngoam\n\nusername admin password 5 $1$KuOSBsvW$Cy0TSD..gEBGBPjzpDgf51  role network-admin\nusername adminbackup password 5 !  role network-operator\nusername adminbackup passphrase  lifetime 99999 warntime 14 gracetime 3\nusername cisco password 5 $1$Nk7ZkwH0$fyiRmMMfIheqE3BqvcL0C1  role network-operator\nusername cisco role network-admin\nusername cisco passphrase  lifetime 99999 warntime 14 gracetime 3\nusername lab password 5 $1$buoy/oqy$.EXQz8rCn72ii8qtdldj00  role network-admin\nusername lab passphrase  lifetime 99999 warntime 14 gracetime 3\nusername netadmin password 5 $5$emOkY3RY$cuBIqbRTRyVwfmOhcL4UbMF95r2CQKvQ8rQjdFy9wx.  role network-admin\nusername netadmin sshkey ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDA8zh97flbXBI35NiYRC0A5EcFGHEJTf59o+wGKUhn2FN6SHdLBmcbsyBbSBSPgcC92UIaxls1F6xc4T2dU+be5MF3r7wGcYfqxGOeiHQbwbc0BDvYxu36uznzvbYvMTx2f7WdKi4N0ngpmLPPabWQQi+nwZCDO8MfyQ3edPY7KMGN5u1xXh7ni4sj+Kt8E/c8CgI+Y98UUvz77yiFByJoAOVhqije+E/e+jeVRiWsCXEy70pqm9OxW3zo3GtYi7ydFL8zt8pckbJ1aAKs5wSSDuwIr4Gfu4E5PL+DpB0/atlYdqGsOcQR3gMgOwxDnO/n4MrjPreqY8p8KbbeCuql netadmin@ansible.insiel.it\n\nusername netadmin passphrase  lifetime 99999 warntime 14 gracetime 3\nusername netoperator password 5 $5$emOkY3RY$cuBIqbRTRyVwfmOhcL4UbMF95r2CQKvQ8rQjdFy9wx.  role network-operator\nusername netoperator passphrase  lifetime 99999 warntime 14 gracetime 3\nno password strength-check\nno ip domain-lookup\nradius-server timeout 1\nradius-server retransmit 2\nradius-server deadtime 5\nradius-server host 172.16.1.1 key 7 \"puwjurzy\" authentication accounting \nradius-server host 172.16.1.2 key 7 \"puwjurzy\" authentication accounting \naaa group server radius MYRADIUS \n    server 172.16.1.1 \n    server 172.16.1.2 \n    use-vrf management\n    source-interface mgmt0\nvlan dot1Q tag native\nsystem default switchport\nsystem jumbomtu 0\nno logging event trunk-status enable\nerrdisable recovery cause link-flap\nerrdisable recovery cause udld\nerrdisable recovery cause loopback\ncopp profile strict\nsnmp-server contact admin@net-automation-lab.local\nsnmp-server location 170 West Tasman Drive - San Jose, CA 95134-170 USA\nsnmp-server source-interface traps mgmt0\nsnmp-server source-interface informs mgmt0\nsnmp-server user lab network-admin auth md5 0x5ceb414591539ee35159fca86fdfa101 priv 0x5ceb414591539ee35159fca86fdfa101 localizedkey\nsnmp-server user admin network-admin auth md5 0x328945d53e05e8e7207f8c20b142f0b7 priv 0x328945d53e05e8e7207f8c20b142f0b7 localizedkey\nsnmp-server user cisco network-admin auth md5 0x55b3c64a53fb95518e75358ee75e82e9 priv 0x55b3c64a53fb95518e75358ee75e82e9 localizedkey\nsnmp-server user cisco network-operator\nsnmp-server user admin auth md5 0x328945d53e05e8e7207f8c20b142f0b7 priv 0x328945d53e05e8e7207f8c20b142f0b7 localizedkey engineID 128:0:0:9:3:0:0:0:0:0:0\nrmon event 1 log trap public description FATAL(1) owner PMON@FATAL\nrmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL\nrmon event 3 log trap public description ERROR(3) owner PMON@ERROR\nrmon event 4 log trap public description WARNING(4) owner PMON@WARNING\nrmon event 5 log trap public description INFORMATION(5) owner PMON@INFO\nsnmp-server enable traps bgp\nsnmp-server enable traps link\nsnmp-server enable traps hsrp state-change\nsnmp-server enable traps sysmgr cseFailSwCoreNotifyExtended\nsnmp-server enable traps config ccmCLIRunningConfigChanged\nsnmp-server enable traps snmp authentication\nsnmp-server enable traps system Clock-change-notification\nsnmp-server community myRWcommunity group network-operator\nsnmp-server community myROcommunity group network-operator\nntp server 172.16.1.1 use-vrf management\nntp server 172.16.1.2 use-vrf management\nntp source-interface  mgmt0\naaa authentication login default group MYRADIUS \naaa accounting default group MYRADIUS \nradius-server directed-request \n\nip pim rp-address 192.168.0.2 group-list 239.0.0.0/8\nip pim ssm range 232.0.0.0/8\nvlan 1,1001,3801,3803\nvlan 1001\n  name l3-CUSTOMER-02\nvlan 3801\n  name L2-CUSTOMER-01\n  vn-segment 13801\nvlan 3803\n  name L3-CUSTOMER-02\n  vn-segment 13803\n\nspanning-tree mode mst\nvrf context CUSTOMER-02\n  ip pim ssm range 232.0.0.0/8\n  rd 1:1\n  address-family ipv4 unicast\n    route-target import 1:1\n    route-target import 1:1 evpn\n    route-target export 1:1\n    route-target export 1:1 evpn\nvrf context management\n  ip route 0.0.0.0/0 172.16.1.1\nhardware forwarding unicast trace\n\n\ninterface mgmt0\n  description OOB Management\n  duplex full\n  vrf member management\n  ip address 172.16.1.13/24\n\ninterface Vlan1\n\ninterface Vlan1001\n  description l3-CUSTOMER-02\n  no shutdown\n  mtu 9216\n  vrf member CUSTOMER-02\n  no ip redirects\n  ip forward\n  no ipv6 redirects\n\ninterface Vlan3803\n  description CUSTOMER-02 - VLAN\n  no shutdown\n  mtu 9100\n  vrf member CUSTOMER-02\n  ip address 192.168.0.1/24\n\ninterface nve1\n  no shutdown\n  source-interface loopback0\n  host-reachability protocol bgp\n  member vni 13803\n    mcast-group 239.1.0.1\n\ninterface Ethernet2/1\n  description Link to Spine-1\n  no switchport\n  mtu 9216\n  mac-address fa16.3e00.000f\n  ip address 10.0.1.9/31\n  ip ospf network point-to-point\n  no ip ospf passive-interface\n  ip router ospf underlay area 0.0.0.1\n  ip pim sparse-mode\n  no shutdown\n\ninterface Ethernet2/2\n  description Link to Spine-2\n  no switchport\n  mtu 9216\n  mac-address fa16.3e00.0010\n  ip address 10.0.2.9/31\n  ip ospf network point-to-point\n  no ip ospf passive-interface\n  ip router ospf underlay area 0.0.0.1\n  ip pim sparse-mode\n  no shutdown\n\ninterface Ethernet2/3\n  description ESX1\n  no switchport\n  spanning-tree port type edge\n  spanning-tree bpduguard enable\n  spanning-tree guard root\n  mtu 9216\n  mac-address fa16.3e00.0011\n  no shutdown\n\ninterface Ethernet2/4\n  description Backup\n  no switchport\n  spanning-tree port type edge\n  spanning-tree bpduguard enable\n  spanning-tree guard root\n  mtu 9216\n  mac-address 0000.0000.002f\n  no shutdown\n\ninterface Ethernet2/5\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/6\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/7\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/8\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/9\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/10\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/11\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/12\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/13\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/14\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/15\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/16\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/17\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/18\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/19\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/20\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/21\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/22\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/23\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/24\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/25\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/26\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/27\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/28\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/29\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/30\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/31\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/32\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/33\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/34\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/35\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/36\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/37\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/38\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/39\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/40\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/41\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/42\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/43\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/44\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/45\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/46\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/47\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet2/48\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/1\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/2\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/3\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/4\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/5\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/6\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/7\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/8\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/9\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/10\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/11\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/12\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/13\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/14\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/15\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/16\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/17\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/18\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/19\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/20\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/21\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/22\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/23\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/24\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/25\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/26\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/27\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/28\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/29\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/30\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/31\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/32\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/33\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/34\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/35\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/36\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/37\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/38\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/39\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/40\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/41\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/42\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/43\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/44\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/45\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/46\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/47\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet3/48\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/1\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/2\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/3\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/4\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/5\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/6\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/7\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/8\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/9\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/10\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/11\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/12\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/13\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/14\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/15\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/16\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/17\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/18\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/19\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/20\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/21\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/22\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/23\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/24\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/25\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/26\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/27\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/28\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/29\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/30\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/31\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/32\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/33\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/34\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/35\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/36\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/37\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/38\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/39\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/40\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/41\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/42\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/43\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/44\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/45\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/46\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/47\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface Ethernet4/48\n  shutdown\n  no switchport\n  mac-address 0000.0000.002f\n\ninterface loopback0\n  description Loopback\n  ip address 192.168.0.12/24\n  ip router ospf underlay area 0.0.0.1\n  ip pim sparse-mode\nclock timezone CET 1 0\ncli alias name wr copy run start\ncli alias name vxlanrt show bgp l2vpn evpn\ncli alias name ipint show ip interf brief vrf all\ncli alias name underlay show ip ospf underlay\ncli alias name overlay show ip ospf overlay\nline console\nline vty\n  exec-timeout 15\nboot kickstart bootflash:/titanium-d1-kickstart.7.3.0.D1.1.bin\nboot system bootflash:/titanium-d1.7.3.0.D1.1.bin \nip radius source-interface mgmt0\nrouter ospf underlay\n  router-id 192.168.0.12\n  passive-interface default\nrouter bgp 65003\n  router-id 192.168.0.12\n  address-family ipv4 unicast\n  address-family l2vpn evpn\n    nexthop trigger-delay critical 100 non-critical 500\n    retain route-target all\n  template peer spines\n    remote-as 65003\n    update-source loopback0\n    address-family ipv4 unicast\n    address-family l2vpn evpn\n      send-community both\n  neighbor 192.168.0.3\n    inherit peer spines\n  neighbor 192.168.0.6\n    inherit peer spines\n    address-family ipv4 unicast\n  vrf CUSTOMER-02\n    address-family ipv4 unicast\n      advertise l2vpn evpn\nevpn\n  vni 13801 l2\n    rd 4:13801\n    route-target import 1:13801\n    route-target export 1:13801\n  vni 13803 l2\n    rd 4:13803\n    route-target import 1:13803\n    route-target export 1:13803\nip tcp path-mtu-discovery\nno system default switchport shutdown\nlogging server 172.16.1.1 5 use-vrf management\nlogging server 172.16.1.2 5 use-vrf management\nlogging module 6\nlogging source-interface mgmt0\nlogging timestamp milliseconds\nlogging monitor 6",
         "ansible_net_filesystems": [
             "bootflash:"
         ],
@@ -15,17 +19,22 @@
             "legacy",
             "config"
         ],
-        "ansible_net_hostname": "switch",
+        "ansible_net_hostname": "nx-osv-4",
         "ansible_net_image": "bootflash:///titanium-d1.7.3.0.D1.1.bin",
         "ansible_net_interfaces": {
             "Ethernet2/1": {
                 "bandwidth": 1000000,
-                "duplex": "auto",
-                "macaddress": "0000.0000.002f",
+                "description": "Link to Spine-1",
+                "duplex": "full",
+                "ipv4": {
+                    "address": "10.0.1.9",
+                    "masklen": 31
+                },
+                "macaddress": "fa16.3e00.000f",
                 "mode": "routed",
-                "mtu": "1500",
-                "speed": "auto-speed",
-                "state": "down",
+                "mtu": "9216",
+                "speed": "1000 Mb/s",
+                "state": "up",
                 "type": "Ethernet"
             },
             "Ethernet2/10": {
@@ -130,12 +139,17 @@
             },
             "Ethernet2/2": {
                 "bandwidth": 1000000,
-                "duplex": "auto",
-                "macaddress": "0000.0000.002f",
+                "description": "Link to Spine-2",
+                "duplex": "full",
+                "ipv4": {
+                    "address": "10.0.2.9",
+                    "masklen": 31
+                },
+                "macaddress": "fa16.3e00.0010",
                 "mode": "routed",
-                "mtu": "1500",
-                "speed": "auto-speed",
-                "state": "down",
+                "mtu": "9216",
+                "speed": "1000 Mb/s",
+                "state": "up",
                 "type": "Ethernet"
             },
             "Ethernet2/20": {
@@ -240,12 +254,13 @@
             },
             "Ethernet2/3": {
                 "bandwidth": 1000000,
-                "duplex": "auto",
-                "macaddress": "0000.0000.002f",
+                "description": "ESX1",
+                "duplex": "full",
+                "macaddress": "fa16.3e00.0011",
                 "mode": "routed",
-                "mtu": "1500",
-                "speed": "auto-speed",
-                "state": "down",
+                "mtu": "9216",
+                "speed": "1000 Mb/s",
+                "state": "up",
                 "type": "Ethernet"
             },
             "Ethernet2/30": {
@@ -350,10 +365,11 @@
             },
             "Ethernet2/4": {
                 "bandwidth": 1000000,
+                "description": "Backup",
                 "duplex": "auto",
                 "macaddress": "0000.0000.002f",
                 "mode": "routed",
-                "mtu": "1500",
+                "mtu": "9216",
                 "speed": "auto-speed",
                 "state": "down",
                 "type": "Ethernet"
@@ -501,7 +517,7 @@
             "Ethernet3/1": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -511,7 +527,7 @@
             "Ethernet3/10": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -521,7 +537,7 @@
             "Ethernet3/11": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -531,7 +547,7 @@
             "Ethernet3/12": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -541,7 +557,7 @@
             "Ethernet3/13": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -551,7 +567,7 @@
             "Ethernet3/14": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -561,7 +577,7 @@
             "Ethernet3/15": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -571,7 +587,7 @@
             "Ethernet3/16": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -581,7 +597,7 @@
             "Ethernet3/17": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -591,7 +607,7 @@
             "Ethernet3/18": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -601,7 +617,7 @@
             "Ethernet3/19": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -611,7 +627,7 @@
             "Ethernet3/2": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -621,7 +637,7 @@
             "Ethernet3/20": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -631,7 +647,7 @@
             "Ethernet3/21": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -641,7 +657,7 @@
             "Ethernet3/22": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -651,7 +667,7 @@
             "Ethernet3/23": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -661,7 +677,7 @@
             "Ethernet3/24": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -671,7 +687,7 @@
             "Ethernet3/25": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -681,7 +697,7 @@
             "Ethernet3/26": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -691,7 +707,7 @@
             "Ethernet3/27": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -701,7 +717,7 @@
             "Ethernet3/28": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -711,7 +727,7 @@
             "Ethernet3/29": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -721,7 +737,7 @@
             "Ethernet3/3": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -731,7 +747,7 @@
             "Ethernet3/30": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -741,7 +757,7 @@
             "Ethernet3/31": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -751,7 +767,7 @@
             "Ethernet3/32": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -761,7 +777,7 @@
             "Ethernet3/33": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -771,7 +787,7 @@
             "Ethernet3/34": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -781,7 +797,7 @@
             "Ethernet3/35": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -791,7 +807,7 @@
             "Ethernet3/36": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -801,7 +817,7 @@
             "Ethernet3/37": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -811,7 +827,7 @@
             "Ethernet3/38": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -821,7 +837,7 @@
             "Ethernet3/39": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -831,7 +847,7 @@
             "Ethernet3/4": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -841,7 +857,7 @@
             "Ethernet3/40": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -851,7 +867,7 @@
             "Ethernet3/41": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -861,7 +877,7 @@
             "Ethernet3/42": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -871,7 +887,7 @@
             "Ethernet3/43": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -881,7 +897,7 @@
             "Ethernet3/44": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -891,7 +907,7 @@
             "Ethernet3/45": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -901,7 +917,7 @@
             "Ethernet3/46": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -911,7 +927,7 @@
             "Ethernet3/47": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -921,7 +937,7 @@
             "Ethernet3/48": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -931,7 +947,7 @@
             "Ethernet3/5": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -941,7 +957,7 @@
             "Ethernet3/6": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -951,7 +967,7 @@
             "Ethernet3/7": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -961,7 +977,7 @@
             "Ethernet3/8": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -971,7 +987,7 @@
             "Ethernet3/9": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "fa16.3e10.18a5",
+                "macaddress": "0000.0000.002f",
                 "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
@@ -982,7 +998,7 @@
                 "bandwidth": 1000000,
                 "duplex": "auto",
                 "macaddress": "0000.0000.002f",
-                "mode": "access",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -991,8 +1007,8 @@
             "Ethernet4/10": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1001,8 +1017,8 @@
             "Ethernet4/11": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1011,8 +1027,8 @@
             "Ethernet4/12": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1021,8 +1037,8 @@
             "Ethernet4/13": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1031,8 +1047,8 @@
             "Ethernet4/14": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1041,8 +1057,8 @@
             "Ethernet4/15": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1051,8 +1067,8 @@
             "Ethernet4/16": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1061,8 +1077,8 @@
             "Ethernet4/17": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1071,8 +1087,8 @@
             "Ethernet4/18": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1081,8 +1097,8 @@
             "Ethernet4/19": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1092,7 +1108,7 @@
                 "bandwidth": 1000000,
                 "duplex": "auto",
                 "macaddress": "0000.0000.002f",
-                "mode": "access",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1101,8 +1117,8 @@
             "Ethernet4/20": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1111,8 +1127,8 @@
             "Ethernet4/21": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1121,8 +1137,8 @@
             "Ethernet4/22": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1131,8 +1147,8 @@
             "Ethernet4/23": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1141,8 +1157,8 @@
             "Ethernet4/24": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1151,8 +1167,8 @@
             "Ethernet4/25": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1161,8 +1177,8 @@
             "Ethernet4/26": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1171,8 +1187,8 @@
             "Ethernet4/27": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1181,8 +1197,8 @@
             "Ethernet4/28": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1191,8 +1207,8 @@
             "Ethernet4/29": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1202,7 +1218,7 @@
                 "bandwidth": 1000000,
                 "duplex": "auto",
                 "macaddress": "0000.0000.002f",
-                "mode": "access",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1211,8 +1227,8 @@
             "Ethernet4/30": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1221,8 +1237,8 @@
             "Ethernet4/31": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1231,8 +1247,8 @@
             "Ethernet4/32": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1241,8 +1257,8 @@
             "Ethernet4/33": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1251,8 +1267,8 @@
             "Ethernet4/34": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1261,8 +1277,8 @@
             "Ethernet4/35": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1271,8 +1287,8 @@
             "Ethernet4/36": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1281,8 +1297,8 @@
             "Ethernet4/37": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1291,8 +1307,8 @@
             "Ethernet4/38": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1301,8 +1317,8 @@
             "Ethernet4/39": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1311,8 +1327,8 @@
             "Ethernet4/4": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1321,8 +1337,8 @@
             "Ethernet4/40": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1331,8 +1347,8 @@
             "Ethernet4/41": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1341,8 +1357,8 @@
             "Ethernet4/42": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1351,8 +1367,8 @@
             "Ethernet4/43": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1361,8 +1377,8 @@
             "Ethernet4/44": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1371,8 +1387,8 @@
             "Ethernet4/45": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1381,8 +1397,8 @@
             "Ethernet4/46": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1391,8 +1407,8 @@
             "Ethernet4/47": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1401,8 +1417,8 @@
             "Ethernet4/48": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1411,8 +1427,8 @@
             "Ethernet4/5": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1421,8 +1437,8 @@
             "Ethernet4/6": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1431,8 +1447,8 @@
             "Ethernet4/7": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1441,8 +1457,8 @@
             "Ethernet4/8": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
@@ -1451,15 +1467,53 @@
             "Ethernet4/9": {
                 "bandwidth": 1000000,
                 "duplex": "auto",
-                "macaddress": "0000.0000.0000",
-                "mode": "access",
+                "macaddress": "0000.0000.002f",
+                "mode": "routed",
                 "mtu": "1500",
                 "speed": "auto-speed",
                 "state": "down",
                 "type": "Ethernet"
             },
+            "Vlan1": {
+                "bandwidth": "1000000",
+                "macaddress": "fa16.3eae.7d68",
+                "mtu": "1500",
+                "state": "down",
+                "type": "svi"
+            },
+            "Vlan1001": {
+                "bandwidth": "1000000",
+                "macaddress": "fa16.3eae.7d68",
+                "mtu": "9216",
+                "state": "down",
+                "type": "svi"
+            },
+            "Vlan3803": {
+                "bandwidth": "1000000",
+                "ipv4": {
+                    "address": "192.168.0.1",
+                    "masklen": "24"
+                },
+                "macaddress": "fa16.3eae.7d68",
+                "mtu": "9100",
+                "state": "down",
+                "type": "svi"
+            },
+            "loopback0": {
+                "bandwidth": 8000000,
+                "description": "Loopback",
+                "ipv4": {
+                    "address": "192.168.0.12",
+                    "masklen": 24
+                },
+                "mode": "routed",
+                "mtu": "1500",
+                "state": "up",
+                "type": "Loopback"
+            },
             "mgmt0": {
                 "bandwidth": 1000000,
+                "description": "OOB Management",
                 "duplex": "full",
                 "ipv4": {
                     "address": "172.16.1.13",
@@ -1471,16 +1525,32 @@
                 "speed": "1000 Mb/s",
                 "state": "up",
                 "type": "Ethernet"
+            },
+            "nve1": {
+                "state": "up",
+                "type": "NVE"
             }
         },
-        "ansible_net_memfree_mb": 994,
+        "ansible_net_memfree_mb": 675,
         "ansible_net_memtotal_mb": 2992,
         "ansible_net_model": "NX-OSv Chassis",
         "ansible_net_neighbors": {
+            "Ethernet2/1": [
+                {
+                    "port": "Ethernet2/2",
+                    "sysname": "nx-osv-1(TB00000000B)"
+                }
+            ],
+            "Ethernet2/2": [
+                {
+                    "port": "Ethernet2/2",
+                    "sysname": "nx-osv-2(TB00010000B)"
+                }
+            ],
             "mgmt0": [
                 {
                     "port": "mgmt0",
-                    "sysname": "switch(TB00070000B)"
+                    "sysname": "nx-osv-3(TB00020000B)"
                 }
             ]
         },
@@ -1512,7 +1582,7 @@
                 "status": "Failure"
             }
         ],
-        "hostname": "switch",
+        "hostname": "nx-osv-4",
         "interfaces_list": [
             "mgmt0",
             "Ethernet2/1",
@@ -1658,7 +1728,12 @@
             "Ethernet4/45",
             "Ethernet4/46",
             "Ethernet4/47",
-            "Ethernet4/48"
+            "Ethernet4/48",
+            "loopback0",
+            "Vlan1",
+            "Vlan1001",
+            "Vlan3803",
+            "nve1"
         ],
         "module": [
             {
@@ -1705,7 +1780,10 @@
             }
         ],
         "vlan_list": [
-            1
+            1,
+            1001,
+            3801,
+            3803
         ]
     },
     "changed": false,

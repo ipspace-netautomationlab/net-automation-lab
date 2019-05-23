@@ -3,7 +3,7 @@
 - name: underlay config file
   template:
     src: underlay_conf.j2
-    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_06_underlay.conf"
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_2_1_underlay.conf"
   tags:
   - config
   - underlay

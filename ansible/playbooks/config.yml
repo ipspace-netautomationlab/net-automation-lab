@@ -27,7 +27,7 @@
 - name: create basic device config files
   connection: local
   gather_facts: no
-  hosts: nexus-switch
+  hosts: nexus_switch
   vars_files: ../inventory/vars/services.yml
   roles:
   - fabric
@@ -49,15 +49,43 @@
   - switch-spine
 
 # Third block of tasks: merging all specific config files into one
-- name: create complete config file
+- name: create config files
   connection: local
   gather_facts: no
-  hosts: nexus-switch
+  hosts: nexus_switch
   tasks:
-  - name: Assembling configurations
+  - name: Assembling basic configurations
     assemble:
      src: "{{output_folder}}/config"
-     regexp: '{{inventory_hostname}}'
+     regexp: '{{inventory_hostname}}_1_'
+     dest: "{{output_folder}}/config/{{inventory_hostname}}_basic.conf"
+    tags:
+    - config
+  - name: Assembling underlay configurations
+    assemble:
+     src: "{{output_folder}}/config"
+     regexp: '{{inventory_hostname}}_2_'
+     dest: "{{output_folder}}/config/{{inventory_hostname}}_underlay.conf"
+    tags:
+    - config
+  - name: Assembling overlay configurations
+    assemble:
+     src: "{{output_folder}}/config"
+     regexp: '{{inventory_hostname}}_3_'
+     dest: "{{output_folder}}/config/{{inventory_hostname}}_overlay.conf"
+    tags:
+    - config
+  - name: Assembling services configurations
+    assemble:
+     src: "{{output_folder}}/config"
+     regexp: '{{inventory_hostname}}_4_'
+     dest: "{{output_folder}}/config/{{inventory_hostname}}_services.conf"
+    tags:
+    - config
+  - name: Assembling complete configurations
+    assemble:
+     src: "{{output_folder}}/config"
+     regexp: '{{inventory_hostname}}_\d_'
      dest: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
     tags:
     - config

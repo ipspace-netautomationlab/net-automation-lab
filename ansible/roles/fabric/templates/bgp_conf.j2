@@ -45,7 +45,7 @@ router bgp {{ bgp_global_params.local_as | int }}
 {%endif%}
 {% if 'leaf' in group_names %}
 {% for vrf in services_params.vrfs %}
-{% if vrf.name != "GLOBAL" %}
+{% if vrf.name != "default" %}
   vrf {{ vrf.name }}
     address-family ipv4 unicast
       advertise l2vpn evpn

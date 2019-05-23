@@ -3,7 +3,7 @@
 - name: local users config file
   template:
     src: users_conf.j2
-    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_02_users.conf"
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_1_2_users.conf"
   tags:
   - config
   - users

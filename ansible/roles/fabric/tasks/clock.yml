@@ -3,7 +3,7 @@
 - name: clock config file
   template:
     src: clock_conf.j2
-    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_03_clock.conf"
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_1_3_clock.conf"
   tags:
   - config
   - clock
