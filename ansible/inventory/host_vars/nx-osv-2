@@ -4,13 +4,6 @@
 generic_params:
   id: 2
 
-# Management config data
-mng_params:
-  ifname: mgmt0
-  vrf: management
-  ipaddr: "{{ generic_global_params.mng_net | ipaddr('net') | ipaddr(generic_params.id) | ipaddr('address') | ipmath(generic_global_params.mng_ip_offset) }}/{{ generic_global_params.mng_net | ipaddr('net') | ipaddr('prefix') }}"
-  default_gw: "{{ generic_global_params.mng_net | ipaddr('net') | ipaddr('1') | ipaddr('address') }}"
-
 # Underlay interfaces config data
 underlay:
   interfaces:
