@@ -10,7 +10,7 @@ nv overlay evpn
 !
 hardware access-list tcam region racl {{ generic_global_params.tcam_racl_size | int }}
 hardware access-list tcam region ifacl {{ generic_global_params.tcam_acl_size | int }}
-hardware access-list tcam region arp-ether {{ generic_global_params.tcam_arp_size | int }}
+hardware access-list tcam region arp-ether {{ generic_global_params.tcam_arp_size | int }} double-wide
 hardware access-list tcam region copp {{ generic_global_params.tcam_copp_size | int }}
 !
 power redundancy-mode combined force

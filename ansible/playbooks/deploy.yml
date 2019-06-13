@@ -11,6 +11,7 @@
     - underlay
     - overlay
     - services
+    - complete
 # The second Play saves the device's runnin-config files into '{{ output_folder }}/backup' folder
 - name: Config backup
   gather_facts: no
@@ -27,8 +28,9 @@
     - underlay
     - overlay
     - services
+    - complete
 # The third Play the first config specific tasks with basic settings into the devices
-- name: First Deploy
+- name: First Deploy Tasks
   gather_facts: no
   hosts: nexus_switch
   vars: 
@@ -48,61 +50,21 @@
       remote_file: "{{user}}_id_rsa.pub"
     tags:
     - first_deploy
+  - name: enable key auth for netadmin user
+    nxos_config:
+      lines: 
+       - username netadmin password 5 $5$XrDP5fvW$8krvmAerX1siN0U5W5j9YcQT.jbj78tSM8a5lFEc8cA  role network-admin
+       - username netadmin sshkey file bootflash:netadmin_id_rsa.pub
+      save_when: modified
+    tags:
+    - first_deploy
+  #only for lab purposes
   - name: Enable temporary license on devices
     nxos_config:
       lines: license grace-period
       save_when: modified
     tags:
-    - first_deploy
-  - name: Copying complete config file into devices
-    nxos_file_copy:
-      local_file: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
-      remote_file: "config.txt"
-    tags:
-    - first_deploy
- # Deploy config through nxos_commands fails if there is any syntax error, this kind of deployment highlights any templating issue!
-  - block: 
-     - name: deploy complete config
-       vars:
-         ansible_command_timeout: 40
-       nxos_config:
-        src: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
-        save_when: modified
-       tags:
-       - first_deploy
-    rescue:
-     - name: delete config file on devices if present
-       cli_command:
-         command: delete bootflash:config.txt
-         prompt:
-          - "[y]"
-         answer:
-          - 'y'
-       ignore_errors: True
-       tags:
-       - first_deploy
-     - name: "Something went wrong... Rolling back to backup conf"
-       connection: local
-       shell: ls {{backup_folder}}/{{inventory_hostname}}*.cfg | tail -1
-       register: backup_file
-       ignore_errors: True
-       tags:
-       - first_deploy
-     - debug: msg="Rolling back to {{backup_file.stdout}}"
-       tags:
-       - first_deploy
-     - name: Copying latest backup config file into devices
-       connection: local
-       command: scp {{scp_opts}} {{backup_file.stdout}} {{ ansible_ssh_user }}@{{ansible_host}}:/config.txt
-       tags:
-       - first_deploy
-     - name: Replacing running config with latest backup config file (supported on N9K platform only)
-       nxos_config:
-         replace_src: bootflash:config.txt
-         replace: config
-         save_when: modified
-       tags:
-       - first_deploy
+    - lab
 
 # The fourth Play deploys the complete config file or part of it into the devices
 - name: Complete Deploy
@@ -122,7 +84,8 @@
        - basic
        - underlay
        - overlay
-       - services          
+       - services 
+       - complete       
      - name: deploy basic config
        vars:
          ansible_command_timeout: 40
@@ -155,6 +118,14 @@
         save_when: modified
        tags:
        - services
+     - name: deploy complete config
+       vars:
+         ansible_command_timeout: 40
+       nxos_config:
+        src: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
+        save_when: modified
+       tags:
+       - complete
     #if deploy fails then roll back to the last backup
     rescue:
      - name: delete config file on devices if present
@@ -170,6 +141,7 @@
        - underlay
        - overlay
        - services
+       - complete
      - name: "Something went wrong... Rolling back to backup conf"
        connection: local
        shell: ls {{backup_folder}}/{{inventory_hostname}}*.cfg | tail -1
@@ -180,12 +152,14 @@
        - underlay
        - overlay
        - services
+       - complete
      - debug: msg="Rolling back to {{backup_file.stdout}}"
        tags:
        - basic
        - underlay
        - overlay
        - services
+       - complete
      - name: Copying latest backup config file into devices
        connection: local
        command: scp {{scp_opts}} {{backup_file.stdout}} {{ ansible_ssh_user }}@{{ansible_host}}:/config.txt
@@ -194,6 +168,7 @@
        - underlay
        - overlay
        - services
+       - complete
      - name: Replacing running config with latest backup config file (supported on N9K platform only)
        nxos_config:
          replace_src: bootflash:config.txt
@@ -204,3 +179,4 @@
        - underlay
        - overlay
        - services
+       - complete

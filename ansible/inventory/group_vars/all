@@ -29,7 +29,7 @@ generic_global_params:
   anycast_gateway_mac: 025d.7353.2cd7
   tcam_racl_size: 512
   tcam_acl_size: 0
-  tcam_arp_size: 512
+  tcam_arp_size: 256
   tcam_copp_size: 512
   mng_net: 172.16.1.0/24
   mng_ip_offset: 9
@@ -127,13 +127,13 @@ underlay_global_params:
     loopback:
     - id: 0
       description: router-id
-      ipaddr: "{{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(generic_params.id*3) }}"
+      ipaddr: "{{ generic_global_params.loopback_net | ipaddr('net') | ipsubnet(32, generic_params.id*3) }}"
     - id: 1
       description: anycast-rp
-      ipaddr: "{{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(generic_params.id*3+1) }}"
+      ipaddr: "{{ generic_global_params.loopback_net | ipaddr('net') | ipsubnet(32, generic_params.id*3+1) }}"
     - id: 2
       description: anycast-rp-address
-      ipaddr: "{{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(pim_global_params.rp_id*3+2) }}"
+      ipaddr: "{{ generic_global_params.loopback_net | ipaddr('net') | ipsubnet(32,pim_global_params.rp_id*3+2) }}"
 
 # BGP config data
 bgp_global_params:
