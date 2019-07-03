@@ -17,15 +17,21 @@
   gather_facts: no
   hosts: nexus_switch
   tasks:
-  - name: config backup on switch
-    vars:
-      ansible_command_timeout: 40
-    cli_command:
-     command: copy running-config bootflash:/backup.conf
-     prompt:
-      - "[n]"
-     answer:
-      - 'y'
+  - nxos_rollback:
+     checkpoint_file: backup.cfg
+#- name: Config backup
+#  gather_facts: no
+#  hosts: nexus_switch
+#  tasks:
+#  - name: config backup on switch
+#    vars:
+#      ansible_command_timeout: 40
+#    cli_command:
+#     command: copy running-config bootflash:/backup.conf
+#     prompt:
+#      - "[n]"
+#     answer:
+#      - 'y'
     tags:
     - basic
     - underlay
@@ -143,56 +149,8 @@
        - complete
     #if deploy fails then roll back to the last backup
     rescue:
-#     - name: delete config file on devices if present
-#       cli_command:
-#         command: delete bootflash:config.txt
-#         prompt:
-#          - "[y]"
-#         answer:
-#          - 'y'
-#       ignore_errors: True
-#       tags:
-#       - basic
-#       - underlay
-#       - overlay
-#       - services
-#       - complete
-     - name: "Something went wrong... Rolling back to backup conf"
-       connection: local
-       shell: ls {{backup_folder}}/{{inventory_hostname}}*.cfg | tail -1
-       register: backup_file
-       ignore_errors: True
-       tags:
-       - basic
-       - underlay
-       - overlay
-       - services
-       - complete
-#     - debug: msg="Rolling back to {{backup_file.stdout}}"
-#       tags:
-#       - basic
-#       - underlay
-#       - overlay
-#       - services
-#       - complete
-#     - name: Copying latest backup config file into devices
-#       connection: local
-#       command: scp {{scp_opts}} {{backup_file.stdout}} {{ ansible_ssh_user }}@{{ansible_host}}:/config.txt
-#       tags:
-#       - basic
-#       - underlay
-#       - overlay
-#       - services
-#       - complete
-     - name: Replacing running config with latest backup config file (supported on N9K platform only)
-       nxos_config:
-         replace_src: backup.conf
-         replace: config
-         save_when: modified
-#       nxos_config:
-#         replace_src: bootflash:config.txt
-#         replace: config
-#         save_when: modified
+     - name: Include rescue tasks
+       include_tasks: rescue.yml
        tags:
        - basic
        - underlay
