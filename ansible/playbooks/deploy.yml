@@ -12,6 +12,7 @@
     - overlay
     - services
     - complete
+    
 # The second Play saves the device's runnin-config files into '{{ output_folder }}/backup' folder
 - name: Config backup
   gather_facts: no
@@ -19,19 +20,6 @@
   tasks:
   - nxos_rollback:
      checkpoint_file: backup.cfg
-#- name: Config backup
-#  gather_facts: no
-#  hosts: nexus_switch
-#  tasks:
-#  - name: config backup on switch
-#    vars:
-#      ansible_command_timeout: 40
-#    cli_command:
-#     command: copy running-config bootflash:/backup.conf
-#     prompt:
-#      - "[n]"
-#     answer:
-#      - 'y'
     tags:
     - basic
     - underlay
@@ -50,6 +38,7 @@
     - overlay
     - services
     - complete
+    
 # The third Play the first config specific tasks with basic settings into the devices
 - name: First Deploy Tasks
   gather_facts: no
@@ -59,34 +48,20 @@
     - ansible_ssh_user: admin
     - ansible_ssh_pass: admin
   tasks:
-  - name: Enable feature scp-server
-    nxos_feature:
-      feature: scp-server
-      state: enabled
+  - name: Include first_deploy tasks
+    include_tasks: first_deploy.yml
     tags:
     - first_deploy
-  - name: Copying user's RSA key file into devices
-    nxos_file_copy:
-      local_file: "/home/{{user}}/.ssh/{{user}}_id_rsa.pub"
-      remote_file: "{{user}}_id_rsa.pub"
-    tags:
-    - first_deploy
-  - name: enable key auth for netadmin user
-    nxos_config:
-      lines: 
-       - username netadmin password 5 $5$XrDP5fvW$8krvmAerX1siN0U5W5j9YcQT.jbj78tSM8a5lFEc8cA  role network-admin
-       - username netadmin sshkey file bootflash:netadmin_id_rsa.pub
-      save_when: modified
-    tags:
-    - first_deploy
-  #only for lab purposes
-  - name: Enable temporary license on devices
-    nxos_config:
-      lines: license grace-period
-      save_when: modified
-    tags:
     - lab
-
+    
+  handlers:
+  - name: save_config
+    nxos_config:
+      save_when: modified
+  tags:
+  - first_deploy
+  - lab
+    
 # The fourth Play deploys the complete config file or part of it into the devices
 - name: Complete Deploy
   gather_facts: no
