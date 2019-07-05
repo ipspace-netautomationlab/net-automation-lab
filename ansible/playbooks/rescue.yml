@@ -1,0 +1,5 @@
+---
+
+- name: Replacing running config with latest local backup config file (supported on N9K platform only)
+  nxos_rollback:
+    rollback_to: backup.cfg

@@ -11,12 +11,23 @@
     - underlay
     - overlay
     - services
+    - complete
+    
 # The second Play saves the device's runnin-config files into '{{ output_folder }}/backup' folder
 - name: Config backup
   gather_facts: no
   hosts: nexus_switch
   tasks:
-  - name: config backup
+  - name: config checkpoint for rollback
+    nxos_rollback:
+     checkpoint_file: backup.cfg
+    tags:
+    - basic
+    - underlay
+    - overlay
+    - services
+    - complete
+  - name: config backup on server
     nxos_config:
       backup: True
       backup_options:
@@ -27,8 +38,10 @@
     - underlay
     - overlay
     - services
+    - complete
+    
 # The third Play the first config specific tasks with basic settings into the devices
-- name: First Deploy
+- name: First Deploy Tasks
   gather_facts: no
   hosts: nexus_switch
   vars: 
@@ -36,171 +49,104 @@
     - ansible_ssh_user: admin
     - ansible_ssh_pass: admin
   tasks:
-  - name: Enable feature scp-server
-    nxos_feature:
-      feature: scp-server
-      state: enabled
+  - name: Include first_deploy tasks
+    include_tasks: first_deploy.yml
     tags:
     - first_deploy
-  - name: Copying user's RSA key file into devices
-    nxos_file_copy:
-      local_file: "/home/{{user}}/.ssh/{{user}}_id_rsa.pub"
-      remote_file: "{{user}}_id_rsa.pub"
-    tags:
-    - first_deploy
-  - name: Enable temporary license on devices
+    - lab
+    
+  handlers:
+  - name: save_config
     nxos_config:
-      lines: license grace-period
       save_when: modified
-    tags:
-    - first_deploy
-  - name: Copying complete config file into devices
-    nxos_file_copy:
-      local_file: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
-      remote_file: "config.txt"
-    tags:
-    - first_deploy
- # Deploy config through nxos_commands fails if there is any syntax error, this kind of deployment highlights any templating issue!
-  - block: 
-     - name: deploy complete config
-       vars:
-         ansible_command_timeout: 40
-       nxos_config:
-        src: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
-        save_when: modified
-       tags:
-       - first_deploy
-    rescue:
-     - name: delete config file on devices if present
-       cli_command:
-         command: delete bootflash:config.txt
-         prompt:
-          - "[y]"
-         answer:
-          - 'y'
-       ignore_errors: True
-       tags:
-       - first_deploy
-     - name: "Something went wrong... Rolling back to backup conf"
-       connection: local
-       shell: ls {{backup_folder}}/{{inventory_hostname}}*.cfg | tail -1
-       register: backup_file
-       ignore_errors: True
-       tags:
-       - first_deploy
-     - debug: msg="Rolling back to {{backup_file.stdout}}"
-       tags:
-       - first_deploy
-     - name: Copying latest backup config file into devices
-       connection: local
-       command: scp {{scp_opts}} {{backup_file.stdout}} {{ ansible_ssh_user }}@{{ansible_host}}:/config.txt
-       tags:
-       - first_deploy
-     - name: Replacing running config with latest backup config file (supported on N9K platform only)
-       nxos_config:
-         replace_src: bootflash:config.txt
-         replace: config
-         save_when: modified
-       tags:
-       - first_deploy
-
+  tags:
+  - first_deploy
+  - lab
+    
 # The fourth Play deploys the complete config file or part of it into the devices
-- name: Complete Deploy
+- name: Config Deploy
   gather_facts: no
   hosts: nexus_switch 
-  vars: 
-  # 'nxos_file_copy' module doesn't work with ssh keys (found an issue to be solved!) and therefore we are using simple scp scripts
-   - scp_opts: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /home/{{ ansible_ssh_user }}/.ssh/{{ ansible_ssh_user }}_id_rsa"
   tasks: 
   # Deploy config through nxos_commands fails if there is any syntax error, this kind of deployment highlights any templating issue!
+  - name: disable interactive terminal
+    nxos_command:
+     commands: 
+       - command: terminal dont-ask
+    tags:
+    - basic
+    - underlay
+    - overlay
+    - services 
+    - complete
+  
   - block:
-     - name: disable interactive terminal
-       nxos_command:
-        commands: 
-          - command: terminal dont-ask
-       tags:
-       - basic
-       - underlay
-       - overlay
-       - services          
      - name: deploy basic config
-       vars:
-         ansible_command_timeout: 40
        nxos_config:
         src: "{{output_folder}}/config/{{inventory_hostname}}_basic.conf"
-        save_when: modified
-       tags:
-       - basic
-     - name: deploy underlay config
-       vars:
-         ansible_command_timeout: 40
-       nxos_config:
-        src: "{{output_folder}}/config/{{inventory_hostname}}_underlay.conf"
-        save_when: modified
-       tags:
-       - underlay
-     - name: deploy overlay config
-       vars:
-         ansible_command_timeout: 40
-       nxos_config:
-        src: "{{output_folder}}/config/{{inventory_hostname}}_overlay.conf"
-        save_when: modified
-       tags:
-       - overlay
-     - name: deploy service config
-       vars:
-         ansible_command_timeout: 40
-       nxos_config:
-        src: "{{output_folder}}/config/{{inventory_hostname}}_services.conf"
-        save_when: modified
-       tags:
-       - services
+       notify: save_config
     #if deploy fails then roll back to the last backup
     rescue:
-     - name: delete config file on devices if present
-       cli_command:
-         command: delete bootflash:config.txt
-         prompt:
-          - "[y]"
-         answer:
-          - 'y'
-       ignore_errors: True
-       tags:
-       - basic
-       - underlay
-       - overlay
-       - services
-     - name: "Something went wrong... Rolling back to backup conf"
-       connection: local
-       shell: ls {{backup_folder}}/{{inventory_hostname}}*.cfg | tail -1
-       register: backup_file
-       ignore_errors: True
-       tags:
-       - basic
-       - underlay
-       - overlay
-       - services
-     - debug: msg="Rolling back to {{backup_file.stdout}}"
-       tags:
-       - basic
-       - underlay
-       - overlay
-       - services
-     - name: Copying latest backup config file into devices
-       connection: local
-       command: scp {{scp_opts}} {{backup_file.stdout}} {{ ansible_ssh_user }}@{{ansible_host}}:/config.txt
-       tags:
-       - basic
-       - underlay
-       - overlay
-       - services
-     - name: Replacing running config with latest backup config file (supported on N9K platform only)
-       nxos_config:
-         replace_src: bootflash:config.txt
-         replace: config
-         save_when: modified
-       tags:
-       - basic
-       - underlay
-       - overlay
-       - services
+    - name: rescue
+      include_tasks: rescue.yml
+    tags:
+     - basic
+     
+  - block:
+    - name: deploy underlay config
+      nxos_config:
+       src: "{{output_folder}}/config/{{inventory_hostname}}_underlay.conf"
+      notify: save_config
+    #if deploy fails then roll back to the last backup
+    rescue:
+     - name: Include rescue tasks
+       include_tasks: rescue.yml
+    tags:
+    - underlay
+    
+  - block:
+    - name: deploy overlay config
+      nxos_config:
+       src: "{{output_folder}}/config/{{inventory_hostname}}_overlay.conf"
+      notify: save_config
+    #if deploy fails then roll back to the last backup
+    rescue:
+     - name: Include rescue tasks
+       include_tasks: rescue.yml
+    tags:
+    - overlay
+    
+  - block:
+    - name: deploy services config
+      nxos_config:
+       src: "{{output_folder}}/config/{{inventory_hostname}}_services.conf"
+      notify: save_config
+    #if deploy fails then roll back to the last backup
+    rescue:
+     - name: Include rescue tasks
+       include_tasks: rescue.yml
+    tags:
+    - services
+    
+  - block:
+    - name: deploy complete config
+      nxos_config:
+       src: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
+      notify: save_config
+    #if deploy fails then roll back to the last backup
+    rescue:
+     - name: Include rescue tasks
+       include_tasks: rescue.yml
+    tags:
+    - complete
+   
+  handlers:
+  - name: save_config
+    nxos_config:
+      save_when: modified
+    tags:
+    - basic
+    - underlay
+    - overlay
+    - services
+    - complete

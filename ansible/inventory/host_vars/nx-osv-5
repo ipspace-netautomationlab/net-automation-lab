@@ -8,9 +8,9 @@ generic_params:
 underlay:
   interfaces:
     phy:
-    - name: 2/1
+    - name: 1/1
       description: Link to Spine-1
-    - name: 2/2
+    - name: 1/2
       description: Link to Spine-2
       
 # Overlay interfaces config data
@@ -18,10 +18,10 @@ overlay:
   interfaces:
     phy:
       trunk:
-      - name: 2/3
+      - name: 1/3
         description: ESX1
-        vlan_list: 1-50,100
+        vlan_list: 1-50,100,3803
       access:
-      - name: 2/4
+      - name: 1/4
         description: Backup
         vlan: 10

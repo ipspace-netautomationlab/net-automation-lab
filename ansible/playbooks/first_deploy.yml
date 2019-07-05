@@ -1,0 +1,30 @@
+---
+
+- name: Enable feature scp-server
+  nxos_feature:
+    feature: scp-server
+    state: enabled
+  tags:
+  - first_deploy
+- name: Copying user's RSA key file into devices
+  nxos_file_copy:
+    local_file: "/home/{{user}}/.ssh/{{user}}_id_rsa.pub"
+    remote_file: "{{user}}_id_rsa.pub"
+  tags:
+  - first_deploy
+- name: enable key auth for netadmin user
+  nxos_config:
+    lines: 
+     - username netadmin password 5 $5$XrDP5fvW$8krvmAerX1siN0U5W5j9YcQT.jbj78tSM8a5lFEc8cA  role network-admin
+     - username netadmin sshkey file bootflash:netadmin_id_rsa.pub
+  notify: save_config
+  tags:
+  - first_deploy
+#only for lab purposes
+- name: Enable temporary license on devices
+  nxos_config:
+    lines: license grace-period
+  notify: save_config
+  tags:
+  - lab
+
