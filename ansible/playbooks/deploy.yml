@@ -18,7 +18,8 @@
   gather_facts: no
   hosts: nexus_switch
   tasks:
-  - nxos_rollback:
+  - name: config checkpoint for rollback
+    nxos_rollback:
      checkpoint_file: backup.cfg
     tags:
     - basic
@@ -63,72 +64,89 @@
   - lab
     
 # The fourth Play deploys the complete config file or part of it into the devices
-- name: Complete Deploy
+- name: Config Deploy
   gather_facts: no
   hosts: nexus_switch 
-  vars: 
-  # 'nxos_file_copy' module doesn't work with ssh keys (found an issue to be solved!) and therefore we are using simple scp scripts
-   - scp_opts: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /home/{{ ansible_ssh_user }}/.ssh/{{ ansible_ssh_user }}_id_rsa"
   tasks: 
   # Deploy config through nxos_commands fails if there is any syntax error, this kind of deployment highlights any templating issue!
+  - name: disable interactive terminal
+    nxos_command:
+     commands: 
+       - command: terminal dont-ask
+    tags:
+    - basic
+    - underlay
+    - overlay
+    - services 
+    - complete
+  
   - block:
-     - name: disable interactive terminal
-       nxos_command:
-        commands: 
-          - command: terminal dont-ask
-       tags:
-       - basic
-       - underlay
-       - overlay
-       - services 
-       - complete       
      - name: deploy basic config
-       vars:
-         ansible_command_timeout: 40
        nxos_config:
         src: "{{output_folder}}/config/{{inventory_hostname}}_basic.conf"
-        save_when: modified
-       tags:
-       - basic
-     - name: deploy underlay config
-       vars:
-         ansible_command_timeout: 40
-       nxos_config:
-        src: "{{output_folder}}/config/{{inventory_hostname}}_underlay.conf"
-        save_when: modified
-       tags:
-       - underlay
-     - name: deploy overlay config
-       vars:
-         ansible_command_timeout: 40
-       nxos_config:
-        src: "{{output_folder}}/config/{{inventory_hostname}}_overlay.conf"
-        save_when: modified
-       tags:
-       - overlay
-     - name: deploy service config
-       vars:
-         ansible_command_timeout: 40
-       nxos_config:
-        src: "{{output_folder}}/config/{{inventory_hostname}}_services.conf"
-        save_when: modified
-       tags:
-       - services
-     - name: deploy complete config
-       vars:
-         ansible_command_timeout: 40
-       nxos_config:
-        src: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
-        save_when: modified
-       tags:
-       - complete
+       notify: save_config
+    #if deploy fails then roll back to the last backup
+    rescue:
+    - name: rescue
+      include_tasks: rescue.yml
+    tags:
+     - basic
+     
+  - block:
+    - name: deploy underlay config
+      nxos_config:
+       src: "{{output_folder}}/config/{{inventory_hostname}}_underlay.conf"
+      notify: save_config
     #if deploy fails then roll back to the last backup
     rescue:
      - name: Include rescue tasks
        include_tasks: rescue.yml
-       tags:
-       - basic
-       - underlay
-       - overlay
-       - services
-       - complete
+    tags:
+    - underlay
+    
+  - block:
+    - name: deploy overlay config
+      nxos_config:
+       src: "{{output_folder}}/config/{{inventory_hostname}}_overlay.conf"
+      notify: save_config
+    #if deploy fails then roll back to the last backup
+    rescue:
+     - name: Include rescue tasks
+       include_tasks: rescue.yml
+    tags:
+    - overlay
+    
+  - block:
+    - name: deploy services config
+      nxos_config:
+       src: "{{output_folder}}/config/{{inventory_hostname}}_services.conf"
+      notify: save_config
+    #if deploy fails then roll back to the last backup
+    rescue:
+     - name: Include rescue tasks
+       include_tasks: rescue.yml
+    tags:
+    - services
+    
+  - block:
+    - name: deploy complete config
+      nxos_config:
+       src: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
+      notify: save_config
+    #if deploy fails then roll back to the last backup
+    rescue:
+     - name: Include rescue tasks
+       include_tasks: rescue.yml
+    tags:
+    - complete
+   
+  handlers:
+  - name: save_config
+    nxos_config:
+      save_when: modified
+    tags:
+    - basic
+    - underlay
+    - overlay
+    - services
+    - complete
