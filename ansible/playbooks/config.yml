@@ -15,7 +15,7 @@
       - config
   - name: creating config folder
     file: 
-      owner: netadmin
+#      owner: netadmin
       path: '{{output_folder}}/config'
       state: directory
       mode: 0777
