@@ -82,6 +82,8 @@
   
   - block:
      - name: deploy basic config
+       vars:
+         ansible_command_timeout: 40
        nxos_config:
         src: "{{output_folder}}/config/{{inventory_hostname}}_basic.conf"
        notify: save_config
@@ -94,6 +96,8 @@
      
   - block:
     - name: deploy underlay config
+      vars:
+       ansible_command_timeout: 40
       nxos_config:
        src: "{{output_folder}}/config/{{inventory_hostname}}_underlay.conf"
       notify: save_config
@@ -106,6 +110,8 @@
     
   - block:
     - name: deploy overlay config
+      vars:
+       ansible_command_timeout: 40
       nxos_config:
        src: "{{output_folder}}/config/{{inventory_hostname}}_overlay.conf"
       notify: save_config
@@ -118,6 +124,8 @@
     
   - block:
     - name: deploy services config
+      vars:
+       ansible_command_timeout: 40
       nxos_config:
        src: "{{output_folder}}/config/{{inventory_hostname}}_services.conf"
       notify: save_config
@@ -130,6 +138,8 @@
     
   - block:
     - name: deploy complete config
+      vars:
+       ansible_command_timeout: 40
       nxos_config:
        src: "{{output_folder}}/config/{{inventory_hostname}}_complete.conf"
       notify: save_config
