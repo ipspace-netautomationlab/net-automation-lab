@@ -8,10 +8,17 @@
   - first_deploy
 - name: Copying user's RSA key file into devices
   nxos_file_copy:
-    local_file: "{{key_path}}/{{id}}_id_rsa.pub"
-    remote_file: "{{id}}_id_rsa.pub"
-  tags:
-  - first_deploy
+    file_pull: yes
+    remote_file: "{{key_path}}/{{id}}_id_rsa.pub"
+    local_file: "{{id}}_id_rsa.pub"
+    remote_scp_server: {{key_server}}
+    remote_scp__server_user: {{key_server_user}} 
+    remote_scp_server_password: {{key_server_pass}} 
+#  nxos_file_copy:
+#    local_file: "{{key_path}}/{{id}}_id_rsa.pub"
+#    remote_file: "{{id}}_id_rsa.pub"
+#  tags:
+#  - first_deploy
 - name: enable key auth for netadmin user
   nxos_config:
     lines: 
