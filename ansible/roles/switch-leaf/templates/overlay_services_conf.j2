@@ -1,5 +1,5 @@
-!
-fabric forwarding anycast-gateway-mac {{ generic_global_params.anycast_gateway_mac }}
+{# !
+fabric forwarding anycast-gateway-mac {{ generic_global_params.anycast_gateway_mac }} #}
 !
 !
 {% for vrf in services_params.vrfs %}
@@ -23,10 +23,17 @@ vlan {{ vrf.id | int + 1000 }}
 !
 {% endif %}
 {% for vlan in vrf.vlans %}
+{% if vlan.state == "present" %}
 vlan {{ vlan.id | int }}
   name {{ vlan.name }}
   vn-segment {{ vlan.id | int + 10000}}
 !
+{% elif vlan.state == "absent" %}
+no vlan {{ vlan.id | int }}
+!
+{% else %}
+!
+{% endif %}
 {% endfor %}
 {% endfor %}
 !
@@ -44,6 +51,7 @@ interface Vlan{{ vrf.id | int + 1000 }}
 {% endif %}
 {% for vlan in vrf.vlans %}
 {% if vlan.ipaddr is defined %}
+{% if vlan.state == "present" %}
 interface Vlan{{ vlan.id | int }}
   description {{ vlan.description }}
   no shutdown
@@ -52,21 +60,34 @@ interface Vlan{{ vlan.id | int }}
   ip address {{ vlan.ipaddr | ipaddr }}
   fabric forwarding mode anycast-gateway
 !
+{% elif vlan.state == "absent" %}
+no interface vlan {{ vlan.id | int }}
+!
+{% else %}
+!
+{%endif%}
 {%endif%}
 {% endfor %}
 {% endfor %}
 !
 interface nve1
-  no shutdown
+{#   no shutdown
   host-reachability protocol bgp
-  source-interface loopback0
+  source-interface loopback0 #}
 {% for vrf in services_params.vrfs %}
 {% if vrf.name != "default" %}
   member vni {{ vrf.id | int + 1000 }} associate-vrf
 {% for vlan in vrf.vlans %}
+{% if vlan.state == "present" %}
   member vni {{ vlan.id | int + 10000 }}
     suppress-arp
     mcast-group 239.1.0.{{ vrf.id }}
+{% elif vlan.state == "absent" %}
+  no member vni {{ vlan.id | int + 10000 }}
+!
+{% else %}
+!
+{%endif%}
 {% endfor %}
 {% endif %}
 {% endfor %}
@@ -74,10 +95,17 @@ interface nve1
 evpn
 {% for vrf in services_params.vrfs %}
 {% for vlan in vrf.vlans %}
+{% if vlan.state == "present" %}
  vni {{ vlan.id | int + 10000 }} l2
     rd {{ generic_params.id }}:{{ vlan.id | int + 10000 }}
     route-target import 1:{{ vlan.id | int + 10000 }}
     route-target export 1:{{ vlan.id | int + 10000 }}
+{% elif vlan.state == "absent" %}
+ no vni {{ vlan.id | int + 10000 }} l2
+!
+{% else %}
+!
+{%endif%}
 {% endfor %}
 {% endfor %}
 !

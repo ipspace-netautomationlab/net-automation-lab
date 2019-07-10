@@ -1,9 +1,16 @@
 ---
 
-- name: write overlay config file
+- name: write overlay basic config file
+  template:
+    src: overlay_basic_conf.j2
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_4_1_overlay_services_basic.conf"
+  tags:
+  - config
+  - overlay
+- name: write overlay services config file
   template:
     src: overlay_services_conf.j2
-    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_4_1_overlay_services.conf"
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_4_2_overlay_services.conf"
   tags:
   - config
   - overlay
