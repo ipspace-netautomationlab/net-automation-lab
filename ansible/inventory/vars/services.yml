@@ -6,6 +6,7 @@ services_params:
   - name: default
     vlans:
     - id: 3801
+      state: absent
       name: L2-CUSTOMER-01
       description: CUSTOMER-01 - VLAN
   - name: CUSTOMER-02
@@ -14,6 +15,7 @@ services_params:
       name: 1
     vlans:
     - id: 3803
+      state: absent
       name: L3-CUSTOMER-02
       description: CUSTOMER-02 - VLAN
       ipaddr: 192.168.0.1/24
