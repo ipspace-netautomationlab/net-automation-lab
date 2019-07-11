@@ -3,7 +3,7 @@
 - name: write overlay basic config file
   template:
     src: overlay_basic_conf.j2
-    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_4_1_overlay_services_basic.conf"
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_3_2_overlay_services_basic.conf"
   tags:
   - config
   - overlay
