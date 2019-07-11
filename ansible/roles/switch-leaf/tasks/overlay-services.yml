@@ -7,6 +7,7 @@
   tags:
   - config
   - overlay
+
 - name: write overlay services config file
   template:
     src: overlay_services_conf.j2
