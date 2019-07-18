@@ -20,7 +20,7 @@
 - name: Copying user's RSA key file into devices
   nxos_file_copy:
     file_pull: yes
-    remote_file: "{{key_path}}/{{id}}_id_rsa.pub"
+    remote_file: "{{key_path}}"
     local_file: "{{id}}_id_rsa.pub"
     remote_scp_server: "{{key_server}}"
     remote_scp_server_user: "{{key_server_user}}" 
