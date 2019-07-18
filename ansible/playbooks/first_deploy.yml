@@ -1,25 +1,38 @@
 ---
 
 - name: Enable feature scp-server
+  vars:
+    - ansible_ssh_user: admin
+    - ansible_ssh_pass: admin
   nxos_feature:
     feature: scp-server
     state: enabled
   tags:
   - first_deploy
+- name: create machine user
+  nxos_config:
+    lines: 
+     - "username {{id}} password 5 $5$XrDP5fvW$8krvmAerX1siN0U5W5j9YcQT.jbj78tSM8a5lFEc8cA  role network-admin"
+#     - "username {{id}} sshkey file bootflash:{{id}}_id_rsa.pub"
+  notify: save_config
+  tags:
+  - first_deploy
 - name: Copying user's RSA key file into devices
   nxos_file_copy:
-    file_pull: yes
-    remote_file: "{{key_path}}/{{id}}_id_rsa.pub"
-    local_file: "{{id}}_id_rsa.pub"
-    remote_scp_server: "{{key_server}}"
-    remote_scp_server_user: "{{key_server_user}}" 
-    remote_scp_server_password: "{{key_server_pass}}" 
+#    file_pull: yes
+#    remote_file: "{{key_path}}/{{id}}_id_rsa.pub"
+#    local_file: "{{id}}_id_rsa.pub"
+#    remote_scp_server: "{{key_server}}"
+#    remote_scp_server_user: "{{key_server_user}}" 
+#    remote_scp_server_password: "{{key_server_pass}}" 
+    local_file: "{{key_path}}/{{id}}_id_rsa.pub"
+    remote_file: "{{id}}_id_rsa.pub"
   tags:
   - first_deploy
 - name: enable key auth for machine user
   nxos_config:
     lines: 
-     - "username {{id}} password 5 $5$XrDP5fvW$8krvmAerX1siN0U5W5j9YcQT.jbj78tSM8a5lFEc8cA  role network-admin"
+#     - "username {{id}} password 5 $5$XrDP5fvW$8krvmAerX1siN0U5W5j9YcQT.jbj78tSM8a5lFEc8cA  role network-admin"
      - "username {{id}} sshkey file bootflash:{{id}}_id_rsa.pub"
   notify: save_config
   tags:
