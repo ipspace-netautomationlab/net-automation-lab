@@ -5,7 +5,14 @@
     feature: scp-server
     state: enabled
   tags:
-  - first_deploy
+  - pre_deploy
+- name: create netadmin user
+  nxos_config:
+    lines: 
+     - "username {{id}} password 5 $5$XrDP5fvW$8krvmAerX1siN0U5W5j9YcQT.jbj78tSM8a5lFEc8cA  role network-admin"
+  notify: save_config
+  tags:
+  - pre_deploy
 - name: Copying user's RSA key file into devices
   nxos_file_copy:
     file_pull: yes
@@ -19,7 +26,7 @@
 - name: enable key auth for machine user
   nxos_config:
     lines: 
-     - "username {{id}} password 5 $5$XrDP5fvW$8krvmAerX1siN0U5W5j9YcQT.jbj78tSM8a5lFEc8cA  role network-admin"
+#     - "username {{id}} password 5 $5$XrDP5fvW$8krvmAerX1siN0U5W5j9YcQT.jbj78tSM8a5lFEc8cA  role network-admin"
      - "username {{id}} sshkey file bootflash:{{id}}_id_rsa.pub"
   notify: save_config
   tags:
