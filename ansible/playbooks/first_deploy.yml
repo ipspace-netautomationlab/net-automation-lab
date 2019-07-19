@@ -6,6 +6,12 @@
     state: enabled
   tags:
   - first_deploy
+- name: print facts if defined
+  debug:
+    var: ansible_facts
+  when: anible_facts is defined
+  tags:
+  - first_deploy
 - name: Copying user's RSA key file into devices
   vars:
    - username: "{{key_server_user}}"
