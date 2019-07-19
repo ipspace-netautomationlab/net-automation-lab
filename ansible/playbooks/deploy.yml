@@ -44,10 +44,10 @@
 - name: First Deploy Tasks
   gather_facts: no
   hosts: nexus_switch
-  vars: 
-    - user: "{{lookup('env','USER')}}"
-    - ansible_ssh_user: admin
-    - ansible_ssh_pass: admin
+#  vars: 
+#    - user: "{{lookup('env','USER')}}"
+#    - ansible_ssh_user: admin
+#    - ansible_ssh_pass: admin
   tasks:
   - name: Include first_deploy tasks
     include_tasks: first_deploy.yml
