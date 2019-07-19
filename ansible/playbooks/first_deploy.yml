@@ -13,17 +13,19 @@
   tags:
   - first_deploy
 - name: Copying user's RSA key file into devices
-  vars:
-   - username: "{{key_server_user}}"
-   - password: "{{key_server_pass}}"   
+#  vars:
+#   - username: "{{key_server_user}}"
+#   - password: "{{key_server_pass}}"   
   nxos_file_copy:
-    file_pull: yes
-    file_pull_timeout: 30
-    remote_file: "{{key_path}}/{{id}}_id_rsa.pub"
-    local_file: "{{id}}_id_rsa.pub"
-    remote_scp_server: "{{key_server}}"
-    remote_scp_server_user: "{{key_server_user}}" 
-    remote_scp_server_password: "{{key_server_pass}}" 
+#    file_pull: yes
+#    file_pull_timeout: 30
+#    remote_file: "{{key_path}}/{{id}}_id_rsa.pub"
+#    local_file: "{{id}}_id_rsa.pub"
+#    remote_scp_server: "{{key_server}}"
+#    remote_scp_server_user: "{{key_server_user}}" 
+#    remote_scp_server_password: "{{key_server_pass}}"
+    local_file: "{{key_path}}/{{id}}_id_rsa.pub"
+    remote_file: "{{id}}_id_rsa.pub"
   tags:
   - first_deploy
 - name: enable key auth for machine user
