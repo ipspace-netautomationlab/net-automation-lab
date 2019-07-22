@@ -28,7 +28,7 @@
   connection: local
   gather_facts: no
   hosts: nexus_switch
-  vars_files: ../inventory/vars/services.yml
+#  vars_files: ../inventory/vars/services.yml
   roles:
   - fabric
       
@@ -36,7 +36,7 @@
   connection: local
   gather_facts: no
   hosts: leaf
-  vars_files: ../inventory/vars/services.yml
+#  vars_files: ../inventory/vars/services.yml
   roles:
   - switch-leaf
 
@@ -44,7 +44,7 @@
   connection: local
   gather_facts: no
   hosts: spine
-  vars_files: ../inventory/vars/services.yml
+#  vars_files: ../inventory/vars/services.yml
   roles:
   - switch-spine
 
