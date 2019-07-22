@@ -43,7 +43,7 @@ router bgp {{ bgp_global_params.local_as | int }}
 {%endif%}
 {% endfor %}
 {%endif%}
-{% if 'leaf' in group_names %}
+{# {% if 'leaf' in group_names %}
 {% for vrf in services_params.vrfs %}
 {% if vrf.name != "default" %}
   vrf {{ vrf.name }}
@@ -51,5 +51,5 @@ router bgp {{ bgp_global_params.local_as | int }}
       advertise l2vpn evpn
 {% endif %}
 {% endfor %}
-{% endif %}
+{% endif %} #}
 !
