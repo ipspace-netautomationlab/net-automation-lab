@@ -115,53 +115,13 @@
     - name: Include rescue tasks
       include_tasks: rescue.yml
     
-#     - debug: 
-#        msg: "Warning: Validation failed"
-#       tags:
-#       - basic
-#       - underlay
-#       - overlay
-#       - services
-#       - rollback
-#     - name: delete config file on devices if present
-#       cli_command:
-#         command: delete bootflash:config.txt
-#         prompt:
-#          - "[y]"
-#         answer:
-#          - 'y'
-##       ignore_errors: True
-#       tags:
-#       - rollback
-#     - name: "Something went wrong... Rolling back to backup conf"
-#       connection: local
-#       shell: ls {{backup_folder}}/{{inventory_hostname}}*.cfg | tail -1
-#       register: backup_file
-##       ignore_errors: True
-#       tags:
-#       - rollback
-#     - debug: msg="Rolling back to {{backup_file.stdout}}"
-#       tags:
-#       - rollback
-#     - name: Copying latest backup config file into devices
-#       connection: local
-#       command: scp {{scp_opts}} {{backup_file.stdout}} {{ ansible_ssh_user }}@{{ansible_host}}:/config.txt
-#       tags:
-#       - rollback
-#     - name: Replacing running config with latest backup config file (supported on N9K platform only)
-#       nxos_config:
-#         replace_src: bootflash:config.txt
-#         replace: config
-#         save_when: modified
-#       tags:
-#       - rollback
        
 # The second Play handles the validation tasks related to services (VRFs, VLANs, etc.)
 - name: Validate leaf device configuration
   gather_facts: no
   hosts: leaf
   remote_user: netadmin
-  vars_files: ../inventory/vars/services.yml
+  # vars_files: ../inventory/vars/services.yml
   tasks:
   - block:
     # Gathering generic facts in order to get info about interfaces and VLAN list
@@ -290,44 +250,3 @@
     rescue:
     - name: Include rescue tasks
       include_tasks: rescue.yml
-       
-#     - debug:
-#        msg: "Warning: Validation failed"
-#       tags:
-#       - basic
-#       - underlay
-#       - overlay
-#       - services
-#       - rollback
-#     - name: delete config file on devices if present
-#       cli_command:
-#         command: delete bootflash:config.txt
-#         prompt:
-#          - "[y]"
-#         answer:
-#          - 'y'
-##       ignore_errors: True
-#       tags:
-#       - rollback
-#     - name: "Something went wrong... Rolling back to backup conf"
-#       connection: local
-#       shell: ls {{backup_folder}}/{{inventory_hostname}}*.cfg | tail -1
-#       register: backup_file
-##       ignore_errors: True
-#       tags:
-#       - rollback
-#     - debug: msg="Rolling back to {{backup_file.stdout}}"
-#       tags:
-#       - rollback
-#     - name: Copying latest backup config file into devices
-#       connection: local
-#       command: scp {{scp_opts}} {{backup_file.stdout}} {{ ansible_ssh_user }}@{{ansible_host}}:/config.txt
-#       tags:
-#       - rollback
-#     - name: Replacing running config with latest backup config file (supported on N9K platform only)
-#       nxos_config:
-#         replace_src: bootflash:config.txt
-#         replace: config
-#         save_when: modified
-#       tags:
-#       - rollback
