@@ -14,4 +14,4 @@
     dest: "{{ output_folder }}/config/{{ inventory_hostname }}_4_1_overlay_services.conf"
   tags:
   - config
-  - overlay
+  - services
