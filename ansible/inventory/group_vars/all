@@ -40,11 +40,11 @@ generic_global_params:
 
 # Local users database (used also for SNMP config data)
 global_users: 
-  - username: netadmin
-    role: network-admin
+#  - username: netadmin
+#    role: network-admin
     #encrypted password
-    pwd:  $5$emOkY3RY$cuBIqbRTRyVwfmOhcL4UbMF95r2CQKvQ8rQjdFy9wx.
-    ssh_key: netadmin_id_rsa.pub
+#    pwd:  $5$emOkY3RY$cuBIqbRTRyVwfmOhcL4UbMF95r2CQKvQ8rQjdFy9wx.
+#    ssh_key: netadmin_id_rsa.pub
   - username: netoperator
     role: network-operator
     #encrypted password
