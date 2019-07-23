@@ -11,109 +11,114 @@
     switch_count: "{{ groups['nexus_switch'] | length }}"
   tasks:
   - block:
-  # Gathering generic facts in order to get info about interfaces and VLAN list
-    - name: Gathering spine info
-      nxos_facts:
-        gather_subset: all
-      register: nxos_facts_spine_out
-      tags:
-      - validate
-      - underlay
-    # The task tries to check if leaf device point-to-point interfaces are "pingable"
-    - name: trying to ping leaf devices
-      nxos_command:
-        commands: 
-          - command: ping {{ item | ipmath(offset) }} timeout 1 count 3
-      register: nxos_ping_spine_out
-      with_items: "{{ nxos_facts_spine_out.ansible_facts.ansible_net_all_ipv4_addresses }}"
-      when: item | ipaddr(generic_global_params.uplink[0].net) == item or item | ipaddr(generic_global_params.uplink[1].net) == item
-      tags:
-      - validate
-      - underlay
-    # The task fails if one or more P2P interfaces are unreachable
-    - name: displaying ping results
-      ignore_errors: True
-      vars:
-      -  regex_pattern: 100.00% packet loss
-      fail:
-        msg: "WARNING: Cannot ping {{ item['item'] | ipmath(offset) }} from device {{ inventory_hostname }}"
-      with_items: "{{ nxos_ping_spine_out.results }}"
-      when: 
-        # Skipping check related to not point-to-point interfaces
-        - item['skipped'] is not defined
-        # Errors triggered if 'regex_pattern' is found within the results
-        - item['stdout'][0] is regex(regex_pattern)
-      tags:
-      - validate
-      - underlay
-    # Checking for OSPF neighborship on spine devices
-    - name: gathering info about OSPF Underlay neighborship
-      nxos_command:
-        commands: 
-          - command: show ip ospf underlay neighbors
-            output: json
-      register: nxos_ospf_spine_out
-      tags:
-      - validate
-      - underlay
-    # The task fails if the amount of OSPF neighboship doesn't match the amount of leaf devices
-    - name: verifying OSPF Underlay neighborship amount
-      ignore_errors: True
-      vars:
-      -  neighborship: "{{ nxos_ospf_spine_out.stdout_lines.0.TABLE_ctx.ROW_ctx.TABLE_nbr.ROW_nbr | map(attribute='rid') | list | length }}"
-      fail:
-        msg: "WARNING: OSPF neighborship missing on {{ inventory_hostname }}"
-      when: neighborship != leaf_count
-      tags:
-      - validate
-      - underlay
-    # The task fails if one or more OSPF neighboships are not in 'FULL' state
-    - name: verifying OSPF Underlay neighborship status
-      ignore_errors: True
-      fail:
-        msg: "WARNING: Cannot establish OSPF neighborship on interface '{{ nxos_ospf_spine_out.stdout_lines.0.TABLE_ctx.ROW_ctx.TABLE_nbr.ROW_nbr[item.0].intf}}' related to device '{{ inventory_hostname }}'"
-      with_indexed_items: "{{ nxos_ospf_spine_out.stdout_lines.0.TABLE_ctx.ROW_ctx.TABLE_nbr.ROW_nbr | map(attribute='state') | list }}"
-      # Errors triggered if any not full neighborship is found 
-      when: item.1 != 'FULL'
-      tags:
-      - validate
-      - underlay
-    # Checking for BGP neighborship on spine devices
-    - name: gathering info about BGP neighborship
-      nxos_command:
-        commands: 
-          - command: show bgp l2vpn evpn summary
-            output: json
-      register: nxos_bgp_spine_out
-      tags:
-      - validate
-      - overlay
-    # The task fails if the amount of BGP neighboship doesn't match the amount of leaf devices
-    - name: verifying BGP neighborship amount
-      ignore_errors: True
-      vars:
-      - neighborship: "{{ nxos_bgp_spine_out.stdout_lines.0.TABLE_vrf.ROW_vrf.TABLE_af.ROW_af.TABLE_saf.ROW_saf.TABLE_neighbor.ROW_neighbor | map(attribute='neighborid') | list | length }}"
-      - condition: "{{ (switch_count | int) - 1 }}"
-      fail:
-        msg: "WARNING: BGP neighborship missing on {{ inventory_hostname }}"
-      when: neighborship != condition
-      tags:
-      - validate
-      - overlay
-    # The task fails if one or more BGP neighboships are not in 'ESTABLISHED' state
-    - name: verifying BGP neighborship status
-      ignore_errors: True
-      fail:
-        msg: "WARNING: Cannot establish BGP neighborship with {{ nxos_bgp_spine_out.stdout_lines.0.TABLE_vrf.ROW_vrf.TABLE_af.ROW_af.TABLE_saf.ROW_saf.TABLE_neighbor.ROW_neighbor[item.0].neighborid }} on {{ inventory_hostname }}"
-      with_indexed_items: "{{ nxos_bgp_spine_out.stdout_lines.0.TABLE_vrf.ROW_vrf.TABLE_af.ROW_af.TABLE_saf.ROW_saf.TABLE_neighbor.ROW_neighbor | map(attribute='state') | list }}"
-      when: item.1 != "Established"
-      tags:
-      - validate
-      - overlay
+    - name: Include all fabric validate tasks
+      include_tasks: fabric_validate.yml
+  # # Gathering generic facts in order to get info about interfaces and VLAN list
+    # - name: Gathering spine info
+      # nxos_facts:
+        # gather_subset: all
+      # register: nxos_facts_spine_out
+      # tags:
+      # - validate
+      # - underlay
+    # # The task tries to check if leaf device point-to-point interfaces are "pingable"
+    # - name: trying to ping leaf devices
+      # nxos_command:
+        # commands: 
+          # - command: ping {{ item | ipmath(offset) }} timeout 1 count 3
+      # register: nxos_ping_spine_out
+      # with_items: "{{ nxos_facts_spine_out.ansible_facts.ansible_net_all_ipv4_addresses }}"
+      # when: item | ipaddr(generic_global_params.uplink[0].net) == item or item | ipaddr(generic_global_params.uplink[1].net) == item
+      # tags:
+      # - validate
+      # - underlay
+    # # The task fails if one or more P2P interfaces are unreachable
+    # - name: displaying ping results
+      # ignore_errors: True
+      # vars:
+      # -  regex_pattern: 100.00% packet loss
+      # fail:
+        # msg: "WARNING: Cannot ping {{ item['item'] | ipmath(offset) }} from device {{ inventory_hostname }}"
+      # with_items: "{{ nxos_ping_spine_out.results }}"
+      # when: 
+        # # Skipping check related to not point-to-point interfaces
+        # - item['skipped'] is not defined
+        # # Errors triggered if 'regex_pattern' is found within the results
+        # - item['stdout'][0] is regex(regex_pattern)
+      # tags:
+      # - validate
+      # - underlay
+    # # Checking for OSPF neighborship on spine devices
+    # - name: gathering info about OSPF Underlay neighborship
+      # nxos_command:
+        # commands: 
+          # - command: show ip ospf underlay neighbors
+            # output: json
+      # register: nxos_ospf_spine_out
+      # tags:
+      # - validate
+      # - underlay
+    # # The task fails if the amount of OSPF neighboship doesn't match the amount of leaf devices
+    # - name: verifying OSPF Underlay neighborship amount
+      # ignore_errors: True
+      # vars:
+      # -  neighborship: "{{ nxos_ospf_spine_out.stdout_lines.0.TABLE_ctx.ROW_ctx.TABLE_nbr.ROW_nbr | map(attribute='rid') | list | length }}"
+      # fail:
+        # msg: "WARNING: OSPF neighborship missing on {{ inventory_hostname }}"
+      # when: neighborship != leaf_count
+      # tags:
+      # - validate
+      # - underlay
+    # # The task fails if one or more OSPF neighboships are not in 'FULL' state
+    # - name: verifying OSPF Underlay neighborship status
+      # ignore_errors: True
+      # fail:
+        # msg: "WARNING: Cannot establish OSPF neighborship on interface '{{ nxos_ospf_spine_out.stdout_lines.0.TABLE_ctx.ROW_ctx.TABLE_nbr.ROW_nbr[item.0].intf}}' related to device '{{ inventory_hostname }}'"
+      # with_indexed_items: "{{ nxos_ospf_spine_out.stdout_lines.0.TABLE_ctx.ROW_ctx.TABLE_nbr.ROW_nbr | map(attribute='state') | list }}"
+      # # Errors triggered if any not full neighborship is found 
+      # when: item.1 != 'FULL'
+      # tags:
+      # - validate
+      # - underlay
+    # # Checking for BGP neighborship on spine devices
+    # - name: gathering info about BGP neighborship
+      # nxos_command:
+        # commands: 
+          # - command: show bgp l2vpn evpn summary
+            # output: json
+      # register: nxos_bgp_spine_out
+      # tags:
+      # - validate
+      # - overlay
+    # # The task fails if the amount of BGP neighboship doesn't match the amount of leaf devices
+    # - name: verifying BGP neighborship amount
+      # ignore_errors: True
+      # vars:
+      # - neighborship: "{{ nxos_bgp_spine_out.stdout_lines.0.TABLE_vrf.ROW_vrf.TABLE_af.ROW_af.TABLE_saf.ROW_saf.TABLE_neighbor.ROW_neighbor | map(attribute='neighborid') | list | length }}"
+      # - condition: "{{ (switch_count | int) - 1 }}"
+      # fail:
+        # msg: "WARNING: BGP neighborship missing on {{ inventory_hostname }}"
+      # when: neighborship != condition
+      # tags:
+      # - validate
+      # - overlay
+    # # The task fails if one or more BGP neighboships are not in 'ESTABLISHED' state
+    # - name: verifying BGP neighborship status
+      # ignore_errors: True
+      # fail:
+        # msg: "WARNING: Cannot establish BGP neighborship with {{ nxos_bgp_spine_out.stdout_lines.0.TABLE_vrf.ROW_vrf.TABLE_af.ROW_af.TABLE_saf.ROW_saf.TABLE_neighbor.ROW_neighbor[item.0].neighborid }} on {{ inventory_hostname }}"
+      # with_indexed_items: "{{ nxos_bgp_spine_out.stdout_lines.0.TABLE_vrf.ROW_vrf.TABLE_af.ROW_af.TABLE_saf.ROW_saf.TABLE_neighbor.ROW_neighbor | map(attribute='state') | list }}"
+      # when: item.1 != "Established"
+      # tags:
+      # - validate
+      # - overlay
       
     rescue: 
     - name: Include rescue tasks
       include_tasks: rescue.yml
+    tags:
+    - underlay
+    - overlay
     
        
 # The second Play handles the validation tasks related to services (VRFs, VLANs, etc.)
@@ -129,10 +134,11 @@
       register: nxos_facts_leaf_out
       nxos_facts:
         gather_subset: all
-      tags:
-      - validate
-      - postdeploy
-      - predeploy
+#      tags:
+#      - validate
+#      - postdeploy
+#      - predeploy
+      
     # Gathering info about VRFs
     - name: Running 'show vrf' on remote devices
       nxos_command:
@@ -140,10 +146,11 @@
           - command: show vrf
             output: json
       register: nxos_vrf_leaf_out
-      tags:
-      - validate
-      - postdeploy
-      - predeploy
+#      tags:
+#      - validate
+#      - postdeploy
+#      - predeploy
+      
     # Gathering info about VLAN to VRF mapping
     - name: Running 'show vrf all interface' on remote devices
       nxos_command:
@@ -151,102 +158,155 @@
           - command: show vrf all interface
             output: json
       register: nxos_vlan_leaf_out
-      tags:
-      - validate
-      - postdeploy
-      - predeploy
-    #  The task fails if one or more VRFs (defined in services.yml) are not found
-    - name: Checking for VRFs
-      ignore_errors: True
-      fail:
-        msg: "WARNING: VRF '{{item.name}}' not found on device '{{inventory_hostname}}'"
-      with_items: "{{services_params.vrfs}}"
-      when: "item.name not in nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list"
-      tags:
-      - validate
-      - postdeploy
-    #  The task fails if one or more L3 VLANs (defined in services.yml) are not found
-    - name: Checking for L3 VLANs
-      ignore_errors: True
-      vars:
-        - to_be_vlan_list: "{{ (item.vlans | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
-        - as_is_vlan_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_if.ROW_if | json_query(jsonquery) }}"
-        - jsonquery: "[?vrf_name=='{{ item.name }}'].if_name"
-        - to_be_vlan_count: "{{ to_be_vlan_list | length }}"
-        - as_is_vlan_count: "{{ as_is_vlan_list | length }}"
-        - intersect_vlan_count: "{{ to_be_vlan_list | intersect(as_is_vlan_list) | length }}"
-      fail:
-        msg: "WARNING: Following VLAN missing in VRF '{{ item.name }}': {{ to_be_vlan_list | difference(as_is_vlan_list) | flatten | join(',') }}"
-      with_items: "{{ services_params.vrfs }}"
-      when:
-        - item.name != "default"
-        - intersect_vlan_count < to_be_vlan_count
-      tags:
-      - validate
-      - postdeploy
-    #  The task fails if one or more L2 VLANs (defined in services.yml) are not found
-    - name: Checking for L2 VLANs
-      ignore_errors: True
-      vars:
-        - to_be_vlan_list: "{{ (item.vlans | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
-        - as_is_vlan_list: "{{ vlan_list | map('regex_replace', '(.*)', 'Vlan\\1') | list }}"
-        - to_be_vlan_count: "{{ to_be_vlan_list | length }}"
-        - as_is_vlan_count: "{{ as_is_vlan_list | length }}"
-        - intersect_vlan_count: "{{ to_be_vlan_list | intersect(as_is_vlan_list) | length }}"
-      fail:
-        msg: "WARNING: Following VLAN missing in VRF '{{ item.name }}': {{ to_be_vlan_list | difference(as_is_vlan_list) | flatten | join(',') }}"
-      with_items: "{{ services_params.vrfs }}"
-      when:
-        - item.name == "default"
-        - intersect_vlan_count < to_be_vlan_count
-      tags:
-      - validate
-      - postdeploy
-    #  The task fails if one or more VRFs (defined in services.yml) already exist
-    - name: Checking for VRFs
-#      ignore_errors: True
-      fail:
-        msg: "WARNING: VRF '{{item.name}}' already exists on device '{{inventory_hostname}}'"
-      with_items: "{{services_params.vrfs}}"
-      when: "item.name in nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list"
-      tags:
-      - predeploy
-    #  The task fails if one or more L3 VLANs (defined in services.yml) already exist
-    - name: Checking for L3 VLANs
-#      ignore_errors: True
-      vars:
-        - to_be_vlan_list: "{{ (item.vlans | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
-        - as_is_vlan_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_if.ROW_if | json_query(jsonquery) }}"
-        - jsonquery: "[?vrf_name=='{{ item.name }}'].if_name"
-        - to_be_vlan_count: "{{ to_be_vlan_list | length }}"
-        - as_is_vlan_count: "{{ as_is_vlan_list | length }}"
-        - intersect_vlan_count: "{{ to_be_vlan_list | intersect(as_is_vlan_list) | length }}"
-      fail:
-        msg: "WARNING: Following VLAN already exist in VRF '{{ item.name }}': {{ to_be_vlan_list | intersect(as_is_vlan_list) | flatten | join(',') }}"
-      with_items: "{{ services_params.vrfs }}"
-      when:
-        - item.name != "default"
-        - intersect_vlan_count > 0
-      tags:
-      - predeploy
-    #  The task fails if one or more L2 VLANs (defined in services.yml) already exist
-    - name: Checking for L2 VLANs
-#      ignore_errors: True
-      vars:
-        - to_be_vlan_list: "{{ (item.vlans | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
-        - as_is_vlan_list: "{{ vlan_list | map('regex_replace', '(.*)', 'Vlan\\1') | list }}"
-        - to_be_vlan_count: "{{ to_be_vlan_list | length }}"
-        - as_is_vlan_count: "{{ as_is_vlan_list | length }}"
-        - intersect_vlan_count: "{{ to_be_vlan_list | intersect(as_is_vlan_list) | length }}"
-      fail:
-        msg: "WARNING: Following VLAN already exist in VRF '{{ item.name }}': {{ to_be_vlan_list | intersect(as_is_vlan_list) | flatten | join(',') }}"
-      with_items: "{{ services_params.vrfs }}"
-      when:
-        - item.name == "default"
-        - intersect_vlan_count > 0
-      tags:
-      - predeploy
+#      tags:
+#      - validate
+#      - postdeploy
+#      - predeploy
       
     rescue:
     - name: Include rescue tasks
       include_tasks: rescue.yml
+    tags:
+    - postdeploy
+    - validate
+    - predeploy
+    
+  - block:
+    - name: Include leaf specific validate tasks
+      include_tasks: leaf_validate.yml
+      vars:
+       - to_be_vlan_list: "{{ (item.vlans | selectattr("state", "present") | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
+       - as_is_svi_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_if.ROW_if | json_query(jsonquery) }}"
+       - as_is_vlan_list: "{{ vlan_list | map('regex_replace', '(.*)', 'Vlan\\1') | list }}"
+       - jsonquery: "[?vrf_name=='{{ item.name }}'].if_name"
+       - to_be_vlan_count: "{{ to_be_vlan_list | length }}"
+       - as_is_vlan_count: "{{ as_is_vlan_list | length }}"
+       - intersect_vlan_count: "{{ to_be_vlan_list | intersect(as_is_vlan_list) | length }}"
+    # # Gathering generic facts in order to get info about interfaces and VLAN list
+    # - name: Gathering leaf info
+      # register: nxos_facts_leaf_out
+      # nxos_facts:
+        # gather_subset: all
+      # tags:
+      # - validate
+      # - postdeploy
+      # - predeploy
+    # # Gathering info about VRFs
+    # - name: Running 'show vrf' on remote devices
+      # nxos_command:
+        # commands: 
+          # - command: show vrf
+            # output: json
+      # register: nxos_vrf_leaf_out
+      # tags:
+      # - validate
+      # - postdeploy
+      # - predeploy
+    # # Gathering info about VLAN to VRF mapping
+    # - name: Running 'show vrf all interface' on remote devices
+      # nxos_command:
+        # commands: 
+          # - command: show vrf all interface
+            # output: json
+      # register: nxos_vlan_leaf_out
+      # tags:
+      # - validate
+      # - postdeploy
+      # - predeploy
+    # #  The task fails if one or more VRFs (defined in services.yml) are not found
+    # - name: Checking for VRFs
+      # ignore_errors: True
+      # fail:
+        # msg: "WARNING: VRF '{{item.name}}' not found on device '{{inventory_hostname}}'"
+      # with_items: "{{services_params.vrfs}}"
+      # when: "item.name not in nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list"
+      # tags:
+      # - validate
+      # - postdeploy
+    # #  The task fails if one or more L3 VLANs (defined in services.yml) are not found
+    # - name: Checking for L3 VLANs
+      # ignore_errors: True
+      # vars:
+        # - to_be_vlan_list: "{{ (item.vlans | selectattr("state", "present") | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
+        # - as_is_vlan_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_if.ROW_if | json_query(jsonquery) }}"
+        # - jsonquery: "[?vrf_name=='{{ item.name }}'].if_name"
+        # - to_be_vlan_count: "{{ to_be_vlan_list | length }}"
+        # - as_is_vlan_count: "{{ as_is_vlan_list | length }}"
+        # - intersect_vlan_count: "{{ to_be_vlan_list | intersect(as_is_vlan_list) | length }}"
+      # fail:
+        # msg: "WARNING: Following VLAN missing in VRF '{{ item.name }}': {{ to_be_vlan_list | difference(as_is_vlan_list) | flatten | join(',') }}"
+      # with_items: "{{ services_params.vrfs }}"
+      # when:
+        # - item.name != "default"
+        # - intersect_vlan_count < to_be_vlan_count
+      # tags:
+      # - validate
+      # - postdeploy
+    # #  The task fails if one or more L2 VLANs (defined in services.yml) are not found
+    # - name: Checking for L2 VLANs
+      # ignore_errors: True
+      # vars:
+        # - to_be_vlan_list: "{{ (item.vlans | selectattr("state", "present") | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
+        # - as_is_vlan_list: "{{ vlan_list | map('regex_replace', '(.*)', 'Vlan\\1') | list }}"
+        # - to_be_vlan_count: "{{ to_be_vlan_list | length }}"
+        # - as_is_vlan_count: "{{ as_is_vlan_list | length }}"
+        # - intersect_vlan_count: "{{ to_be_vlan_list | intersect(as_is_vlan_list) | length }}"
+      # fail:
+        # msg: "WARNING: Following VLAN missing in VRF '{{ item.name }}': {{ to_be_vlan_list | difference(as_is_vlan_list) | flatten | join(',') }}"
+      # with_items: "{{ services_params.vrfs }}"
+      # when:
+        # - item.name == "default"
+        # - intersect_vlan_count < to_be_vlan_count
+      # tags:
+      # - validate
+      # - postdeploy
+    # #  The task fails if one or more VRFs (defined in services.yml) already exist
+    # - name: Checking for VRFs
+# #      ignore_errors: True
+      # fail:
+        # msg: "WARNING: VRF '{{item.name}}' already exists on device '{{inventory_hostname}}'"
+      # with_items: "{{services_params.vrfs}}"
+      # when: "item.name in nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list"
+      # tags:
+      # - predeploy
+    # #  The task fails if one or more L3 VLANs (defined in services.yml) already exist
+    # - name: Checking for L3 VLANs
+# #      ignore_errors: True
+      # vars:
+        # - to_be_vlan_list: "{{ (item.vlans | selectattr("state", "present") | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
+        # - as_is_vlan_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_if.ROW_if | json_query(jsonquery) }}"
+        # - jsonquery: "[?vrf_name=='{{ item.name }}'].if_name"
+        # - to_be_vlan_count: "{{ to_be_vlan_list | length }}"
+        # - as_is_vlan_count: "{{ as_is_vlan_list | length }}"
+        # - intersect_vlan_count: "{{ to_be_vlan_list | intersect(as_is_vlan_list) | length }}"
+      # fail:
+        # msg: "WARNING: Following VLAN already exist in VRF '{{ item.name }}': {{ to_be_vlan_list | intersect(as_is_vlan_list) | flatten | join(',') }}"
+      # with_items: "{{ services_params.vrfs }}"
+      # when:
+        # - item.name != "default"
+        # - intersect_vlan_count > 0
+      # tags:
+      # - predeploy
+    # #  The task fails if one or more L2 VLANs (defined in services.yml) already exist
+    # - name: Checking for L2 VLANs
+# #      ignore_errors: True
+      # vars:
+        # - to_be_vlan_list: "{{ (item.vlans | selectattr("state", "present") | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
+        # - as_is_vlan_list: "{{ vlan_list | map('regex_replace', '(.*)', 'Vlan\\1') | list }}"
+        # - to_be_vlan_count: "{{ to_be_vlan_list | length }}"
+        # - as_is_vlan_count: "{{ as_is_vlan_list | length }}"
+        # - intersect_vlan_count: "{{ to_be_vlan_list | intersect(as_is_vlan_list) | length }}"
+      # fail:
+        # msg: "WARNING: Following VLAN already exist in VRF '{{ item.name }}': {{ to_be_vlan_list | intersect(as_is_vlan_list) | flatten | join(',') }}"
+      # with_items: "{{ services_params.vrfs }}"
+      # when:
+        # - item.name == "default"
+        # - intersect_vlan_count > 0
+      # tags:
+      # - predeploy
+      
+    rescue:
+    - name: Include rescue tasks
+      include_tasks: rescue.yml
+    tags:
+    - postdeploy
