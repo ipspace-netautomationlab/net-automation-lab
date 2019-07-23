@@ -189,7 +189,7 @@
       - predeploy
       
     - debug: 
-       msg: "{{item}}"
+       msg: "{{vrf}}"
       tags:
       - validate
       - postdeploy
