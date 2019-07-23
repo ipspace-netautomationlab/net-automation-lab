@@ -133,65 +133,8 @@
   gather_facts: no
   hosts: leaf
   remote_user: netadmin
-  # vars_files: ../inventory/vars/services.yml
-  tasks:
-#  - block:
-#    # Gathering generic facts in order to get info about interfaces and VLAN list
-#    - name: Gathering leaf info
-#      register: nxos_facts_leaf_out
-#      nxos_facts:
-#        gather_subset: all
-##      tags:
-##      - validate
-##      - postdeploy
-##      - predeploy
-#      
-#    # Gathering info about VRFs
-#    - name: Running 'show vrf' on remote devices
-#      nxos_command:
-#        commands: 
-#          - command: show vrf
-#            output: json
-#      register: nxos_vrf_leaf_out
-##      tags:
-##      - validate
-##      - postdeploy
-##      - predeploy
-#      
-#    # Gathering info about VLAN to VRF mapping
-#    - name: Running 'show vrf all interface' on remote devices
-#      nxos_command:
-#        commands: 
-#          - command: show vrf all interface
-#            output: json
-#      register: nxos_vlan_leaf_out
-##      tags:
-##      - validate
-##      - postdeploy
-##      - predeploy
-#      
-#    rescue:
-#    - name: Include rescue tasks
-#      include_tasks: rescue.yml
-#    tags:
-#    - postdeploy
-#    - validate
-#    - predeploy
-    
+  tasks:  
   - block:
-#    vars:
-#     to_be_created_vlan_list: "{{ (item.vlans | selectattr('state', 'equalto', 'present') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
-#     to_be_deleted_vlan_list: "{{ (item.vlans | selectattr('state', 'absent') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
-#     to_be_created_svi_list: "{{ (item.vlans | selectattr('state', 'equalto', 'present') | selectattr('ipaddr', 'defined') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
-#     as_is_svi_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_if.ROW_if | json_query(jsonquery) }}"
-#     as_is_vlan_list: "{{ vlan_list | map('regex_replace', '(.*)', 'Vlan\\1') | list }}"
-#     jsonquery: "[?vrf_name=='{{ item.name }}'].if_name"
-#     to_be_created_vlan_count: "{{ to_be_created_vlan_list | length }}"
-#     as_is_vlan_count: "{{ as_is_vlan_list | length }}"
-#     intersect_vlan_count: "{{ to_be_created_vlan_list | intersect(as_is_vlan_list) | length }}"
-#     intersect_svi_count: "{{ to_be_created_svi_list | intersect(as_is_svi_list) | length }}"
-     #  The task fails if one or more VRFs (defined in services.yml) are not found
-#    - debug: msg="{{a+b}}"
         # Gathering generic facts in order to get info about interfaces and VLAN list
     - name: Gathering leaf info
       register: nxos_facts_leaf_out
@@ -226,23 +169,33 @@
       - postdeploy
       - predeploy
 
-    - set_fact:
-       to_be_created_vlan_list: "{{ (item.vlans | selectattr('state', 'equalto', 'present') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
-       to_be_deleted_vlan_list: "{{ (item.vlans | selectattr('state', 'absent') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
-       to_be_created_svi_list: "{{ (item.vlans | selectattr('state', 'equalto', 'present') | selectattr('ipaddr', 'defined') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
-       as_is_svi_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_if.ROW_if | json_query(jsonquery) }}"
-       as_is_vlan_list: "{{ vlan_list | map('regex_replace', '(.*)', 'Vlan\\1') | list }}"
-       jsonquery: "[?vrf_name=='{{ item.name }}'].if_name"
-       to_be_created_vlan_count: "{{ to_be_created_vlan_list | length }}"
-       as_is_vlan_count: "{{ as_is_vlan_list | length }}"
-       intersect_vlan_count: "{{ to_be_created_vlan_list | intersect(as_is_vlan_list) | length }}"
-       intersect_svi_count: "{{ to_be_created_svi_list | intersect(as_is_svi_list) | length }}"
+    - name: setting vars
+      set_fact:
+        vrf: "{{item}}"
+#       - to_be_created_vlan_list: "{{ (item.vlans | selectattr('state', 'equalto', 'present') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
+#       - to_be_deleted_vlan_list: "{{ (item.vlans | selectattr('state', 'absent') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
+#       - to_be_created_svi_list: "{{ (item.vlans | selectattr('state', 'equalto', 'present') | selectattr('ipaddr', 'defined') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
+#       - as_is_svi_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_if.ROW_if | json_query(jsonquery) }}"
+#       - as_is_vlan_list: "{{ vlan_list | map('regex_replace', '(.*)', 'Vlan\\1') | list }}"
+#       - jsonquery: "[?vrf_name=='{{ item.name }}'].if_name"
+#       to_be_created_vlan_count: "{{ to_be_created_vlan_list | length }}"
+#       as_is_vlan_count: "{{ as_is_vlan_list | length }}"
+#       intersect_vlan_count: "{{ to_be_created_vlan_list | intersect(as_is_vlan_list) | length }}"
+#       intersect_svi_count: "{{ to_be_created_svi_list | intersect(as_is_svi_list) | length }}"
       with_items: "{{ services_params.vrfs }}"
       tags:
       - validate
       - postdeploy
       - predeploy
-            
+      
+    - debug: 
+       msg: "{{item}}"
+      tags:
+      - validate
+      - postdeploy
+      - predeploy
+           
+     #  The task fails if one or more VRFs (defined in services.yml) are not found           
     - name: Checking for VRFs
       ignore_errors: True
       fail:
@@ -312,18 +265,6 @@
         - intersect_vlan_count > 0
       tags:
       - predeploy
-      
-#    vars:
-#     - to_be_created_vlan_list: "{{ (item.vlans | selectattr('state', 'equalto', 'present') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
-#     - to_be_deleted_vlan_list: "{{ (item.vlans | selectattr('state', 'absent') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
-#     - to_be_created_svi_list: "{{ (item.vlans | selectattr('state', 'equalto', 'present') | selectattr('ipaddr', 'defined') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
-#     - as_is_svi_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_if.ROW_if | json_query(jsonquery) }}"
-#     - as_is_vlan_list: "{{ vlan_list | map('regex_replace', '(.*)', 'Vlan\\1') | list }}"
-#     - jsonquery: "[?vrf_name=='{{ item.name }}'].if_name"
-#     - to_be_created_vlan_count: "{{ to_be_created_vlan_list | length }}"
-#     - as_is_vlan_count: "{{ as_is_vlan_list | length }}"
-#     - intersect_vlan_count: "{{ to_be_created_vlan_list | intersect(as_is_vlan_list) | length }}"
-#     - intersect_svi_count: "{{ to_be_created_svi_list | intersect(as_is_svi_list) | length }}"
     
     rescue:
     - name: Include rescue tasks
