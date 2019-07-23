@@ -191,6 +191,7 @@
 #     intersect_vlan_count: "{{ to_be_created_vlan_list | intersect(as_is_vlan_list) | length }}"
 #     intersect_svi_count: "{{ to_be_created_svi_list | intersect(as_is_svi_list) | length }}"
      #  The task fails if one or more VRFs (defined in services.yml) are not found
+    - debug: msg="{{a+b}}"
     - name: Checking for VRFs
       ignore_errors: True
       fail:
@@ -260,6 +261,10 @@
         - intersect_vlan_count > 0
       tags:
       - predeploy
+      
+    vars:
+        - a: 42
+        - b: 31
     
     rescue:
     - name: Include rescue tasks
