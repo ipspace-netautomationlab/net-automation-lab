@@ -171,7 +171,7 @@
 
     - name: setting vars
       set_fact:
-        vrf: "{{item}}"
+        vrf: "{{item.vlans}}"
 #       - to_be_created_vlan_list: "{{ (item.vlans | selectattr('state', 'equalto', 'present') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
 #       - to_be_deleted_vlan_list: "{{ (item.vlans | selectattr('state', 'absent') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
 #       - to_be_created_svi_list: "{{ (item.vlans | selectattr('state', 'equalto', 'present') | selectattr('ipaddr', 'defined') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
