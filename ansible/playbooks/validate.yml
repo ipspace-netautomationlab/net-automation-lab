@@ -313,3 +313,5 @@
       include_tasks: rescue.yml
     tags:
     - postdeploy
+    - validate
+    - predeploy  
