@@ -1,122 +1,98 @@
-{# !
-fabric forwarding anycast-gateway-mac {{ generic_global_params.anycast_gateway_mac }} #}
 !
 !
-{% for vrf in services_params.vrfs %}
+{% if vrf_state == "create" or vrf_state == "modify" ) %}
 {% if vrf.name != "default" %}
-vrf context {{ vrf.name }}
-  vni {{ vrf.id | int + 1000 }}
+vrf context {{ vrf_name }}
+  vni {{ vrf_id | int + 1000 }}
   ip pim ssm range {{ pim_global_params.ssm_multicast_group }}
-  rd 1:{{ vrf.id }}
+  rd 1:{{ vrf_id }}
   address-family ipv4 unicast
-    route-target both 1:{{ vrf.id }}
-    route-target both 1:{{ vrf.id }} evpn
-!
-{% endif %}
-{% endfor %}
+    route-target both 1:{{ vrf_id }}
+    route-target both 1:{{ vrf_id }} evpn
 !
 router bgp {{ bgp_global_params.local_as | int }}
-{% for vrf in services_params.vrfs %}
-{% if vrf.name != "default" %}
-  vrf {{ vrf.name }}
+  vrf {{ vrf_name }}
     address-family ipv4 unicast
       advertise l2vpn evpn
-{% endif %}
-{% endfor %}
 !
-{% for vrf in services_params.vrfs %}
-{% if vrf.name != "default" %}
-vlan {{ vrf.id | int + 1000 }}
- name l3-{{ vrf.name}}
- vn-segment {{ vrf.id | int + 1000 }}
+vlan {{ vrf_id | int + 1000 }}
+ name l3-{{ vrf_name}}
+ vn-segment {{ vrf_id | int + 1000 }}
 !
-{% endif %}
-{% for vlan in vrf.vlans %}
-{% if vlan.state == "present" %}
-vlan {{ vlan.id | int }}
-  name {{ vlan.name }}
-  vn-segment {{ vlan.id | int + 10000}}
-!
-{% elif vlan.state == "absent" %}
-no vlan {{ vlan.id | int }}
-!
-{% else %}
-!
-{% endif %}
-{% endfor %}
-{% endfor %}
-!
-{% for vrf in services_params.vrfs %}
-{% if vrf.name != "default" %}
-interface Vlan{{ vrf.id | int + 1000 }}
-  description l3-{{ vrf.name }}
+interface Vlan{{ vrf_id | int + 1000 }}
+  description l3-{{ vrf_name }}
   no shutdown
   mtu {{ phyif_global_params.mtu | int }}
-  vrf member {{ vrf.name }}
+  vrf member {{ vrf_name }}
   no ip redirects
   ip forward
   no ipv6 redirects
 !
+interface nve1
+  member vni {{ vrf_id | int + 1000 }} associate-vrf
+!
 {% endif %}
-{% for vlan in vrf.vlans %}
-{% if vlan.ipaddr is defined %}
-{% if vlan.state == "present" %}
-interface Vlan{{ vlan.id | int }}
-  description {{ vlan.description }}
-  no shutdown
-  mtu {{ vlanif_global_params.mtu | int }}
-  vrf member {{ vrf.name }}
-  ip address {{ vlan.ipaddr | ipaddr }}
-  fabric forwarding mode anycast-gateway
-!
-{% elif vlan.state == "absent" %}
-no interface vlan {{ vlan.id | int }}
-!
-{% else %}
-!
-{%endif%}
-{%endif%}
-{% endfor %}
-{% endfor %}
+{% elif vrf_state == "delete" %}
 !
 interface nve1
-{#   no shutdown
-  host-reachability protocol bgp
-  source-interface loopback0 #}
-{% for vrf in services_params.vrfs %}
-{% if vrf.name != "default" %}
-  member vni {{ vrf.id | int + 1000 }} associate-vrf
-{% for vlan in vrf.vlans %}
-{% if vlan.state == "present" %}
-  member vni {{ vlan.id | int + 10000 }}
-    suppress-arp
-    mcast-group 239.1.0.{{ vrf.id }}
-{% elif vlan.state == "absent" %}
-  no member vni {{ vlan.id | int + 10000 }}
+  no member vni {{ vrf_id | int + 1000 }} associate-vrf
+!
+no interface Vlan{{ vrf_id | int + 1000 }}
+!
+no vlan {{ vrf_id | int + 1000 }}
+!
+router bgp {{ bgp_global_params.local_as | int }}
+  no vrf {{ vrf_name }}
+!
+no vrf context {{ vrf_name }}
 !
 {% else %}
-!
-{%endif%}
-{% endfor %}
 {% endif %}
-{% endfor %}
+!
+{% if ( vlan_state == "create" or vlan_state == "modify" ) %}
+vlan {{ vlan_id | int }}
+  name {{ vlan_name }}
+  vn-segment {{ vlan_id | int + 10000}}
+!
+{% if vlan_ipaddr is defined %}
+interface Vlan{{ vlan_id | int }}
+  description {{ vlan_descr }}
+  no shutdown
+  mtu {{ vlanif_global_params.mtu | int }}
+  vrf member {{ vrf_name }}
+  ip address {{ vlan_ipaddr | ipaddr }}
+  fabric forwarding mode anycast-gateway
+!
+{% endif %}
+!
+interface nve1
+  member vni {{ vlan_id | int + 10000 }}
+    suppress-arp
+    mcast-group 239.1.0.{{ vrf_id }}
 !
 evpn
-{% for vrf in services_params.vrfs %}
-{% for vlan in vrf.vlans %}
-{% if vlan.state == "present" %}
- vni {{ vlan.id | int + 10000 }} l2
-    rd {{ generic_params.id }}:{{ vlan.id | int + 10000 }}
-    route-target import 1:{{ vlan.id | int + 10000 }}
-    route-target export 1:{{ vlan.id | int + 10000 }}
-{% elif vlan.state == "absent" %}
- no vni {{ vlan.id | int + 10000 }} l2
+ vni {{ vlan_id | int + 10000 }} l2
+    rd {{ generic_params.id }}:{{ vlan_id | int + 10000 }}
+    route-target import 1:{{ vlan_id | int + 10000 }}
+    route-target export 1:{{ vlan_id | int + 10000 }}
+!
+{% elif vlan_state == "delete" %}
+no vlan {{ vlan_id | int }}
+!
+{% if vlan_ipaddr is defined %}
+no interface vlan {{ vlan_id | int }}
+!
+{% endif %}
+!
+interface nve1
+  no member vni {{ vlan_id | int + 10000 }}
+!
+evpn
+ no vni {{ vlan_id | int + 10000 }} l2
 !
 {% else %}
 !
-{%endif%}
-{% endfor %}
-{% endfor %}
+{% endif %}
 !
 !
 {% for interface in overlay.interfaces.phy.trunk %}
