@@ -187,7 +187,7 @@
 #        to_be_deleted_vlan_list: "{{ (item.vlans | selectattr('state', 'equalto', 'absent') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
 #        to_be_created_svi_list: "{{ (item.vlans | selectattr('state', 'equalto', 'present') | selectattr('ipaddr', 'defined') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
         vrf_list: "{{ nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list }}"
-        vlan_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_vlanbrief.ROW_vlanbrief | map(attribute='vlanid') | list }}"
+        vlan_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_vlanbrief.ROW_vlanbrief | map(attribute='vlanshowbr-vlanid') | list }}"
 #        vrf_list: "{{ nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | json_query([?vrf_name=='{{newvrf}}'].vrf_id) }}"
 #        jsonquery: "[?vrf_name=='{{ item.name }}'].if_name"
 #        as_is_svi_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_if.ROW_if | json_query(jsonquery) }}"
