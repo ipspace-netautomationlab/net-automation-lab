@@ -1,6 +1,6 @@
 !
 !
-{% if vrf_state == "create" or vrf_state == "modify" ) %}
+{% if ( vrf_state == "create" or vrf_state == "modify" ) %}
 {% if vrf.name != "default" %}
 vrf context {{ vrf_name }}
   vni {{ vrf_id | int + 1000 }}
