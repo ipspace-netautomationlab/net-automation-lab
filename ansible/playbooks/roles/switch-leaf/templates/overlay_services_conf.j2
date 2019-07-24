@@ -2,7 +2,7 @@
 !
 {% if vrf_state is defined %}
 {% if ( vrf_state == "create" or vrf_state == "modify" ) %}
-{% if vrf.name != "default" %}
+{% if vrf_name != "default" %}
 vrf context {{ vrf_name }}
   vni {{ vrf_id | int + 1000 }}
   ip pim ssm range {{ pim_global_params.ssm_multicast_group }}
