@@ -133,17 +133,15 @@
   gather_facts: no
   hosts: leaf
   remote_user: netadmin
-  tasks:  
-  - block:
-    # Gathering generic facts in order to get info about interfaces and VLAN list
+  pre_tasks:
     - name: Gathering leaf info
       register: nxos_facts_leaf_out
       nxos_facts:
         gather_subset: all
-#      tags:
-#      - validate
-#      - postdeploy
-#      - predeploy
+      tags:
+      - validate
+      - postdeploy
+      - predeploy
       
     # Gathering info about VRFs
     - name: Running 'show vrf' on remote devices
@@ -152,10 +150,10 @@
           - command: show vrf
             output: json
       register: nxos_vrf_leaf_out
-#      tags:
-#      - validate
-#      - postdeploy
-#      - predeploy
+      tags:
+      - validate
+      - postdeploy
+      - predeploy
     
     # Gathering info about VLANs
     - name: Running 'show vlan' on remote devices
@@ -164,27 +162,19 @@
           - command: show vlan
             output: json
       register: nxos_vlan_leaf_out
-#    tags:
-#    - validate
-#    - postdeploy
-#    - predeploy
-    
-#  # Gathering info about VLAN to VRF mapping
-#  - name: Running 'show vrf all interface' on remote devices
-#    nxos_command:
-#      commands: 
-#        - command: show vrf all interface
-#          output: json
-#    register: nxos_vlan_leaf_out
-#    tags:
-#    - validate
-#    - postdeploy
-#    - predeploy
+      tags:
+      - validate
+      - postdeploy
+      - predeploy
 
     - name: setting vars
       set_fact:
         vrf_list: "{{ nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list }}"
         vlan_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_vlanbrief.ROW_vlanbrief | map(attribute='vlanshowbr-vlanid') | list }}"
+      tags:
+      - validate
+      - postdeploy
+      - predeploy
         
     - debug: 
        msg: "{{vlan_list}}"
@@ -192,20 +182,15 @@
       - validate
       - postdeploy
       - predeploy
-    tags:
-    - validate
-    - postdeploy
-    - predeploy
-    
+      
 #    - debug: 
 #       msg: "{{vrf_list}}"
 #      tags:
 #      - validate
 #      - postdeploy
 #      - predeploy
-#
-
- 
+     
+  tasks:  
   - block:
     #  The task fails if VRF to be created or modified is not found           
     - name: postdeploy - Checking for VRFs to be created or modified
@@ -258,6 +243,12 @@
     - validate
     
   - block:
+    - debug: 
+       msg: "{{vlan_list}}"
+      tags:
+      - validate
+      - postdeploy
+      - predeploy
     #  The task fails if VRF to be created is found           
     - name: predeploy - Checking for VRFs to be created
 #      ignore_errors: True
