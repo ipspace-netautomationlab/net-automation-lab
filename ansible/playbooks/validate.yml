@@ -222,7 +222,7 @@
       fail:
         msg: "WARNING: VRF '{{item.name}}' not found on device '{{inventory_hostname}}'"
 #      with_items: "{{services_params.vrfs}}"
-      when: "vrf_state is defined and vrf_state == "create" and vrf_name in vrf_list"
+      when: (vrf_state is defined and vrf_state == "create" and vrf_name in vrf_list)
 #      when: "vrf_name not in nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list"
       tags:
       - validate
