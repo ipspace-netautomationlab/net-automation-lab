@@ -57,7 +57,7 @@ vlan {{ vlan_id | int }}
   name {{ vlan_name }}
   vn-segment {{ vlan_id | int + 10000}}
 !
-{% if vlan_ipaddr is defined %}
+{% if vlan_ipaddr is defined and vlan_ipaddr | length %}
 interface Vlan{{ vlan_id | int }}
   description {{ vlan_descr }}
   no shutdown
@@ -82,7 +82,7 @@ evpn
 {% elif vlan_state == "delete" %}
 no vlan {{ vlan_id | int }}
 !
-{% if vlan_ipaddr is defined %}
+{% if vlan_ipaddr is defined and vlan_ipaddr | length %}
 no interface vlan {{ vlan_id | int }}
 !
 {% endif %}
