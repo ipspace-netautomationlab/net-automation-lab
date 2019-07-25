@@ -197,12 +197,12 @@
 #      - postdeploy
 #      - predeploy
 #
-#    - debug: 
-#       msg: "{{vlan_list}}"
-#      tags:
-#      - validate
-#      - postdeploy
-#      - predeploy
+    - debug: 
+       msg: "{{vlan_list}}"
+      tags:
+      - validate
+      - postdeploy
+      - predeploy
  
   - block:
     #  The task fails if VRF to be created or modified is not found           
