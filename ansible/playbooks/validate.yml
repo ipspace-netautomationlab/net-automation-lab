@@ -135,15 +135,15 @@
   remote_user: netadmin
   tasks:  
   - block:
-        # Gathering generic facts in order to get info about interfaces and VLAN list
+    # Gathering generic facts in order to get info about interfaces and VLAN list
     - name: Gathering leaf info
       register: nxos_facts_leaf_out
       nxos_facts:
         gather_subset: all
-      tags:
-      - validate
-      - postdeploy
-      - predeploy
+#      tags:
+#      - validate
+#      - postdeploy
+#      - predeploy
       
     # Gathering info about VRFs
     - name: Running 'show vrf' on remote devices
@@ -152,11 +152,11 @@
           - command: show vrf
             output: json
       register: nxos_vrf_leaf_out
-      tags:
-      - validate
-      - postdeploy
-      - predeploy
- 
+#      tags:
+#      - validate
+#      - postdeploy
+#      - predeploy
+    
     # Gathering info about VLANs
     - name: Running 'show vlan' on remote devices
       nxos_command:
@@ -164,44 +164,32 @@
           - command: show vlan
             output: json
       register: nxos_vlan_leaf_out
-      tags:
-      - validate
-      - postdeploy
-      - predeploy
-      
-#    # Gathering info about VLAN to VRF mapping
-#    - name: Running 'show vrf all interface' on remote devices
-#      nxos_command:
-#        commands: 
-#          - command: show vrf all interface
-#            output: json
-#      register: nxos_vlan_leaf_out
-#      tags:
-#      - validate
-#      - postdeploy
-#      - predeploy
+#    tags:
+#    - validate
+#    - postdeploy
+#    - predeploy
+    
+#  # Gathering info about VLAN to VRF mapping
+#  - name: Running 'show vrf all interface' on remote devices
+#    nxos_command:
+#      commands: 
+#        - command: show vrf all interface
+#          output: json
+#    register: nxos_vlan_leaf_out
+#    tags:
+#    - validate
+#    - postdeploy
+#    - predeploy
 
     - name: setting vars
       set_fact:
-#        to_be_created_vlan_list: "{{ (item.vlans | selectattr('state', 'equalto', 'present') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
-#        to_be_deleted_vlan_list: "{{ (item.vlans | selectattr('state', 'equalto', 'absent') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
-#        to_be_created_svi_list: "{{ (item.vlans | selectattr('state', 'equalto', 'present') | selectattr('ipaddr', 'defined') | map(attribute='id') | map('regex_replace', '(.*)', 'Vlan\\1') | list) }}"
         vrf_list: "{{ nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list }}"
         vlan_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_vlanbrief.ROW_vlanbrief | map(attribute='vlanshowbr-vlanid') | list }}"
-#        vrf_list: "{{ nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | json_query([?vrf_name=='{{newvrf}}'].vrf_id) }}"
-#        jsonquery: "[?vrf_name=='{{ item.name }}'].if_name"
-#        as_is_svi_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_if.ROW_if | json_query(jsonquery) }}"
-#        as_is_vlan_list: "{{ vlan_list | map('regex_replace', '(.*)', 'Vlan\\1') | list }}"
-#        to_be_created_vlan_count: "{{ to_be_created_vlan_list | length }}"
-#        as_is_vlan_count: "{{ as_is_vlan_list | length }}"
-#        intersect_vlan_count: "{{ to_be_created_vlan_list | intersect(as_is_vlan_list) | length }}"
-#        intersect_svi_count: "{{ to_be_created_svi_list | intersect(as_is_svi_list) | length }}"
-#      with_items: "{{ services_params.vrfs }}"
-      tags:
-      - validate
-      - postdeploy
-      - predeploy
-      
+    tags:
+    - validate
+    - postdeploy
+    - predeploy
+    
 #    - debug: 
 #       msg: "{{vrf_list}}"
 #      tags:
@@ -215,66 +203,17 @@
 #      - validate
 #      - postdeploy
 #      - predeploy
-      
-#    #  The task fails if one or more VRFs (defined in services.yml) are not found           
-#    - name: Checking for VRFs
-#      ignore_errors: True
-#      fail:
-#        msg: "WARNING: VRF '{{vrf_name}}' already existing on device '{{inventory_hostname}}'"
-##      with_items: "{{services_params.vrfs}}"
-#      when: (vrf_state is defined and vrf_state == "create" and vrf_name in vrf_list)
-##      when: "vrf_name not in nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list"
-#      tags:
-#      - validate
-#      - postdeploy
-#           
-#    #  The task fails if one or more VRFs (defined in services.yml) are not found           
-#    - name: Checking for VRFs
-#      ignore_errors: True
-#      fail:
-#        msg: "WARNING: VRF '{{item.name}}' not found on device '{{inventory_hostname}}'"
-##      with_items: "{{services_params.vrfs}}"
-#      when: "vrf_name not in nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list"
-#      tags:
-#      - validate
-#      - postdeploy
-#      
-#    #  The task fails if one or more L3 VLANs (defined in services.yml) are not found
-#    - name: Checking for VLANs with SVIs
-#      ignore_errors: True
-#      fail:
-#        msg: "WARNING: Following VLAN missing in VRF '{{ item.name }}': {{ to_be_created_svi_list | difference(as_is_svi_list) | flatten | join(',') }}"
-#      with_items: "{{ services_params.vrfs }}"
-#      when:
-#        - item.name != "default"
-#        - intersect_svi_count < to_be_created_svi_count
-#      tags:
-#      - validate
-#      - postdeploy
-#      
-#    #  The task fails if one or more L2 VLANs (defined in services.yml) are not found
-#    - name: Checking for L2 VLANs
-#      ignore_errors: True
-#      fail:
-#        msg: "WARNING: Following VLAN missing in VRF '{{ item.name }}': {{ to_be_created_vlan_list | difference(as_is_vlan_list) | flatten | join(',') }}"
-#      with_items: "{{ services_params.vrfs }}"
-#      when:
-#        - item.name == "default"
-#        - intersect_vlan_count < to_be_created_vlan_count
-#      tags:
-#      - validate
-#      - postdeploy
  
-
+  - block:
     #  The task fails if VRF to be created or modified is not found           
     - name: postdeploy - Checking for VRFs to be created or modified
       ignore_errors: True
       fail:
         msg: "WARNING: VRF '{{vrf_name}}' is not existing on device '{{inventory_hostname}}'"
       when: (vrf_state is defined and ( vrf_state == "create" or vrf_state == "modify" )and vrf_name not in vrf_list)
-      tags:
-      - validate
-      - postdeploy
+#      tags:
+#      - validate
+#      - postdeploy
     
     #  The task fails if VRF to be deleted is found           
     - name: postdeploy - Checking for VRFs to be deleted
@@ -282,9 +221,9 @@
       fail:
         msg: "WARNING: VRF '{{vrf_name}}' is existing on device '{{inventory_hostname}}'"
       when: (vrf_state is defined and vrf_state == "delete" and vrf_name in vrf_list)
-      tags:
-      - validate
-      - postdeploy
+#      tags:
+#      - validate
+#      - postdeploy
       
     #  The task fails if VLAN to be created or modified is not found           
     - name: postdeploy - Checking for VLANs to be created or modified
@@ -292,9 +231,9 @@
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
       when: (vlan_state is defined and ( vlan_state == "create" or vlan_state == "modify" ) and vlan_id not in vlan_list)
-      tags:
-      - validate
-      - postdeploy
+#      tags:
+#      - validate
+#      - postdeploy
     
     #  The task fails if VLAN to be deleted is found           
     - name: postdeploy - Checking for VLANs to be deleted
@@ -302,53 +241,29 @@
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' is existing on device '{{inventory_hostname}}'"
       when: (vlan_state is defined and vlan_state == "delete" and vlan_id in vlan_list)
-      tags:
-      - validate
-      - postdeploy
+#      tags:
+#      - validate
+#      - postdeploy
 
- 
-#    #  The task fails if one or more VRFs (defined in services.yml) already exist
-#    - name: Checking for VRFs
-#      ignore_errors: True
-#      fail:
-#        msg: "WARNING: VRF '{{item.name}}' already exists on device '{{inventory_hostname}}'"
-#      with_items: "{{services_params.vrfs}}"
-#      when: "item.name in nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list"
+    rescue:
+    - name: Include rescue tasks
+      include_tasks: rescue.yml
 #      tags:
-#      - predeploy
-#      
-#    #  The task fails if one or more L3 VLANs (defined in services.yml) already exist
-#    - name: Checking for VLANs with SVIs
-#      ignore_errors: True
-#      fail:
-#        msg: "WARNING: Following VLAN already exist in VRF '{{ item.name }}': {{ to_be_svi_list | intersect(as_is_svi_list) | flatten | join(',') }}"
-#      with_items: "{{ services_params.vrfs }}"
-#      when:
-#        - item.name != "default"
-#        - intersect_svi_count > 0
-#      tags:
-#      - predeploy
-#      
-#    #  The task fails if one or more L2 VLANs (defined in services.yml) already exist
-#    - name: Checking for L2 VLANs
-#      ignore_errors: True
-#      fail:
-#        msg: "WARNING: Following VLAN already exist in VRF '{{ item.name }}': {{ to_be_vlan_list | intersect(as_is_vlan_list) | flatten | join(',') }}"
-#      with_items: "{{ services_params.vrfs }}"
-#      when:
-#        - item.name == "default"
-#        - intersect_vlan_count > 0
-#      tags:
-#      - predeploy
-
+#      - postdeploy
+#      - validate
+    tags:
+    - postdeploy
+    - validate
+    
+  - block:
     #  The task fails if VRF to be created is found           
     - name: predeploy - Checking for VRFs to be created
       ignore_errors: True
       fail:
         msg: "WARNING: VRF '{{vrf_name}}' already existing on device '{{inventory_hostname}}'"
       when: (vrf_state is defined and vrf_state == "create" and vrf_name in vrf_list)
-      tags:
-      - predeploy
+#      tags:
+#      - predeploy
     
     #  The task fails if VRF to be modified or deleted is not found           
     - name: predeploy - Checking for VRFs to be modified or deleted
@@ -356,8 +271,8 @@
       fail:
         msg: "WARNING: VRF '{{vrf_name}}' is not existing on device '{{inventory_hostname}}'"
       when: (vrf_state is defined and ( vrf_state == "modify" or vrf_state == "delete" ) and vrf_name not in vrf_list)
-      tags:
-      - predeploy
+#      tags:
+#      - predeploy
       
     #  The task fails if VLAN to be created is found           
     - name: predeploy - Checking for VLANs to be created
@@ -365,8 +280,8 @@
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' already existing on device '{{inventory_hostname}}'"
       when: (vlan_state is defined and vlan_state == "create" and vlan_id in vlan_list)
-      tags:
-      - predeploy
+#      tags:
+#      - predeploy
     
     #  The task fails if VLAN to be modified or deleted is not found           
     - name: predeploy - Checking for VLANs to be modified or deleted
@@ -374,16 +289,8 @@
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
       when: (vlan_state is defined and ( vlan_state == "modify" or vlan_state == "delete" ) and vlan_id not in vlan_list)
-      tags:
-      - predeploy
-    
-    rescue:
-    - name: Include rescue tasks
-      include_tasks: rescue.yml
-      tags:
-      - postdeploy
-      - validate
+#      tags:
+#      - predeploy
     tags:
-    - postdeploy
-    - validate
     - predeploy  
+
