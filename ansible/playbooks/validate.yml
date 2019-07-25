@@ -217,7 +217,7 @@
 #      ignore_errors: True
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
-      when: (vlan_state is defined and ( vlan_state == "create" or vlan_state == "modify" ) and vlan_id not in vlan_list)
+      when: (vlan_state is defined and ( vlan_state == "create" or vlan_state == "modify" ) and ( vlan_id | string ) not in vlan_list)
 #      tags:
 #      - validate
 #      - postdeploy
@@ -227,7 +227,7 @@
 #      ignore_errors: True
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' is existing on device '{{inventory_hostname}}'"
-      when: (vlan_state is defined and vlan_state == "delete" and vlan_id in vlan_list)
+      when: (vlan_state is defined and vlan_state == "delete" and ( vlan_id | string ) in vlan_list)
 #      tags:
 #      - validate
 #      - postdeploy
@@ -272,7 +272,7 @@
 #      ignore_errors: True
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' already existing on device '{{inventory_hostname}}'"
-      when: (vlan_state is defined and vlan_state == "create" and vlan_id in vlan_list)
+      when: (vlan_state is defined and vlan_state == "create" and ( vlan_id | string ) in vlan_list)
 #      tags:
 #      - predeploy
     
@@ -281,7 +281,7 @@
 #      ignore_errors: True
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
-      when: (vlan_state is defined and ( vlan_state == "modify" or vlan_state == "delete" ) and vlan_id not in vlan_list)
+      when: (vlan_state is defined and ( vlan_state == "modify" or vlan_state == "delete" ) and ( vlan_id | string ) not in vlan_list)
 #      tags:
 #      - predeploy
     tags:
