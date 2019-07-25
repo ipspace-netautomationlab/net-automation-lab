@@ -185,6 +185,13 @@
       set_fact:
         vrf_list: "{{ nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list }}"
         vlan_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_vlanbrief.ROW_vlanbrief | map(attribute='vlanshowbr-vlanid') | list }}"
+        
+    - debug: 
+       msg: "{{vlan_list}}"
+      tags:
+      - validate
+      - postdeploy
+      - predeploy
     tags:
     - validate
     - postdeploy
@@ -197,12 +204,7 @@
 #      - postdeploy
 #      - predeploy
 #
-    - debug: 
-       msg: "{{vlan_list}}"
-      tags:
-      - validate
-      - postdeploy
-      - predeploy
+
  
   - block:
     #  The task fails if VRF to be created or modified is not found           
