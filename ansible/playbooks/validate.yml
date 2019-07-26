@@ -175,47 +175,29 @@
       - validate
       - postdeploy
       - predeploy
-        
-#    - debug: 
-#       msg: "{{vlan_list}}"
-#      tags:
-#      - validate
-#      - postdeploy
-#      - predeploy
-      
-#    - debug: 
-#       msg: "{{vrf_list}}"
-#      tags:
-#      - validate
-#      - postdeploy
-#      - predeploy
      
   tasks:  
   - block:
     #  The task fails if VRF to be created or modified is not found           
     - name: postdeploy - Checking for VRFs to be created or modified
-#      ignore_errors: True
       fail:
         msg: "WARNING: VRF '{{vrf_name}}' is not existing on device '{{inventory_hostname}}'"
       when: (vrf_state is defined and ( vrf_state == "create" or vrf_state == "modify" )and vrf_name not in vrf_list)
     
     #  The task fails if VRF to be deleted is found           
     - name: postdeploy - Checking for VRFs to be deleted
-#      ignore_errors: True
       fail:
         msg: "WARNING: VRF '{{vrf_name}}' is existing on device '{{inventory_hostname}}'"
       when: (vrf_state is defined and vrf_state == "delete" and vrf_name in vrf_list)
       
     #  The task fails if VLAN to be created or modified is not found           
     - name: postdeploy - Checking for VLANs to be created or modified
-#      ignore_errors: True
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
       when: (vlan_state is defined and ( vlan_state == "create" or vlan_state == "modify" ) and ( vlan_id | string ) not in vlan_list)
     
     #  The task fails if VLAN to be deleted is found           
     - name: postdeploy - Checking for VLANs to be deleted
-#      ignore_errors: True
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' is existing on device '{{inventory_hostname}}'"
       when: (vlan_state is defined and vlan_state == "delete" and ( vlan_id | string ) in vlan_list)
@@ -231,28 +213,24 @@
   - block:
     #  The task fails if VRF to be created is found           
     - name: predeploy - Checking for VRFs to be created
-#      ignore_errors: True
       fail:
         msg: "WARNING: VRF '{{vrf_name}}' already existing on device '{{inventory_hostname}}'"
       when: (vrf_state is defined and vrf_state == "create" and vrf_name in vrf_list)
     
     #  The task fails if VRF to be modified or deleted is not found           
     - name: predeploy - Checking for VRFs to be modified or deleted
-#      ignore_errors: True
       fail:
         msg: "WARNING: VRF '{{vrf_name}}' is not existing on device '{{inventory_hostname}}'"
       when: (vrf_state is defined and ( vrf_state == "modify" or vrf_state == "delete" ) and vrf_name not in vrf_list)
       
     #  The task fails if VLAN to be created is found           
     - name: predeploy - Checking for VLANs to be created
-#      ignore_errors: True
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' already existing on device '{{inventory_hostname}}'"
       when: (vlan_state is defined and vlan_state == "create" and ( vlan_id | string ) in vlan_list)
     
     #  The task fails if VLAN to be modified or deleted is not found           
     - name: predeploy - Checking for VLANs to be modified or deleted
-#      ignore_errors: True
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
       when: (vlan_state is defined and ( vlan_state == "modify" or vlan_state == "delete" ) and ( vlan_id | string ) not in vlan_list)
