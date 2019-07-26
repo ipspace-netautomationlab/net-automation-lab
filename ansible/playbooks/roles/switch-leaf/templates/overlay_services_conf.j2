@@ -101,7 +101,7 @@ evpn
 {% if inventory_hostname == device_name %}
 interface Ethernet {{ if_module }}/{{ if_num }}
 {% if tr_vlan_state is not defined %}
-{% if if_descr is defined %}
+{% if if_descr is defined and if_descr | length %}
   description {{ if_descr }}
 {% endif %}
   mtu {{ phyif_global_params.mtu | int }}
