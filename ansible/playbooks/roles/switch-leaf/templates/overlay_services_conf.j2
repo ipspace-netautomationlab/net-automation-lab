@@ -121,30 +121,4 @@ interface Ethernet {{ if_module }}/{{ if_num }}
   switchport trunk allowed vlan remove {{tr_vlan_id}}
   {% endif %}
 {% endif %}
-{# !
-{% for interface in overlay.interfaces.phy.trunk %}
-interface Ethernet {{ interface.name }}
-  description {{ interface.description }}
-  mtu {{ phyif_global_params.mtu | int }}
-  switchport
-  switchport mode trunk
-  switchport trunk allowed vlan {{ interface.vlan_list }}
-  spanning-tree port type edge
-  spanning-tree bpduguard enable
-  spanning-tree guard root
-  no shutdown
-{% endfor %}
-!
-{% for interface in overlay.interfaces.phy.access %}
-interface Ethernet {{ interface.name }}
-  description {{ interface.description }}
-  mtu {{ phyif_global_params.mtu | int }}
-  switchport
-  switchport mode access
-  switchport access vlan {{ interface.vlan | int }}
-  spanning-tree port type edge
-  spanning-tree bpduguard enable
-  spanning-tree guard root
-  no shutdown
-{% endfor %} #}
 !
