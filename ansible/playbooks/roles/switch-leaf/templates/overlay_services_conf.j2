@@ -100,25 +100,25 @@ evpn
 !
 {% if inventory_hostname == device_name %}
 interface Ethernet {{ if_module }}/{{ if_num }}
-  {% if tr_vlan_state is not defined %}
+{% if tr_vlan_state is not defined %}
   description {{ if_descr }}
   mtu {{ phyif_global_params.mtu | int }}
   switchport
   spanning-tree port type edge
   spanning-tree bpduguard enable
   spanning-tree guard root
-  {% if if_mode == "trunk" %}
+{% if if_mode == "trunk" %}
   switchport mode trunk
   switchport trunk allowed vlan {{vlan_list}}
-  {% elif if_mode == "access" %}
+{% elif if_mode == "access" %}
   switchport mode access
   switchport access vlan {{vlan_list}}  
-  {% endif %}
+{% endif %}
   no shutdown  
-  {% elif tr_vlan_state == "add" %}
+{% elif tr_vlan_state == "add" %}
   switchport trunk allowed vlan add {{tr_vlan_id}}
-  {% elif tr_vlan_state == "remove" %}
+{% elif tr_vlan_state == "remove" %}
   switchport trunk allowed vlan remove {{tr_vlan_id}}
-  {% endif %}
+{% endif %}
 {% endif %}
 !
