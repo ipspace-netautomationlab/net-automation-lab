@@ -99,7 +99,7 @@ evpn
 {% endif %}
 !
 {% if inventory_hostname == {{device_name}} %}
-interface Ethernet {{ if_name }}
+interface Ethernet {{ if_module }}/{{ if_num }}
   {% if tr_vlan_state is not defined %}
   description {{ if_descr }}
   mtu {{ phyif_global_params.mtu | int }}
