@@ -1,21 +1,42 @@
 ---
 
-# Service config data
-services_params:
-  vrfs:
-  - name: default
-    vlans:
-    - id: 3801
-      state: absent
-      name: L2-CUSTOMER-01
-      description: CUSTOMER-01 - VLAN
-  - name: CUSTOMER-02
-    id: 1
-    l3vlan: 
-      name: 1
-    vlans:
-    - id: 3803
-      state: absent
-      name: L3-CUSTOMER-02
-      description: CUSTOMER-02 - VLAN
-      ipaddr: 192.168.0.1/24
+# Old fashioned service config data
+# services_params:
+#   vrfs:
+#   - name: default
+#     vlans:
+#     - id: 3801
+#       state: absent
+#       name: L2-CUSTOMER-01
+#       description: CUSTOMER-01 - VLAN
+#   - name: CUSTOMER-02
+#     id: 1
+#     l3vlan: 
+#       name: 1
+#     vlans:
+#     - id: 3803
+#       state: absent
+#       name: L3-CUSTOMER-02
+#       description: CUSTOMER-02 - VLAN
+#       ipaddr: 192.168.0.1/24
+
+#new style for service config data, only one VRF and Vlan is admitted
+
+#mandatory
+vrf_name: 'sec-zone-{{vrf_id}}'
+#if SVI is present or vrf state is present the following variable is mandatory
+vrf_id: 2
+#optional
+vrf_descr: test
+#if vrf state is present vrf will be created, modified or deleted
+vrf_state: create
+#if vlan state is present the following variables are mandatory
+vlan_id: 1
+vlan_name: test
+vlan_descr: test
+#if vlan state is present vlan will be created, modified or deleted vrf_id will be used to select VRF if SVI is present
+vlan_state: create
+vlan_ipaddr: '192.168.1.1/24'
+
+
+
