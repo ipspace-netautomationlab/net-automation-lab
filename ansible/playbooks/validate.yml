@@ -167,6 +167,18 @@
       - postdeploy
       - predeploy
 
+    # Gathering info about Switchports
+    - name: Running 'show interface switchport' on remote devices
+      nxos_command:
+        commands: 
+          - command: show interface switchport
+            output: json
+      register: nxos_switchport_leaf_out
+      tags:
+      - validate
+      - postdeploy
+      - predeploy
+
     - name: setting vars
       set_fact:
         vrf_list: "{{ nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list }}"
