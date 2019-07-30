@@ -57,7 +57,7 @@ vlan {{ vlan_id | int }}
   name {{ vlan_name }}
   vn-segment {{ vlan_id | int + 10000}}
 !
-{% vlan_ipaddr is defined and vlan_ipaddr | length and vlan_ipaddr | ipaddr %}
+{%if vlan_ipaddr is defined and vlan_ipaddr | length and vlan_ipaddr | ipaddr %}
 interface Vlan{{ vlan_id | int }}
   description {{ vlan_descr }}
   no shutdown
