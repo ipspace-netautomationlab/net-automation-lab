@@ -57,7 +57,7 @@ vlan {{ vlan_id | int }}
   name {{ vlan_name }}
   vn-segment {{ vlan_id | int + 10000}}
 !
-{%if vrf_id is defined and vrf_id | length and vlan_ipaddr is defined and vlan_ipaddr | length and vlan_ipaddr | ipaddr %}
+{%if vrf_id is defined and vlan_ipaddr is defined and vlan_ipaddr | length and vlan_ipaddr | ipaddr %}
 interface Vlan{{ vlan_id | int }}
   description {{ vlan_descr }}
   no shutdown
@@ -71,7 +71,7 @@ interface Vlan{{ vlan_id | int }}
 interface nve1
   member vni {{ vlan_id | int + 10000 }}
     suppress-arp
-{%if vrf_id is defined and vrf_id | length and vlan_ipaddr is defined and vlan_ipaddr | length and vlan_ipaddr | ipaddr %}
+{%if vrf_id is defined and vlan_ipaddr is defined and vlan_ipaddr | length and vlan_ipaddr | ipaddr %}
     mcast-group 239.1.0.{{ vrf_id }}
 {% else %}
     mcast-group 239.1.0.0
