@@ -11,7 +11,7 @@
 - name: write overlay services border leaf config file
   template:
     src: overlay_services_border_conf.j2
-    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_4_1_overlay_services_border.conf"
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_4_2_overlay_services_border.conf"
   tags:
   - config
   - services

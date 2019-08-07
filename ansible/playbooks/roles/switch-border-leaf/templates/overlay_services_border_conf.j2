@@ -2,11 +2,6 @@
 {% if ( vrf_state == "create" or vrf_state == "modify" ) %}
 {% if vrf_name != "default" %}
 !
-router bgp {{ bgp_global_params.local_as | int }}
- vrf {{ vrf_name }}
-  address-family ipv4 unicast
-   redistribute ospf overlay route-map to-leaves
-!
 router ospf overlay	  
   vrf {{ vrf_name }}
     router-id 10.99.16.7

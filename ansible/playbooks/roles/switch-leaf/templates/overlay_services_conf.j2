@@ -15,6 +15,9 @@ router bgp {{ bgp_global_params.local_as | int }}
   vrf {{ vrf_name }}
     address-family ipv4 unicast
       advertise l2vpn evpn
+{% if "border-leaf" in role_names %}
+      redistribute ospf overlay route-map to-leaves
+{% endif %}
 !
 vlan {{ vrf_id | int + 1000 }}
  name l3-{{ vrf_name}}
