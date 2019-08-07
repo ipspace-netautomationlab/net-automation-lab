@@ -31,6 +31,7 @@ interface Vlan{{ vrf_id | int + 1000 }}
 !
 interface nve1
   member vni {{ vrf_id | int + 1000 }} associate-vrf
+  exit
 !
 {% endif %}
 {% elif vrf_state == "delete" %}
