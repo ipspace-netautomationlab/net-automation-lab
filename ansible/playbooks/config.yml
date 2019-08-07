@@ -39,6 +39,14 @@
 #  vars_files: ../inventory/vars/services.yml
   roles:
   - switch-leaf
+  
+- name: create border leaf device config files
+  connection: local
+  gather_facts: no
+  hosts: leaf
+#  vars_files: ../inventory/vars/services.yml
+  roles:
+  - switch-border-leaf
 
 - name: create spine device config files
   connection: local
