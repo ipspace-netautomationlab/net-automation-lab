@@ -1,0 +1,63 @@
+!
+!
+{% if vrf_state is defined %}
+{% if ( vrf_state == "create" or vrf_state == "modify" ) %}
+{% if vrf_name != "default" %}
+!
+router bgp {{ bgp_global_params.local_as | int }}
+  vrf {{ vrf_name }}
+    address-family ipv4 unicast
+	  redistribute ospf overlay route-map to-leaves
+!
+router ospf overlay	  
+  vrf {{ vrf_name }}
+    router-id 10.99.16.7
+    area {{ ospf_global_params.overlay_area }} nssa
+    redistribute bgp {{ bgp_global_params.local_as | int }} route-map host_route_palmanova
+    timers throttle spf 100 300 1000
+    timers lsa-arrival 100
+    timers throttle lsa 0 1000 1000
+    table-map set_distance
+    passive-interface default
+!
+vlan {{ 3900+ ((vrf_id*2)+( generic_params.id % 2))) }}
+  name to-fw-sz{{vrf_id}}
+!
+interface Vlan{{ 3900+ ((vrf_id*2)+( generic_params.id % 2))) }}
+  description Po1.{{ 3900+ ((vrf_id*2)+( generic_params.id % 2))) }} to fg1500d - sz{{vrf_id}}
+  no shutdown
+  mtu 9100
+  carrier-delay 60
+  vrf member {{ vrf_name }}
+  ip address {{ generic_global_params.border_net | ipsubnet(31, ((vrf_id*2)+( generic_params.id % 2))) | next_nth_usable(1) }}/31
+  ip ospf cost 1
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf overlay area {{ ospf_global_params.overlay_area }}
+!
+{% endif %}
+{% elif vrf_state == "delete" %}
+!
+router ospf overlay
+  no vrf {{ vrf_name }}
+!
+no vlan 
+{% else %}
+{% endif %}
+{% endif %}
+!
+{% if vlan_state is defined %}
+{% if ( vlan_state == "create" or vlan_state == "modify" ) %}
+{%if vrf_id is defined and vlan_ipaddr is defined and vlan_ipaddr | length and vlan_ipaddr | ipaddr %}
+interface Vlan{{ vlan_id | int }}
+  carrier-delay 60
+  ip ospf cost 1
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf overlay area {{ ospf_global_params.overlay_area }}
+!
+{% endif %}
+!
+{% endif %}
+{% endif %}
+!

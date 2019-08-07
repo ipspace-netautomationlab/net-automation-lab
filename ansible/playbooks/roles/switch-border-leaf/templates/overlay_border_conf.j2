@@ -1,0 +1,25 @@
+!  
+ip prefix-list deny_host_route seq 5 permit 0.0.0.0/0 le 31 
+!
+{% for network in generic_global_params.remote_dc.networks %}
+{% if network | ipaddr %}
+ip prefix-list host_route_{{ generic_global_params.remote_dc.name }} seq {{ loop.index * 5 }} permit {{network}} eq 32
+{% endif %} 
+{% endfor %}
+!
+ip prefix-list host_route seq 5 permit 0.0.0.0/0 eq 32
+!
+route-map host_route_palmanova permit 10
+  match ip address prefix-list host_route_{{ generic_global_params.remote_dc.name }}
+  match route-type internal 
+!
+route-map to-leaves permit 10								   
+  match ip address prefix-list deny_host_route 
+  set community no-export 
+!
+route-map set_distance permit 10
+  match ip address prefix-list host_route
+  set distance 230
+! 
+router ospf overlay
+  passive-interface default
