@@ -20,11 +20,11 @@ router ospf overlay
     table-map set_distance
     passive-interface default
 !
-vlan {{ 3900+ ((vrf_id*2)+( generic_params.id % 2))) }}
+vlan {{ 3900+ ((vrf_id*2)+( generic_params.id % 2)) }}
   name to-fw-sz{{vrf_id}}
 !
-interface Vlan{{ 3900+ ((vrf_id*2)+( generic_params.id % 2))) }}
-  description Po1.{{ 3900+ ((vrf_id*2)+( generic_params.id % 2))) }} to fg1500d - sz{{vrf_id}}
+interface Vlan{{ 3900+ ((vrf_id*2)+( generic_params.id % 2)) }}
+  description Po1.{{ 3900+ ((vrf_id*2)+( generic_params.id % 2)) }} to fg1500d - sz{{vrf_id}}
   no shutdown
   mtu 9100
   carrier-delay 60
@@ -48,7 +48,7 @@ no vlan
 !
 {% if vlan_state is defined %}
 {% if ( vlan_state == "create" or vlan_state == "modify" ) %}
-{%if vrf_id is defined and vlan_ipaddr is defined and vlan_ipaddr | length and vlan_ipaddr | ipaddr %}
+{% if vrf_id is defined and vlan_ipaddr is defined and vlan_ipaddr | length and vlan_ipaddr | ipaddr %}
 interface Vlan{{ vlan_id | int }}
   carrier-delay 60
   ip ospf cost 1
