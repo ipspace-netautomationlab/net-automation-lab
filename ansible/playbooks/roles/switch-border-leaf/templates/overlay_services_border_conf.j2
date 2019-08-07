@@ -1,5 +1,3 @@
-!
-!
 {% if vrf_state is defined %}
 {% if ( vrf_state == "create" or vrf_state == "modify" ) %}
 {% if vrf_name != "default" %}
@@ -41,7 +39,9 @@ interface Vlan{{ 3900+ ((vrf_id*2)+( generic_params.id % 2)) }}
 router ospf overlay
   no vrf {{ vrf_name }}
 !
-no vlan 
+no vlan {{ 3900+ ((vrf_id*2)+( generic_params.id % 2)) }}
+!
+no int vlan {{ 3900+ ((vrf_id*2)+( generic_params.id % 2)) }}
 {% else %}
 {% endif %}
 {% endif %}
@@ -50,10 +50,6 @@ no vlan
 {% if ( vlan_state == "create" or vlan_state == "modify" ) %}
 {% if vrf_id is defined and vlan_ipaddr is defined and vlan_ipaddr | length and vlan_ipaddr | ipaddr %}
 interface Vlan{{ vlan_id | int }}
-  carrier-delay 60
-  ip ospf cost 1
-  ip ospf network point-to-point
-  no ip ospf passive-interface
   ip router ospf overlay area {{ ospf_global_params.overlay_area }}
 !
 {% endif %}

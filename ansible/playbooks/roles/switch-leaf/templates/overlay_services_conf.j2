@@ -31,7 +31,6 @@ interface Vlan{{ vrf_id | int + 1000 }}
 !
 interface nve1
   member vni {{ vrf_id | int + 1000 }} associate-vrf
-!
 {% endif %}
 {% elif vrf_state == "delete" %}
 !
@@ -50,7 +49,6 @@ no vrf context {{ vrf_name }}
 {% else %}
 {% endif %}
 {% endif %}
-!
 {% if vlan_state is defined %}
 {% if ( vlan_state == "create" or vlan_state == "modify" ) %}
 vlan {{ vlan_id | int }}
@@ -98,7 +96,6 @@ evpn
  no vni {{ vlan_id | int + 10000 }} l2
 !
 {% else %}
-!
 {% endif %}
 {% endif %}
 !
@@ -129,4 +126,3 @@ interface Ethernet {{ if_module }}/{{ if_num }}
 {% endif %}
 {% endif %}
 {% endif %}
-!
