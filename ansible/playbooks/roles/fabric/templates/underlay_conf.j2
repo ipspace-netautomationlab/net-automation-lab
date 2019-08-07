@@ -27,8 +27,8 @@ interface loopback{{  underlay_global_params.interfaces.loopback[0].id | int }}
   description {{ underlay.interfaces.phy[loop.index-1].description }}
   mtu {{ phyif_global_params.mtu | int }}
   ip address {{ generic_global_params.uplink[groups.spine.index(inventory_hostname)].net | ipsubnet(31, hostvars[leaf].generic_params.id) }} #}
-  interface Ethernet {{ underlay.interfaces.phy[generic_params.id-3].name }}
-  description {{ underlay.interfaces.phy[generic_params.id-3].description }}
+  interface Ethernet {{ underlay.interfaces.phy[hostvars[leaf].generic_params.id-3].name }}
+  description {{ underlay.interfaces.phy[hostvars[leaf].generic_params.id-3].description }}
   mtu {{ phyif_global_params.mtu | int }}
   ip address {{ generic_global_params.uplink[groups.spine.index(inventory_hostname)].net | ipsubnet(31, hostvars[leaf].generic_params.id) }} 
   ip ospf network point-to-point
