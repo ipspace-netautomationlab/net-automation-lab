@@ -70,6 +70,16 @@
     tags:
     - config
     - basic
+  - name: Copying basic configurations to tftp home
+    copy:
+      src: "{{output_folder}}/config/{{inventory_hostname}}_basic.conf"
+      dest: "{{tftp_folder}}/config/n9k_basic_{{serial}}.conf"
+      owner: root
+      group: root
+      mode: '0777'
+    tags:
+    - config
+    - basic
   - name: Assembling underlay configurations
     assemble:
      src: "{{output_folder}}/config"
