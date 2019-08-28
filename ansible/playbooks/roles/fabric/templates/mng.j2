@@ -1,0 +1,13 @@
+!
+{% if mng_default_gateway | ipv4 %}
+vrf context management
+  ip route 0.0.0.0/0 {{ mng_default_gateway | ipv4}}
+{% endif %}
+!
+{% if mng_address | ipv4 %}
+interface mgmt0
+  description OOB Management
+  duplex full
+  vrf member management
+  ip address {{ mng_address | ipv4 }}
+{% endif %}
