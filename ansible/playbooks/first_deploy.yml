@@ -6,12 +6,12 @@
     state: enabled
   tags:
   - first_deploy
-- name: Copying user's RSA key file into devices 
-  nxos_file_copy:
-    local_file: "{{key_path}}/{{id}}_id_rsa.pub"
-    remote_file: "{{id}}_id_rsa.pub"
-  tags:
-  - key_access
+#- name: Copying user's RSA key file into devices 
+#  nxos_file_copy:
+#    local_file: "{{key_path}}/{{id}}_id_rsa.pub"
+#    remote_file: "{{id}}_id_rsa.pub"
+#  tags:
+#  - key_access
 - name: create user
   nxos_config:
     lines: 
@@ -19,13 +19,13 @@
   notify: save_config
   tags:
   - first_deploy
-- name: enable key auth for machine user
-  nxos_config:
-    lines: 
-     - "username {{id}} sshkey file bootflash:{{id}}_id_rsa.pub"
-  notify: save_config
-  tags:
-  - key_access
+#- name: enable key auth for machine user
+#  nxos_config:
+#    lines: 
+#     - "username {{id}} sshkey file bootflash:{{id}}_id_rsa.pub"
+#  notify: save_config
+#  tags:
+#  - key_access
 #only for lab purposes
 - name: Enable temporary license on devices
   nxos_config:
