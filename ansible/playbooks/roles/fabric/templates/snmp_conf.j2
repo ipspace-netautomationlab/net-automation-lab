@@ -1,3 +1,6 @@
+ip access-list SNMP_RO
+ permit ip 10.0.252.0 0.0.0.255 any
+ permit ip 192.168.253.0 0.0.0.255 any
 !
 snmp-server contact {{ snmp_global_params.contact }}
 snmp-server location {{ snmp_global_params.location }}
