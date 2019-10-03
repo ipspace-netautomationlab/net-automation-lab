@@ -122,6 +122,7 @@
 #copy to ftp server    
 - name: tftp file copy
   hosts: tftp-server
+  tasks:
   - name: Copying complete configurations to tftp home
     copy:
       src: "{{output_folder}}/config/{{hostvars[item].inventory_hostname}}_complete.conf"
