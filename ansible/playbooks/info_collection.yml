@@ -65,4 +65,4 @@
   hosts: nexus_switch
 #  vars_files: ../inventory/vars/services.yml
   roles:
-    - fabric
+    - info
