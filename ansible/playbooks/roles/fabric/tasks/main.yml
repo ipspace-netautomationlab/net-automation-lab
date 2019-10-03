@@ -1,9 +1,5 @@
 ---
 
- - import_tasks: facts.yml
- - import_tasks: system-facts.yml
- - import_tasks: ipaddr-facts.yml
- - import_tasks: ethif-facts.yml
  - import_tasks: aaa.yml
  - import_tasks: bgp.yml
  - import_tasks: clock.yml
