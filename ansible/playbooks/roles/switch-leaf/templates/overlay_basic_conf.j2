@@ -3,6 +3,7 @@ fabric forwarding anycast-gateway-mac {{ generic_global_params.anycast_gateway_m
 !
 !
 interface nve1
+  description overlay
   no shutdown
   host-reachability protocol bgp
   source-interface loopback0

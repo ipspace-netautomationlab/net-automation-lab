@@ -5,13 +5,16 @@ hostname {{ generic_global_params.hostname }}
 feature {{ item.name }}
 {% endfor %}
 !
+no feature telnet
+!
 cfs eth distribute
 nv overlay evpn
 !
-hardware access-list tcam region racl {{ generic_global_params.tcam_racl_size | int }}
+!hardware access-list tcam region racl {{ generic_global_params.tcam_racl_size | int }}
+!hardware access-list tcam region copp {{ generic_global_params.tcam_copp_size | int }}
 hardware access-list tcam region ifacl {{ generic_global_params.tcam_acl_size | int }}
 hardware access-list tcam region arp-ether {{ generic_global_params.tcam_arp_size | int }} double-wide
-hardware access-list tcam region copp {{ generic_global_params.tcam_copp_size | int }}
+hardware access-list tcam region span {{ generic_global_params.tcam_span_size | int }}
 !
 power redundancy-mode combined force
 !
@@ -26,7 +29,23 @@ errdisable recovery cause link-flap
 errdisable recovery cause udld
 errdisable recovery cause loopback
 !
-!copp profile strict
+ip access-list VPN-MGMT-ADDR
+ permit tcp 192.168.76.0 0.0.0.255 any eq 22 
+ permit tcp 192.168.67.0 0.0.0.127 any eq 22 
+ remark rete MNGMT server
+ permit tcp 192.168.253.0 0.0.0.255 any eq 22 
+ remark Insiel
+ permit tcp 172.22.0.0 0.0.255.255 any eq 22 
+ permit tcp 10.200.0.0 0.0.0.255 any eq 22 
+ permit tcp 10.200.48.0 0.0.0.255 any eq 22 
+ permit tcp 10.200.64.0 0.0.0.63 any eq 22 
+ permit tcp 10.200.68.0 0.0.0.63 any eq 22 
+ permit tcp 10.200.72.0 0.0.0.63 any eq 22 
+ permit tcp 10.200.96.0 0.0.0.255 any eq 22 
+ remark Servizi di rete
+ permit tcp 10.0.252.0 0.0.0.255 any eq 22 
+!
+copp profile strict
 !
 login on-success log 
 !
@@ -44,5 +63,7 @@ line console
 line vty
   session-limit 16
   exec-timeout 15
+  logout-warning 20
+  access-class VPN-MGMT-ADDR in
 !
 !

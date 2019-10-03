@@ -14,6 +14,7 @@ snmp-server enable traps snmp authentication
 snmp-server enable traps system Clock-change-notification
 {% for community in snmp_global_params.communities %}
 snmp-server community {{ community.name }} group network-operator
+snmp-server community {{ community.name }} use-acl SNMP_RO
 {% endfor %}
 {% for host in snmp_global_params.servers %}
 snmp-server host {{ host.ipaddr | ipv4 }} use-vrf {{ mng_params.vrf }}
