@@ -130,6 +130,6 @@
       owner: root
       group: root
       mode: '0777'
-    loop: "{{ query('inventory_hostnames', 'all:nexus_switch') }}"
+    loop: "{{ query('inventory_hostnames', 'nexus_switch') }}"
     tags:
     - tftp_upload
