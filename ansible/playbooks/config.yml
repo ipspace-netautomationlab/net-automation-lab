@@ -86,16 +86,6 @@
     tags:
     - config
     - basic
-  - name: Copying basic configurations to tftp home
-    copy:
-      src: "{{output_folder}}/config/{{inventory_hostname}}_basic.conf"
-      dest: "{{tftp_folder}}/config/{{inventory_hostname}}.conf"
-      owner: root
-      group: root
-      mode: '0777'
-    tags:
-    - config
-    - basic
   - name: Assembling underlay configurations
     assemble:
      src: "{{output_folder}}/config"
@@ -128,3 +118,17 @@
     tags:
     - config
     - complete
+
+#copy to ftp server    
+- name: tftp file copy
+  hosts: tftp-server
+  - name: Copying complete configurations to tftp home
+    copy:
+      src: "{{output_folder}}/config/{{hostvars[item].inventory_hostname}}_complete.conf"
+      dest: "{{tftp_folder}}/config/{{hostvars[item].serial_num}}.conf"
+      owner: root
+      group: root
+      mode: '0777'
+    loop: "{{ query('inventory_hostnames', 'all:nexus_switch') }}"
+    tags:
+    - tftp_upload
