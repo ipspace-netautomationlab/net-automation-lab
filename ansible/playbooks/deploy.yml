@@ -18,24 +18,24 @@
   gather_facts: no
   hosts: nexus_switch
   tasks:
-  - name: collect sh version information
-    register: shver_out
-    nxos_command:
-      commands: show version
-    tags:
-    - basic
-    - underlay
-    - overlay
-    - services
-    - complete
-  - debug:
-      msg: system serial is {{(shver_out | to_nice_json).stdout.0.TABLE_package_list.ROW_package_list}}
-    tags:
-    - basic
-    - underlay
-    - overlay
-    - services
-    - complete
+#  - name: collect sh version information
+#    register: shver_out
+#    nxos_command:
+#      commands: show version
+#    tags:
+#    - basic
+#    - underlay
+#    - overlay
+#    - services
+#    - complete
+#  - debug:
+#      msg: system serial is {{(shver_out | to_nice_json).stdout.0.TABLE_package_list.ROW_package_list}}
+#    tags:
+#    - basic
+#    - underlay
+#    - overlay
+#    - services
+#    - complete
   - name: config checkpoint for rollback
     nxos_rollback:
      checkpoint_file: backup.cfg

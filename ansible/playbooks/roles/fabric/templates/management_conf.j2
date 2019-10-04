@@ -4,5 +4,5 @@ vrf context {{ mng_params.vrf }}
 !
 interface {{ mng_params.ifname }}
   vrf member {{ mng_params.vrf }}
-  ip address {{ mng_params.ipaddr | ipv4 }}
+  ip address {{ mng_params.ipaddr | ipv4 }}/{{ mng_params.ipsubnet | ipv4 }}
 !
