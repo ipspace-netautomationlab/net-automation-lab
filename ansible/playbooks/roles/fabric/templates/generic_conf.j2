@@ -30,20 +30,12 @@ errdisable recovery cause udld
 errdisable recovery cause loopback
 !
 ip access-list VPN-MGMT-ADDR
- permit tcp 192.168.76.0 0.0.0.255 any eq 22 
- permit tcp 192.168.67.0 0.0.0.127 any eq 22 
- remark rete MNGMT server
- permit tcp 192.168.253.0 0.0.0.255 any eq 22 
- remark Insiel
- permit tcp 172.22.0.0 0.0.255.255 any eq 22 
- permit tcp 10.200.0.0 0.0.0.255 any eq 22 
- permit tcp 10.200.48.0 0.0.0.255 any eq 22 
- permit tcp 10.200.64.0 0.0.0.63 any eq 22 
- permit tcp 10.200.68.0 0.0.0.63 any eq 22 
- permit tcp 10.200.72.0 0.0.0.63 any eq 22 
- permit tcp 10.200.96.0 0.0.0.255 any eq 22 
- remark Servizi di rete
- permit tcp 10.0.252.0 0.0.0.255 any eq 22 
+{% for section in mng_acl %}
+ remark {{section.name}}
+{% for subnet in section %}
+ permit tcp {{subnet.net}} {{subnet.subnet}} any eq 22 
+{% endfor %}
+{% endfor %}
 !
 {% if copp is defined and copp == "strict"%}
 copp profile strict
