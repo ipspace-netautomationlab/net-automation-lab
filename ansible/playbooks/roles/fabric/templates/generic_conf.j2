@@ -30,11 +30,12 @@ errdisable recovery cause udld
 errdisable recovery cause loopback
 !
 ip access-list VPN-MGMT-ADDR
-{% for section in mng_acl %}
- remark {{section.name}}
-{% for subnet in section %}
- permit tcp {{subnet.net}} {{subnet.subnet}} any eq 22 
-{% endfor %}
+{% for line in mng_acl %}
+{% if line.line=="remark" %}
+ remark {{line.name}}
+{% elif line.line=="rule" %}
+ permit tcp {{line.net}} {{line.subnet}} any eq 22 
+{% endif %}
 {% endfor %}
 !
 {% if copp is defined and copp == "strict"%}
