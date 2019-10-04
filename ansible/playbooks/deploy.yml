@@ -29,7 +29,7 @@
     - services
     - complete
   - debug:
-      msg: system serial is {{shver_out.proc_board_id}}
+      msg: output is {{shver_out | to_nice_json}}
     tags:
     - basic
     - underlay
