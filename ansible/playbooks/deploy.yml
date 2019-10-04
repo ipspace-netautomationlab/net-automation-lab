@@ -13,11 +13,29 @@
     - services
     - complete
     
-# The second Play saves the device's runnin-config files into '{{ output_folder }}/backup' folder
+# The second Play gets system serial and saves the device's runnin-config files into '{{ output_folder }}/backup' folder
 - name: Config backup
   gather_facts: no
   hosts: nexus_switch
   tasks:
+  - name: collect sh version information
+    register: shver_out
+    nxos_command:
+      commands: show version | json
+    tags:
+    - basic
+    - underlay
+    - overlay
+    - services
+    - complete
+  - debug:
+      msg: system serial is {{shver_out.proc_board_id}}
+    tags:
+    - basic
+    - underlay
+    - overlay
+    - services
+    - complete
   - name: config checkpoint for rollback
     nxos_rollback:
      checkpoint_file: backup.cfg
