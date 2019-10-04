@@ -7,6 +7,16 @@
   tags:
   - info
 
+- name: collect sh version information
+  register: shver_out
+  nxos_command:
+    commands: show version | json
+  tags:
+  - info
+
+- debug: print system serial
+    msg: system serial is: {{shver_out.proc_board_id}}
+
 - name: write all the results to JSON file
   copy:
     content: "{{ nxosfacts_out | to_nice_json }}"
