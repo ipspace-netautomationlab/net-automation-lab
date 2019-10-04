@@ -29,7 +29,7 @@
     - services
     - complete
   - debug:
-      msg: output is {{shver_out | to_nice_json}}
+      msg: output is {{(shver_out | to_nice_json).proc_board_id}}
     tags:
     - basic
     - underlay
