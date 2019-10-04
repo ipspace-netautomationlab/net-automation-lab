@@ -4,9 +4,9 @@ ip pim ssm range {{ pim_global_params.ssm_multicast_group }}
 !
 !
 {% if 'leaf' in group_names %}
-{% for interface in underlay.interfaces.phy %}
-interface Ethernet {{ interface.name }}
-  description {{ interface.description }}
+{% for spine in groups['spine'] %}
+interface Ethernet 1/{{hostvars[spine].generic_params.id }}
+  description Link to {{{{hostvars[spine].hostname}}
   mtu {{ phyif_global_params.mtu | int }}
   ip address {{ generic_global_params.uplink[loop.index-1].net | ipsubnet(31, generic_params.id) | next_nth_usable(1) }}/31
   ip ospf network point-to-point
@@ -27,8 +27,8 @@ interface loopback{{  underlay_global_params.interfaces.loopback[0].id | int }}
   description {{ underlay.interfaces.phy[loop.index-1].description }}
   mtu {{ phyif_global_params.mtu | int }}
   ip address {{ generic_global_params.uplink[groups.spine.index(inventory_hostname)].net | ipsubnet(31, hostvars[leaf].generic_params.id) }} #}
-  interface Ethernet {{ underlay.interfaces.phy[hostvars[leaf].generic_params.id-(underlay_global_params.spine_num+1)].name }}
-  description {{ underlay.interfaces.phy[hostvars[leaf].generic_params.id-(underlay_global_params.spine_num+1)].description }}
+  interface Ethernet 1/{{hostvars[leaf].generic_params.id-(underlay_global_params.spine_num)}}
+  description Link to {{{{hostvars[leaf].hostname}}
   mtu {{ phyif_global_params.mtu | int }}
   ip address {{ generic_global_params.uplink[groups.spine.index(inventory_hostname)].net | ipsubnet(31, hostvars[leaf].generic_params.id) }} 
   ip ospf network point-to-point
