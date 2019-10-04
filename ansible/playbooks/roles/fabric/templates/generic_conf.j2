@@ -5,7 +5,9 @@ hostname {{ generic_global_params.hostname }}
 feature {{ item.name }}
 {% endfor %}
 !
+{% if telnet is defined and telnet == "disable"%}
 no feature telnet
+{% endif %}
 !
 cfs eth distribute
 nv overlay evpn
