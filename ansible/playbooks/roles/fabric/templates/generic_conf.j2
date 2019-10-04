@@ -38,7 +38,7 @@ ip access-list VPN-MGMT-ADDR
 {% endif %}
 {% endfor %}
 !
-{% if copp is defined and copp == "strict"%}
+{% if lab is not defined or lab == "off"%}
 copp profile strict
 {% endif %}
 !
@@ -58,9 +58,7 @@ line console
 line vty
   session-limit 16
   exec-timeout 15
-  logout-warning 20
-{% if lab is not defined %}  
+  logout-warning 20 
   access-class VPN-MGMT-ADDR in
-{% endif %}
 !
 !
