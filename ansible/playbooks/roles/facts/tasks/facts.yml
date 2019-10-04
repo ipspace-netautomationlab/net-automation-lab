@@ -12,10 +12,12 @@
   nxos_command:
     commands: show version | json
   tags:
-  - info
+  - serial
 
 - debug:
     msg: system serial is {{shver_out.proc_board_id}}
+  tags:
+  - serial
 
 - name: write all the results to JSON file
   copy:
