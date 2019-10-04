@@ -15,7 +15,7 @@
   - info
 
 - debug: print system serial
-    msg: system serial is: {{shver_out.proc_board_id}}
+    msg: "system serial is: {{shver_out.proc_board_id}}"
 
 - name: write all the results to JSON file
   copy:
