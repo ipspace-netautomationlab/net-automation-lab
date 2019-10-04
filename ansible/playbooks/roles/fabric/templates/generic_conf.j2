@@ -45,7 +45,9 @@ ip access-list VPN-MGMT-ADDR
  remark Servizi di rete
  permit tcp 10.0.252.0 0.0.0.255 any eq 22 
 !
+{% if copp is defined and copp == "strict"%}
 copp profile strict
+{% endif %}
 !
 login on-success log 
 !
