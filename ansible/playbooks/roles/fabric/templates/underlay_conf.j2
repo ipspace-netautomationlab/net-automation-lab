@@ -8,7 +8,7 @@ ip pim ssm range {{ pim_global_params.ssm_multicast_group }}
 interface Ethernet 1/{{hostvars[spine].generic_params.id }}
   description Link to {{hostvars[spine].generic_global_params.hostname}}
   mtu {{ phyif_global_params.mtu | int }}
-  ip address {{ generic_global_params.uplink[index(spine)].net | ipsubnet(31, generic_params.id) | next_nth_usable(1) }}/31
+  ip address {{ generic_global_params.uplink[hostvars[spine].generic_params.id].net | ipsubnet(31, generic_params.id-(underlay_global_params.spine_num)) | next_nth_usable(1) }}/31
   ip ospf network point-to-point
   no ip ospf passive-interface
   ip router ospf underlay area {{ ospf_global_params.underlay_area }}
@@ -30,7 +30,7 @@ interface loopback{{  underlay_global_params.interfaces.loopback[0].id | int }}
   interface Ethernet 1/{{hostvars[leaf].generic_params.id-(underlay_global_params.spine_num)}}
   description Link to {{hostvars[leaf].generic_global_params.hostname}}
   mtu {{ phyif_global_params.mtu | int }}
-  ip address {{ generic_global_params.uplink[index(leaf)].net | ipsubnet(31, hostvars[leaf].generic_params.id) }} 
+  ip address {{ generic_global_params.uplink[generic_params.id].net | ipsubnet(31, hostvars[leaf].generic_params.id-(underlay_global_params.spine_num)) }} 
   ip ospf network point-to-point
   no ip ospf passive-interface
   ip router ospf underlay area {{ ospf_global_params.underlay_area }}
