@@ -25,9 +25,9 @@
 
 # Second block of tasks: creating device config files
 - name: create basic device config files
+  hosts: nexus_switch
   connection: local
   gather_facts: no
-  hosts: nexus_switch
 #  vars_files: ../inventory/vars/services.yml
   roles:
   - fabric
