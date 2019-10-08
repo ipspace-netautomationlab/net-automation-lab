@@ -22,7 +22,7 @@
   - name: Copying complete configurations to tftp home
     copy:
       src: "{{output_folder}}/config/{{hostvars[item].inventory_hostname}}_complete.conf"
-      dest: "{{tftp_folder}}/config/{{hostvars[item].serial_num}}.conf"
+      dest: "{{tftp_folder}}/config/conf.{{hostvars[item].serial_num}}"
 #      owner: root
 #      group: root
 #      mode: '0777'
