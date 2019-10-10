@@ -7,15 +7,15 @@
   tags:
   - info
 
-- name: collect sh version information
-  register: shver_out
-  nxos_command:
-    commands: show version
-  tags:
-  - info
-
+#- name: collect sh version information
+#  register: shver_out
+#  nxos_command:
+#    commands: show version
+#  tags:
+#  - info
+#
 - debug:
-    msg: system serial is {{(shver_out | to_nice_json).stdout.0.TABLE_package_list.ROW_package_list | map(attribute='proc_board_id')}}
+    msg: system serial is {{ansible_net_serialnum}}
   tags:
   - info
 
