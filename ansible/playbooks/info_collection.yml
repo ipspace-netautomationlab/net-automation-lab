@@ -12,7 +12,7 @@
       state: absent
     run_once: true
     tags:
-      - info
+      - writefacts
 
   - name: deleting json folder
     file: 
@@ -20,7 +20,7 @@
       state: absent
     run_once: true
     tags:
-      - info
+      - writefacts
 
   - name: creating web folder
     file: 
@@ -30,7 +30,7 @@
       mode: 0777
     run_once: true
     tags:
-      - info
+      - writefacts
 
   - name: creating json folder
     file: 
@@ -40,7 +40,7 @@
       mode: 0777
     run_once: true
     tags:
-      - info
+      - writefacts
 
   - name: creating CSS folder
     file: 
@@ -50,7 +50,7 @@
       mode: 0777
     run_once: true
     tags:
-      - info
+      - writefacts
 
   - name: copy CSS into web folder
     copy:
@@ -58,7 +58,7 @@
       dest: "{{output_folder}}/web/css/"
       directory_mode: yes
     tags:
-      - info
+      - writefacts
 
 - name: gathering complete fabric device info collection
   gather_facts: no
