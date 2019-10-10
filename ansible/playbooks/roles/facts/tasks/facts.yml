@@ -24,4 +24,4 @@
     content: "{{ nxosfacts_out | to_nice_json }}"
     dest: "{{output_folder}}/json/{{inventory_hostname}}_nxosfacts.json"
   tags:
-  - info
+  - writefacts

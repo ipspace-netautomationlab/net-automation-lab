@@ -5,5 +5,5 @@
     src: report_system.j2
     dest: "{{output_folder}}/web/{{inventory_hostname}}_system.html"
   tags:
-  - info
+  - systemfacts
   
