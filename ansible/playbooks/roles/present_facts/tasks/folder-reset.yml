@@ -46,10 +46,10 @@
   tags:
     - facts_reset
 
-- name: copy CSS into web folder
-  copy:
-    src: "/home/netadmin/css/"
-    dest: "{{output_folder}}/web/css/"
-    directory_mode: yes
-  tags:
-    - facts_reset
+#- name: copy CSS into web folder
+#  copy:
+#    src: "/home/netadmin/css/"
+#    dest: "{{output_folder}}/web/css/"
+#    directory_mode: yes
+#  tags:
+#    - facts_reset
