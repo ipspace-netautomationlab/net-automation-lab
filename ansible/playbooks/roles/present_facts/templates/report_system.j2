@@ -52,7 +52,7 @@
 					</td>
                     <td class="cell100 column9">
 					{% for psu in hostvars[switch].power_supply_info %}
-					<b>Model:</b> {{psu.model}}<br><b>Status:</b> {{psu.status}}<br><b>Number:</b> {{psu.number}}<br><b>Current:</b> {{psu.amps}}<br><b>Power:</b> {{psu.watts}}<br>
+					<b>Model:</b> {{psu.model}}<br><b>Status:</b> {{psu.status}}<br><b>Number:</b> {{psu.number}}<br>{# <b>Current:</b> {{psu.amps}}<br> #}<b>Power:</b> {{psu.watts}}<br>
 					{%endfor%}
 					</td>
                   </tr>
