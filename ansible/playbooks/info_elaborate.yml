@@ -1,7 +1,7 @@
 ---
 
 - name: gathering complete fabric device info collection
-  gather_facts: no
-  hosts: nexus_switch
+#  gather_facts: no
+  hosts: tftp-server
   roles:
-    - get_facts
+    - present_facts

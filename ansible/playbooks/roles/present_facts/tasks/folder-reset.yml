@@ -1,0 +1,55 @@
+---
+
+- name: deleting web folder
+  file: 
+    path: '{{output_folder}}/web'
+    state: absent
+  run_once: true
+  tags:
+    - facts_reset
+
+- name: deleting json folder
+  file: 
+    path: '{{output_folder}}/json'
+    state: absent
+  run_once: true
+  tags:
+    - facts_reset
+
+- name: creating web folder
+  file: 
+    owner: netadmin
+    path: '{{output_folder}}/web'
+    state: directory
+    mode: 0777
+  run_once: true
+  tags:
+    - facts_reset
+
+- name: creating json folder
+  file: 
+    owner: netadmin
+    path: '{{output_folder}}/json'
+    state: directory
+    mode: 0777
+  run_once: true
+  tags:
+    - facts_reset
+
+- name: creating CSS folder
+  file: 
+    owner: netadmin
+    path: '{{output_folder}}/web/css'
+    state: directory
+    mode: 0777
+  run_once: true
+  tags:
+    - facts_reset
+
+- name: copy CSS into web folder
+  copy:
+    src: "/home/netadmin/css/"
+    dest: "{{output_folder}}/web/css/"
+    directory_mode: yes
+  tags:
+    - facts_reset

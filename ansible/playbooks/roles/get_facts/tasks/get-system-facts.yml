@@ -14,10 +14,4 @@
 #  tags:
 #  - info
 #
-
-- name: write all the results to JSON file
-  copy:
-    content: "{{ nxosfacts_out | to_nice_json }}"
-    dest: "{{output_folder}}/json/{{inventory_hostname}}_nxosfacts.json"
-  tags:
-  - writefacts
+  

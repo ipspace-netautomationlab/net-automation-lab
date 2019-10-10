@@ -36,25 +36,27 @@
           <div class="table100-body js-pscroll">
             <table>
               <tbody>
+			  {% for switch in groups['nexus_switch'] %}
                   <tr class="row100 body">
-                    <td class="cell100 column1">{{ansible_net_version}}</td>
-                    <td class="cell100 column2">{{ansible_net_serialnum}}</td>
-                    <td class="cell100 column3">{{ansible_net_model}}</td>
-                    <td class="cell100 column4">{{ansible_net_memtotal_mb}}</td>
-                    <td class="cell100 column5">{{ansible_net_memfree_mb}}</td>
-                    <td class="cell100 column6">{{ansible_net_image}}</td>
-                    <td class="cell100 column7">{{hostname}}</td>
+				    <td class="cell100 column1">{{hostvars[switch].hostname}}</td>
+                    <td class="cell100 column2">{{hostvars[switch].ansible_net_version}}</td>
+                    <td class="cell100 column3">{{hostvars[switch].ansible_net_serialnum}}</td>
+                    <td class="cell100 column4">{{hostvars[switch].ansible_net_model}}</td>
+                    <td class="cell100 column5">{{hostvars[switch].ansible_net_memtotal_mb}}</td>
+                    <td class="cell100 column6">{{hostvars[switch].ansible_net_memfree_mb}}</td>
+                    <td class="cell100 column7">{{hostvars[switch].ansible_net_image}}</td>
                     <td class="cell100 column8">
-					{% for psu in module %}
+					{% for mod in hostvars[switch].module %}
 					<b>Model:</b> {{mod.model}}<br><b>Type:</b> {{mod.type}}<br><b>Status:</b> {{mod.status}}<br><b>Ports:</b> {{mod.ports}}<br>
 					{%endfor%}
 					</td>
                     <td class="cell100 column9">
-					{% for psu in module %}
+					{% for psu in hostvars[switch].power_supply_info %}
 					<b>Model:</b> {{psu.model}}<br><b>Status:</b> {{psu.status}}<br><b>Number:</b> {{psu.number}}<br><b>Current:</b> {{psu.amps}}<br><b>Power:</b> {{psu.watts}}<br>
 					{%endfor%}
 					</td>
                   </tr>
+			 {%endfor%}
               </tbody>
             </table>
           </div>
