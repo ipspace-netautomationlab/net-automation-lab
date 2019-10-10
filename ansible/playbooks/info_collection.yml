@@ -1,7 +1,7 @@
 ---
   
 - name: output folder reset
-  hosts: localhost
+  hosts: tftp-server
   connection: local
   gather_facts: no
 
