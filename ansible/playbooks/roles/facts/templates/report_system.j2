@@ -25,6 +25,9 @@
                   <th class="cell100 column4">Total Memory [MB]</th>
                   <th class="cell100 column5">Free Memory [MB]</th>
                   <th class="cell100 column6">System Image</th>
+                  <th class="cell100 column7">Hostname</th>
+                  <th class="cell100 column8">Modules</th>
+				  <th class="cell100 column9">Power Supply</th>
                 </tr>
               </thead>
             </table>
@@ -40,12 +43,23 @@
                     <td class="cell100 column4">{{ansible_net_memtotal_mb}}</td>
                     <td class="cell100 column5">{{ansible_net_memfree_mb}}</td>
                     <td class="cell100 column6">{{ansible_net_image}}</td>
+                    <td class="cell100 column7">{{hostname}}</td>
+                    <td class="cell100 column8">
+					{% for psu in module %}
+					<b>Model:</b> {{mod.model}}<br><b>Type:</b> {{mod.type}}<br><b>Status:</b> {{mod.status}}<br><b>Ports:</b> {{mod.ports}}<br>
+					{%endfor%}
+					</td>
+                    <td class="cell100 column9">
+					{% for psu in module %}
+					<b>Model:</b> {{psu.model}}<br><b>Status:</b> {{psu.status}}<br><b>Number:</b> {{psu.number}}<br><b>Current:</b> {{psu.amps}}<br><b>Power:</b> {{psu.watts}}<br>
+					{%endfor%}
+					</td>
                   </tr>
               </tbody>
             </table>
           </div>
         </div>
-        <div id="title2">
+{#         <div id="title2">
           <h1>Module info report for &quot;{{inventory_hostname}}&quot;</h1>
         </div>
         <div class="table100 ver1 m-b-110">
@@ -74,7 +88,7 @@
                 {%endfor%}
               </tbody>
             </table>
-          </div>
+          </div> #}
         </div>
 	  </div>
     </div>

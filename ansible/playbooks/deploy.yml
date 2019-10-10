@@ -18,24 +18,14 @@
   gather_facts: no
   hosts: nexus_switch
   tasks:
-#  - name: collect sh version information
-#    register: shver_out
-#    nxos_command:
-#      commands: show version
-#    tags:
-#    - basic
-#    - underlay
-#    - overlay
-#    - services
-#    - complete
-#  - debug:
-#      msg: system serial is {{(shver_out | to_nice_json).stdout.0.TABLE_package_list.ROW_package_list}}
-#    tags:
-#    - basic
-#    - underlay
-#    - overlay
-#    - services
-#    - complete
+  # The task fails if inventory serial and device serial mismatch
+  - name: verifying Serial Number
+    fail:
+      msg: "ERROR: serial number mismatch, device serial number is {{ansible_net_serialnum}}, inventory serial number is {{serial_num}}, stopping execution."
+    # Errors triggered on serial mismatch
+    when: ansible_net_serialnum != serial_num
+    tags:
+    - serial_check
   - name: config checkpoint for rollback
     nxos_rollback:
      checkpoint_file: backup.cfg

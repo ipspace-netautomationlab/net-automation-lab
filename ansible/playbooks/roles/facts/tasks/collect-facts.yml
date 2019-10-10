@@ -5,7 +5,7 @@
   nxos_facts:
     gather_subset: all
   tags:
-  - info
+  - getfacts
 
 #- name: collect sh version information
 #  register: shver_out
@@ -14,10 +14,6 @@
 #  tags:
 #  - info
 #
-- debug:
-    msg: system serial is {{ansible_net_serialnum}}
-  tags:
-  - info
 
 - name: write all the results to JSON file
   copy:
