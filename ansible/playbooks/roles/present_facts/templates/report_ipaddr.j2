@@ -9,11 +9,11 @@
 </head>
 <body>
   <div id="title">
-    <h1>IP address list report for &quot;{{inventory_hostname}}&quot;</h1>
+    <h1>IP address list report for DC fabric {# &quot;{{inventory_hostname}}&quot; #}</h1>
   </div>
-  <div id="management">
+{#   <div id="management">
     <h2>Management IP address for &quot;{{inventory_hostname}}&quot;&colon; {{ansible_net_interfaces.mgmt0.ipv4.address}}</h2>
-  </div>
+  </div> #}
   <div class="limiter">
     <div class="container-table100">
       <div class="wrap-table100">
@@ -32,12 +32,16 @@
           <div class="table100-body js-pscroll">
             <table>
               <tbody>
-                {% for ipaddress in ansible_net_all_ipv4_addresses %}
-                <tr class="row100 body">
-                  <td class="cell100 column1">{{loop.index}}</td>
-                  <td class="cell100 column2">{{ipaddress}}</td>
-                </tr>
-                {% endfor %}
+			  {% for switch in groups['nexus_switch'] %}
+			   <tr class="row100 body">
+                  <td class="cell100 column1">{{hostvars[switch].hostname}}</td>
+                  <td class="cell100 column2">                
+				  {% for ipaddress in hostvars[switch].ansible_net_all_ipv4_addresses %}
+				  {{ipaddress}} 
+				  {% endfor %}
+				 </td>
+			   </tr>
+			  {% endfor %}
               </tbody>
             </table>
           </div>

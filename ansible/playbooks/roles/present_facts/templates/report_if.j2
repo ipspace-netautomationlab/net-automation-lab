@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ethernet interface list report</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style type="text/css"> @import url(css/bootstrap.min.css?v=1.0.1);</style>
+  <style type="text/css"> @import url(css/main.css?v=1.0.1);</style>
+</head>
+<body>
+  <div id="title">
+    <h1>Ethernet interface list report for DC switching fabric{# &quot;{{inventory_hostname}}&quot; #}</h1>
+  </div>
+  <div class="limiter">
+    <div class="container-table100">
+      <div class="wrap-table100">
+        <div class="table100 ver1 m-b-110">
+          <div class="table100-head">
+            <table>
+              <thead>
+                <tr class="row100 head">
+                  <th class="cell100 column1">Eth Interface Report</th>
+                  <th class="cell100 column2">Loopback Interface Report</th>
+				  <th class="cell100 column2">SVI Interface Report</th>
+{#                   <th class="cell100 column2">State</th>
+                  <th class="cell100 column3">Mode</th>
+                  <th class="cell100 column4">MTU</th>
+                  <th class="cell100 column5">Speed</th>
+                  <th class="cell100 column6">Duplex</th> #}
+                </tr>
+              </thead>
+            </table>
+          </div>
+            
+          <div class="table100-body js-pscroll">
+            <table>
+              <tbody>
+			  {% for switch in groups['nexus_switch'] %}		
+                  <tr class="row100 body">
+                    <td class="cell100 column1">
+					{% for iface in hostvars[switch].ansible_net_interfaces | sort %}
+                    {% if iface.type == "Ethernet" %}		
+					<b>Interface:</b> {{iface}} <b>State:</b> {{iface.state}} <b>Mode:</b> {{iface.mode}} <b>mtu:</b> {{iface.mtu}}<b>speed:</b> {{iface.speed}} <b>duplex:</b> {{iface.duplex}} 
+				    {% if iface.ipv4 is defined %}
+					<b>State:</b> {{iface.ipv4.address}} <b>Mode:</b> {{iface.ipv4.masklen}}
+					{% endif %}
+					<br>
+					{% endif %}
+                    {% endfor %}
+			        </td>
+					<td class="cell100 column2">
+					{% for iface in hostvars[switch].ansible_net_interfaces | sort %}
+                    {% if iface.type == "Loopback" %}		
+					<b>Interface:</b> {{iface}} <b>State:</b> {{iface.state}} <b>Mode:</b> {{iface.mode}} <b>mtu:</b> {{iface.mtu}}<b>speed:</b> {{iface.speed}} <b>duplex:</b> {{iface.duplex}} 
+					{% if iface.ipv4 is defined %}
+					<b>State:</b> {{iface.ipv4.address}} <b>Mode:</b> {{iface.ipv4.masklen}}
+					{% endif %}
+					<br>
+					{% endif %}
+                    {% endfor %}
+			        </td>
+					<td class="cell100 column3">
+					{% for iface in hostvars[switch].ansible_net_interfaces | sort %}
+                    {% if iface.type == "svi" %}		
+					<b>Interface:</b> {{iface}} <b>State:</b> {{iface.state}} <b>Mode:</b> {{iface.mode}} <b>mtu:</b> {{iface.mtu}}<b>speed:</b> {{iface.speed}} <b>duplex:</b> {{iface.duplex}}
+					{% if iface.ipv4 is defined %}
+					<b>State:</b> {{iface.ipv4.address}} <b>Mode:</b> {{iface.ipv4.masklen}}
+					{% endif %}
+					 <br>
+					{% endif %}
+                    {% endfor %}
+			        </td>
+{#                     <td class="cell100 column2"></td>
+					<td class="cell100 column3"></td>
+					<td class="cell100 column4"></td>
+					<td class="cell100 column5"></td>
+					<td class="cell100 column6"></td> #}
+                  </tr>
+		     {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+</body>
+</html>

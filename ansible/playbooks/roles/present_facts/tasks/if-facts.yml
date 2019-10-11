@@ -1,0 +1,8 @@
+---
+
+- name: write Ethernet interfaces to HTML report file
+  template:
+    src: report_if.j2
+    dest: "{{output_folder}}/web/if.html"
+  tags:
+  - iffacts

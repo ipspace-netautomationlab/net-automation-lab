@@ -9,7 +9,7 @@
 </head>
 <body>
   <div id="title1">
-    <h1>System info report for &quot;{{inventory_hostname}}&quot;</h1>
+    <h1>System info report for DC fabric {# &quot;{{inventory_hostname}}&quot; #}</h1>
   </div>
   <div class="limiter">
     <div class="container-table100">
@@ -20,14 +20,15 @@
               <thead>
                 <tr class="row100 head">
                   <th class="cell100 column1">NXOS Version</th>
-                  <th class="cell100 column2">Serial Number</th>
-                  <th class="cell100 column3">Model</th>
-                  <th class="cell100 column4">Total Memory [MB]</th>
-                  <th class="cell100 column5">Free Memory [MB]</th>
-                  <th class="cell100 column6">System Image</th>
-                  <th class="cell100 column7">Hostname</th>
-                  <th class="cell100 column8">Modules</th>
-				  <th class="cell100 column9">Power Supply</th>
+                  <th class="cell100 column2">Management address</th>
+                  <th class="cell100 column3">Serial Number</th>
+                  <th class="cell100 column4">Model</th>
+                  <th class="cell100 column5">Total Memory [MB]</th>
+                  <th class="cell100 column6">Free Memory [MB]</th>
+                  <th class="cell100 column7">System Image</th>
+                  <th class="cell100 column8">Hostname</th>
+                  <th class="cell100 column9">Modules</th>
+				  <th class="cell100 column10">Power Supply</th>
                 </tr>
               </thead>
             </table>
@@ -39,18 +40,19 @@
 			  {% for switch in groups['nexus_switch'] %}
                   <tr class="row100 body">
 				    <td class="cell100 column1">{{hostvars[switch].hostname}}</td>
-                    <td class="cell100 column2">{{hostvars[switch].ansible_net_version}}</td>
-                    <td class="cell100 column3">{{hostvars[switch].ansible_net_serialnum}}</td>
-                    <td class="cell100 column4">{{hostvars[switch].ansible_net_model}}</td>
-                    <td class="cell100 column5">{{hostvars[switch].ansible_net_memtotal_mb}}</td>
-                    <td class="cell100 column6">{{hostvars[switch].ansible_net_memfree_mb}}</td>
-                    <td class="cell100 column7">{{hostvars[switch].ansible_net_image}}</td>
-                    <td class="cell100 column8">
+				    <td class="cell100 column2">{{hostvars[switch].ansible_net_interfaces.mgmt0.ipv4.address}}</td>
+                    <td class="cell100 column3">{{hostvars[switch].ansible_net_version}}</td>
+                    <td class="cell100 column4">{{hostvars[switch].ansible_net_serialnum}}</td>
+                    <td class="cell100 column5">{{hostvars[switch].ansible_net_model}}</td>
+                    <td class="cell100 column6">{{hostvars[switch].ansible_net_memtotal_mb}}</td>
+                    <td class="cell100 column7">{{hostvars[switch].ansible_net_memfree_mb}}</td>
+                    <td class="cell100 column8">{{hostvars[switch].ansible_net_image}}</td>
+                    <td class="cell100 column9">
 					{% for mod in hostvars[switch].module %}
 					<b>Model:</b> {{mod.model}}<br><b>Type:</b> {{mod.type}}<br><b>Status:</b> {{mod.status}}<br><b>Ports:</b> {{mod.ports}}<br>
 					{%endfor%}
 					</td>
-                    <td class="cell100 column9">
+                    <td class="cell100 column10">
 					{% for psu in hostvars[switch].power_supply_info %}
 					<b>Model:</b> {{psu.model}}<br><b>Status:</b> {{psu.status}}<br><b>Number:</b> {{psu.number}}<br>{# <b>Current:</b> {{psu.amps}}<br> #}{# <b>Power:</b> {{psu.watts}}<br> #}
 					{%endfor%}
