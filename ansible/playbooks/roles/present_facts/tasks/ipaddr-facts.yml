@@ -5,4 +5,4 @@
     src: report_ipaddr.j2
     dest: "{{output_folder}}/web/ipaddr.html"
   tags:
-  - ipfacts
+  - ipfacts_report

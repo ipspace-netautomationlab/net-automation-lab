@@ -5,4 +5,4 @@
     src: report_if.j2
     dest: "{{output_folder}}/web/if.html"
   tags:
-  - iffacts
+  - iffacts_report

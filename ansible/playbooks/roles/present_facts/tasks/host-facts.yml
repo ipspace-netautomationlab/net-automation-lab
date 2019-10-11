@@ -6,4 +6,4 @@
     dest: "{{output_folder}}/json/{{hostvars[item].inventory_hostname}}_nxosfacts.json"
   loop: "{{ groups['nexus_switch'] }}"
   tags:
-  - savefacts
+  - facts_save
