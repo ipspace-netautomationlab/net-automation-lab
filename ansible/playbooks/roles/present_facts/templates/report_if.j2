@@ -39,10 +39,10 @@
                   <tr class="row100 body">
                     <td class="cell100 column1">
 					{% for iface in hostvars[switch].ansible_net_interfaces | sort %}
-                    {% if hostvars[switch].ansible_net_interfaces[iface]['type'] is defined and hostvars[switch].ansible_net_interfaces[iface]['type'] == "Ethernet" %}		
+                    {% if hostvars[switch].ansible_net_interfaces[iface]['type'] is defined and "Ethernet" in hostvars[switch].ansible_net_interfaces[iface]['type'] %}		
 					<b>Interface:</b> {{iface}} <b>State:</b> {{hostvars[switch].ansible_net_interfaces[iface]['state']}} <b>mtu:</b> {{hostvars[switch].ansible_net_interfaces[iface]['mtu']}}<b>speed:</b> {{hostvars[switch].ansible_net_interfaces[iface]['speed']}} <b>duplex:</b> {{hostvars[switch].ansible_net_interfaces[iface]['duplex']}}
-				    {% if iface.ipv4 is defined %}
-					<b>State:</b> {{iface.ipv4.address}} <b>Mode:</b> {{iface.ipv4.masklen}}
+				    {% if hostvars[switch].ansible_net_interfaces[iface]['ipv4'] is defined %}
+					<b>Address:</b> {{hostvars[switch].ansible_net_interfaces[iface]['ipv4'].address}} <b>Mask:</b> {{hostvars[switch].ansible_net_interfaces[iface]['ipv4'].masklen}}
 					{% endif %}
 					<br>
 					{% endif %}
