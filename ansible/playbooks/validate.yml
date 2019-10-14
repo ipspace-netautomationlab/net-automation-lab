@@ -3,7 +3,6 @@
 - name: validate fabric configuration
   gather_facts: no
   hosts: spine
-#  remote_user: netadmin
   vars:
     offset: 1
     leaf_count: "{{ groups['leaf'] | length }}"
@@ -132,7 +131,6 @@
 - name: Validate leaf device configuration
   gather_facts: no
   hosts: leaf
-#  remote_user: netadmin
   pre_tasks:
     - name: Gathering leaf info
       register: nxos_facts_leaf_out
