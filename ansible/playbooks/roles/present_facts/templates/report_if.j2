@@ -48,7 +48,30 @@
 					{% endif %}
                     {% endfor %}
 			        </td>
-					<td class="cell100 column2">
+                    <td class="cell100 column2">
+					{% for iface in hostvars[switch].ansible_net_interfaces | sort %}
+                    {% if hostvars[switch].ansible_net_interfaces[iface]['type'] is defined and "Loopback" in hostvars[switch].ansible_net_interfaces[iface]['type'] %}		
+					<b>Interface:</b> {{iface}} <b>State:</b> {{hostvars[switch].ansible_net_interfaces[iface]['state']}} <b>mtu:</b> {{hostvars[switch].ansible_net_interfaces[iface]['mtu']}}
+				    {% if hostvars[switch].ansible_net_interfaces[iface]['ipv4'] is defined %}
+					<b>Address:</b> {{hostvars[switch].ansible_net_interfaces[iface]['ipv4'].address}} <b>Mask:</b> {{hostvars[switch].ansible_net_interfaces[iface]['ipv4'].masklen}}
+					{% endif %}
+					<br>
+					{% endif %}
+                    {% endfor %}
+			        </td>
+                    <td class="cell100 column3">
+					{% for iface in hostvars[switch].ansible_net_interfaces | sort %}
+                    {% if hostvars[switch].ansible_net_interfaces[iface]['type'] is defined and "svi" in hostvars[switch].ansible_net_interfaces[iface]['type'] %}		
+					<b>Interface:</b> {{iface}} <b>State:</b> {{hostvars[switch].ansible_net_interfaces[iface]['state']}} <b>mtu:</b> {{hostvars[switch].ansible_net_interfaces[iface]['mtu']}}
+				    {% if hostvars[switch].ansible_net_interfaces[iface]['ipv4'] is defined %}
+					<b>Address:</b> {{hostvars[switch].ansible_net_interfaces[iface]['ipv4'].address}} <b>Mask:</b> {{hostvars[switch].ansible_net_interfaces[iface]['ipv4'].masklen}}
+					{% endif %}
+					<br>
+					{% endif %}
+                    {% endfor %}
+			        </td>						
+					
+{# 					<td class="cell100 column2">
 					{% for iface in hostvars[switch].ansible_net_interfaces | sort %}
                     {% if ansible_net_interfaces[iface]['type'] is defined and ansible_net_interfaces[iface]['type'] == "Loopback" %}		
 					<b>Interface:</b> {{ansible_net_interfaces[iface]}} <b>State:</b> {{ansible_net_interfaces[iface]['state']}} <b>Mode:</b> {{ansible_net_interfaces[iface]['mode']}} <b>mtu:</b> {{ansible_net_interfaces[iface]['mtu']}}<b>speed:</b> {{ansible_net_interfaces[iface]['speed']}} <b>duplex:</b> {{ansible_net_interfaces[iface]['duplex']}}
@@ -59,6 +82,8 @@
 					{% endif %}
                     {% endfor %}
 			        </td>
+					
+					
 					<td class="cell100 column3">
 					{% for iface in hostvars[switch].ansible_net_interfaces | sort %}
                     {% if ansible_net_interfaces[iface]['type'] is defined and ansible_net_interfaces[iface]['type'] == "svi" %}		
@@ -69,7 +94,7 @@
 					 <br>
 					{% endif %}
                     {% endfor %}
-			        </td>
+			        </td> #}
 {#                     <td class="cell100 column2"></td>
 					<td class="cell100 column3"></td>
 					<td class="cell100 column4"></td>
