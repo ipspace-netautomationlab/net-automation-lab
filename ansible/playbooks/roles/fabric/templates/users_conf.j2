@@ -1,4 +1,6 @@
 !
+no password strength-check
+!
 {% for user in global_users %}
 username {{ user.username }} password {{ user.pwd }}  role {{ user.role }}
 {% if user.ssh_key is defined %}
