@@ -20,6 +20,7 @@
     tags:
      - tftp_upload_reset
   - name: Copying complete configurations to tftp home
+    register: upload_results
     copy:
       src: "{{output_folder}}/config/{{hostvars[item].inventory_hostname}}_complete.conf"
       dest: "{{tftp_folder}}/conf.{{hostvars[item].serial_num}}"
@@ -29,3 +30,7 @@
     loop: "{{ query('inventory_hostnames', 'nexus_switch') }}"
     tags:
     - tftp_upload
+    
+  - debug: 
+     msg: md5sum {{ upload_results }} 
+    loop: "{{ query('inventory_hostnames', 'nexus_switch') }}"
