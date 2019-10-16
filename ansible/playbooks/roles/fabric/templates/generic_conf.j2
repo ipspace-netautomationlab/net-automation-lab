@@ -30,9 +30,9 @@ errdisable recovery cause loopback
 ip access-list MNG-ADDR
 {% for line in mng_acl %}
 {% if line.line=="remark" %}
- {{ansible_loop.index*10}} remark {{line.name}}
+ {{loop.index*10}} remark {{line.name}}
 {% elif line.line=="rule" %}
- {{ansible_loop.index*10}} permit tcp {{line.net}} {{line.subnet}} any eq 22 
+ {{loop.index*10}} permit tcp {{line.net}} {{line.subnet}} any eq 22 
 {% endif %}
 {% endfor %}
 !
