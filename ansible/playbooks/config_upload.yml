@@ -26,7 +26,7 @@
       dest: "{{tftp_folder}}/conf.{{hostvars[item].serial_num}}"
 #      owner: root
 #      group: root
-#      mode: '0777'
+      mode: '0777'
     loop: "{{ query('inventory_hostnames', 'nexus_switch') }}"
     tags:
     - tftp_upload
@@ -34,3 +34,5 @@
   - debug: 
      msg: md5sum {{ upload_results }} 
     loop: "{{ query('inventory_hostnames', 'nexus_switch') }}"
+    tags:
+    - tftp_upload
