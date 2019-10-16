@@ -31,8 +31,7 @@
     tags:
     - tftp_upload
     
-  - debug: 
-     msg: md5sum {{ upload_results }} 
-    loop: "{{ query('inventory_hostnames', 'nexus_switch') }}"
+  - name: Generating md5
+    shell: "{{tftp_folder}}/md5.sh"
     tags:
-    - tftp_upload
+    - tftp_upload    
