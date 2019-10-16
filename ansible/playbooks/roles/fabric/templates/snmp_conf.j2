@@ -1,9 +1,9 @@
 ip access-list SNMP_RO
 {% for line in snmp_acl %}
 {% if line.line=="remark" %}
- remark {{line.name}}
+ {{ansible_loop.index*10}} remark {{line.name}}
 {% elif line.line=="rule" %}
- permit ip {{line.net}} {{line.subnet}} any
+ {{ansible_loop.index*10}} permit ip {{line.net}} {{line.subnet}} any
 {% endif %}
 {% endfor %}
 !

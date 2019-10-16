@@ -27,12 +27,12 @@ errdisable recovery cause link-flap
 errdisable recovery cause udld
 errdisable recovery cause loopback
 !
-ip access-list VPN-MGMT-ADDR
+ip access-list MNG-ADDR
 {% for line in mng_acl %}
 {% if line.line=="remark" %}
- remark {{line.name}}
+ {{ansible_loop.index*10}} remark {{line.name}}
 {% elif line.line=="rule" %}
- permit tcp {{line.net}} {{line.subnet}} any eq 22 
+ {{ansible_loop.index*10}} permit tcp {{line.net}} {{line.subnet}} any eq 22 
 {% endif %}
 {% endfor %}
 !
@@ -57,6 +57,6 @@ line vty
   session-limit 16
   exec-timeout 15
   logout-warning 20 
-  access-class VPN-MGMT-ADDR in
+  access-class MNG-ADDR in
 !
 !
