@@ -122,9 +122,7 @@
     - name: Include rescue tasks
       include_tasks: rescue.yml
     tags:
-    - underlay
-    - overlay
-    - validate
+    - rollback
     
        
 # The second Play handles the validation tasks related to services (VRFs, VLANs, etc.)
@@ -215,10 +213,8 @@
     rescue:
     - name: Include rescue tasks
       include_tasks: rescue.yml
-
     tags:
     - postdeploy
-    - validate
     
   - block:
     #  The task fails if VRF to be created is found           
