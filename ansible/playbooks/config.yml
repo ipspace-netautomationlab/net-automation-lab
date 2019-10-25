@@ -18,7 +18,7 @@
 #      owner: netadmin
       path: '{{output_folder}}/config'
       state: directory
-      mode: 0777
+#      mode: 0777
     run_once: true
     tags:
     - config
