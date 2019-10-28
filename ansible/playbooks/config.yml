@@ -1,27 +1,5 @@
 ---
 
-# First block of tasks: cleaning up the config folder
-- name: output folder reset
-  hosts: localhost
-  connection: local
-  gather_facts: no
-  tasks:
-  - name: deleting config folder
-    file: 
-      path: '{{output_folder}}/config'
-      state: absent
-    run_once: true
-    tags:
-      - config
-  - name: creating config folder
-    file: 
-#      owner: netadmin
-      path: '{{output_folder}}/config'
-      state: directory
-      mode: 0777
-    run_once: true
-    tags:
-    - config
 
 # Second block of tasks: creating device config files
 - name: create basic device config files
