@@ -4,7 +4,7 @@
 - name: output folder reset
   hosts: localhost
   connection: local
-#  gather_facts: no
+  gather_facts: no
   tasks:
   - name: deleting config folder
     file: 
@@ -27,7 +27,7 @@
 - name: create basic device config files
 #  delegate_to: localhost
   connection: local
-#  gather_facts: no
+  gather_facts: no
   hosts: nexus_switch
 #  vars_files: ../inventory/vars/services.yml
   roles:
