@@ -27,10 +27,9 @@
 - name: create basic device config files
 #  delegate_to: localhost
   connection: local
-  ansible_connection: local
   gather_facts: no
   hosts: nexus_switch
-  vars_files: ../inventory/vars/services.yml
+#  vars_files: ../inventory/vars/services.yml
   roles:
   - fabric
       

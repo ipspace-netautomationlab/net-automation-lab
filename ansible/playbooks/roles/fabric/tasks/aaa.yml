@@ -1,6 +1,7 @@
 ---
 
 - name: aaa config file
+  connection: local
   template:
     src: aaa.j2
     dest: "{{ output_folder }}/config/{{ inventory_hostname }}_1_6_aaa.conf"
