@@ -12,7 +12,7 @@
       state: absent
     run_once: true
     tags:
-      - config
+      - config_reset
   - name: creating config folder
     file: 
       path: '{{output_folder}}/config'
@@ -20,7 +20,7 @@
       mode: 0777
     run_once: true
     tags:
-    - config
+    - config_reset
     
 # Second block of tasks: creating device config files
 - name: create basic device config files
