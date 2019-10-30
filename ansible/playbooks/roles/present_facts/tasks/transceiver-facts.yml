@@ -1,0 +1,9 @@
+---
+
+- name: write Transceiver info to HTML report file
+  template:
+    src: report_transceiver.j2
+    dest: "{{output_folder}}/web/transceiver.html"
+  tags:
+  - transceiver_facts_report
+  

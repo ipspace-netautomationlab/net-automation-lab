@@ -1,3 +1,4 @@
 ---
 
  - import_tasks: get-system-facts.yml
+ - import_tasks: get-show-facts.yml

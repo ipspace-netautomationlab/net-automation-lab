@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ethernet interface list report</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style type="text/css"> @import url(css/bootstrap.min.css?v=1.0.1);</style>
+  <style type="text/css"> @import url(css/main.css?v=1.0.1);</style>
+</head>
+<body>
+  <div id="title">
+    <h1>Transceiver list report for DC switching fabric</h1>
+  </div>
+  <div class="limiter">
+    <div class="container-table100">
+      <div class="wrap-table100">
+        <div class="table100 ver1 m-b-110">
+          <div class="table100-head">
+            <table>
+              <thead>
+                <tr class="row100 head">
+				  <th class="cell100 column1">Hostname</th>
+				  <th class="cell100 column2">Interface</th>
+                  <th class="cell100 column3">Transceiver type</th>
+                  <th class="cell100 column4">Part number</th>
+				  <th class="cell100 column5">Serial number</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+            
+          <div class="table100-body js-pscroll">
+            <table>
+              <tbody>
+			  {% for switch in groups['nexus_switch'] %}
+                {% for iface in hostvars[switch].nxos_transceiver_out.stdout.0.TABLE_interface.ROW_interface %}
+					{%if iface.sfp == "present" %}
+                    <tr class="row100 body">
+				    <td class="cell100 column1"> {{hostvars[switch].hostname}} </td>
+                    <td class="cell100 column2"> {{iface.interface}} </td>
+                    <td class="cell100 column3"> {{iface.type}} </td>
+                    <td class="cell100 column4"> {{iface.partnum}} </td>			
+                    <td class="cell100 column4"> {{iface.serialnum}} </td>	
+                    </tr>
+                    {% endif %}	
+		        {% endfor %}
+			 {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+</body>
+</html>

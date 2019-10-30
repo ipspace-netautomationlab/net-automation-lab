@@ -1,0 +1,64 @@
+---
+
+# Gathering info about VRFs
+- name: Running 'show vrf' on remote devices
+  nxos_command:
+    commands: 
+      - command: show vrf
+        output: json
+  register: nxos_vrf_out
+  tags:
+  - show_vrf
+
+# Gathering info about VLANs
+- name: Running 'show vlan' on remote devices
+  nxos_command:
+    commands: 
+      - command: show vlan
+        output: json
+  register: nxos_vlan_out
+  tags:
+  - show_vlan
+
+# Gathering info about Switchports
+- name: Running 'show interface switchport' on remote devices
+  nxos_command:
+    commands: 
+      - command: show interface switchport
+        output: json
+  register: nxos_switchport_leaf_out
+  tags:
+  - show_switchport
+
+# Gathering info about transceiver
+- name: Running 'show interface transceiver' on remote devices
+  nxos_command:
+    commands: 
+      - command: show interface transceiver
+        output: json
+  register: nxos_transceiver_out
+  tags:
+  - show_transceiver
+  
+ # Gathering info about Mac table
+- name: Running 'show mac address-table' on remote devices
+  nxos_command:
+    commands: 
+      - command: show mac address-table
+        output: json
+  register: nxos_mactable_out
+  tags:
+  - show_mactable 
+  
+ # Gathering info about ip route
+- name: Running 'show ip route vrf all' on remote devices
+  nxos_command:
+    commands: 
+      - command: show ip route vrf all
+        output: json
+  register: nxos_iproute_out
+  tags:
+  - show_iproute   
+
+
+
