@@ -40,6 +40,10 @@
   tags:
   - show_transceiver
   
+- set_fact: transceiver_out={{nxos_transceiver_out}} 
+  tags:
+  - show_transceiver
+  
  # Gathering info about Mac table
 - name: Running 'show mac address-table' on remote devices
   nxos_command:
