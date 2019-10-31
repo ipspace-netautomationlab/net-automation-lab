@@ -1,3 +1,7 @@
+{% if generic_params.id in bgp_global_params.reflectors | map(attribute='id')| list%}
+ route-map nexthop-unchanged permit 10
+  set ip next-hop unchanged
+{%endif%}
 !
 router bgp {{ bgp_global_params.local_as | int }}
   router-id {{underlay_global_params.interfaces.loopback[0].ipaddr | ipaddr('address') | ipv4}}
@@ -16,6 +20,15 @@ router bgp {{ bgp_global_params.local_as | int }}
       send-community
       send-community extended
       route-reflector-client
+      soft-reconfiguration inbound always
+  template peer remote-spines
+    remote-as {{ bgp_global_params.remote_as | int }}
+    update-source loopback0
+    ebgp-multihop 10
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+      route-map nexthop-unchanged out
       soft-reconfiguration inbound always
 {%endif%}
   template peer spines
@@ -41,6 +54,11 @@ router bgp {{ bgp_global_params.local_as | int }}
     inherit peer leaves
   !
 {%endif%}
+{% for rreflector in bgp_global_params.remote-reflectors %} 
+  neighbor {{ rreflector.ip | ipv4 }}
+    inherit peer remote-spines
+  !
+{% endfor %}
 {% endfor %}
 {%endif%}
 {# {% if 'leaf' in group_names %}
