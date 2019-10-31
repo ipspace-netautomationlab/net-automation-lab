@@ -40,7 +40,9 @@
   tags:
   - show_transceiver
   
-- set_fact: transceiver_out={{nxos_transceiver_out}} 
+- set_fact: 
+    transceiver_out: "{{nxos_transceiver_out}}"
+    cacheable: true
   tags:
   - show_transceiver
   

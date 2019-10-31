@@ -33,7 +33,7 @@
             <table>
               <tbody>
 			  {% for switch in groups['nexus_switch'] %}
-                {% for iface in hostvars[switch].transceiver_out.stdout.0.TABLE_interface.ROW_interface %}
+                {% for iface in hostvars[switch].nxos_transceiver_out.stdout.0.TABLE_interface.ROW_interface %}
 					{%if iface.sfp == "present" %}
                     <tr class="row100 body">
 				    <td class="cell100 column1"> {{hostvars[switch].hostname}} </td>
