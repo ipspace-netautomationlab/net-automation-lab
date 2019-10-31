@@ -47,6 +47,11 @@ router bgp {{ bgp_global_params.local_as | int }}
   !
 {%endif%}
 {% endfor %}
+{% for rreflector in bgp_global_params.remote_reflectors %} 
+  neighbor {{ rreflector.ip | ipv4 }}
+    inherit peer remote-spines
+  !
+{% endfor %}
 {% if generic_params.id in bgp_global_params.reflectors | map(attribute='id')| list%}
 {% for client in bgp_global_params.clients %}  
 {%if client.id != generic_params.id%}
@@ -54,11 +59,6 @@ router bgp {{ bgp_global_params.local_as | int }}
     inherit peer leaves
   !
 {%endif%}
-{% for rreflector in bgp_global_params.remote_reflectors %} 
-  neighbor {{ rreflector.ip | ipv4 }}
-    inherit peer remote-spines
-  !
-{% endfor %}
 {% endfor %}
 {%endif%}
 {# {% if 'leaf' in group_names %}
