@@ -54,7 +54,7 @@ router bgp {{ bgp_global_params.local_as | int }}
     inherit peer leaves
   !
 {%endif%}
-{% for rreflector in bgp_global_params.remote-reflectors %} 
+{% for rreflector in bgp_global_params.remote_reflectors %} 
   neighbor {{ rreflector.ip | ipv4 }}
     inherit peer remote-spines
   !
