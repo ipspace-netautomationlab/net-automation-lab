@@ -48,6 +48,7 @@
 
 - name: copy CSS into web folder
   copy:
+    remote_src: yes
     src: "{{output_folder}}/css/"
     dest: "{{output_folder}}/web/css/"
     directory_mode: yes
