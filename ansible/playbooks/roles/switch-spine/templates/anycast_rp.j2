@@ -3,3 +3,7 @@
 ip pim anycast-rp {{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(pim_global_params.rp_id*3+2) | ipaddr('address')  | ipv4 }} {{ generic_global_params.loopback_net | ipaddr('net') | ipaddr(rp.id*3+1) | ipaddr('address')  | ipv4 }}
 {% endfor %}
 !
+{% for peer in pim_global_params.msdp %}
+ip msdp peer {{peer.peer}} connect-source loopback0 remote-as {{ bgp_global_params.remote_as | int }}
+{% endfor %}
+!
