@@ -56,12 +56,23 @@ no vrf context {{ vrf_name }}
 {% if ( vlan_state == "create" or vlan_state == "modify" ) %}
 vlan {{ vlan_id | int }}
   name {{ vlan_name }}
+  {% if private_vlan_type is defined %}
+  private-vlan {{private_vlan_type}}
+  {% if private_vlan_type == "primary" %}
+  private-vlan association {{private_vlan_association}}
+  {% endif %}
+  {% endif %}
   vn-segment {{ vlan_id | int + 10000}}
 !
 {%if vrf_id is defined and vlan_ipaddr is defined and vlan_ipaddr | length and vlan_ipaddr | ipaddr %}
 interface Vlan{{ vlan_id | int }}
   description {{ vlan_descr }}
   no shutdown
+  {% if private_vlan_type is defined %}
+  {% if private_vlan_type == "primary" %}
+  private-vlan mapping {{private_vlan_association}}
+  {% endif %}
+  {% endif %}
   mtu {{ vlanif_global_params.mtu | int }}
   vrf member {{ vrf_name }}
   ip address {{ vlan_ipaddr | ipaddr }}
