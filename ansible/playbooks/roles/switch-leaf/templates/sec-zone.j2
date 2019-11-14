@@ -1,0 +1,54 @@
+!
+!
+{% if vrf_state is defined %}
+{% if ( vrf_state == "create" or vrf_state == "modify" ) %}
+{% if vrf_name != "default" %}
+vrf context {{ vrf_name }}
+  vni {{ vrf_id | int + 1000 }}
+  ip pim ssm range {{ pim_global_params.ssm_multicast_group }}
+  rd 1:{{ vrf_id }}
+  address-family ipv4 unicast
+    route-target both 1:{{ vrf_id }}
+    route-target both 1:{{ vrf_id }} evpn
+!
+router bgp {{ bgp_global_params.local_as | int }}
+  vrf {{ vrf_name }}
+    address-family ipv4 unicast
+      advertise l2vpn evpn
+{% if "border-leaf" in role_names %}
+      redistribute ospf overlay route-map to-leaves
+{% endif %}
+!
+vlan {{ vrf_id | int + 1000 }}
+ name l3-{{ vrf_name}}
+ vn-segment {{ vrf_id | int + 1000 }}
+!
+interface Vlan{{ vrf_id | int + 1000 }}
+  description l3-{{ vrf_name }}
+  no shutdown
+  mtu {{ phyif_global_params.mtu | int }}
+  vrf member {{ vrf_name }}
+  no ip redirects
+  ip forward
+  no ipv6 redirects
+!
+interface nve1
+  member vni {{ vrf_id | int + 1000 }} associate-vrf
+{% endif %}
+{% elif vrf_state == "delete" %}
+!
+interface nve1
+  no member vni {{ vrf_id | int + 1000 }} associate-vrf
+!
+no interface Vlan{{ vrf_id | int + 1000 }}
+!
+no vlan {{ vrf_id | int + 1000 }}
+!
+router bgp {{ bgp_global_params.local_as | int }}
+  no vrf {{ vrf_name }}
+!
+no vrf context {{ vrf_name }}
+!
+{% else %}
+{% endif %}
+{% endif %}
