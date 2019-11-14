@@ -37,12 +37,12 @@
   roles:
   - switch-leaf
   
-- name: create border leaf device config files
-  connection: local
-  gather_facts: no
-  hosts: border-leaf
-  roles:
-  - switch-border-leaf
+#- name: create border leaf device config files
+#  connection: local
+#  gather_facts: no
+#  hosts: border-leaf
+#  roles:
+#  - switch-border-leaf
 
 - name: create spine device config files
   connection: local
