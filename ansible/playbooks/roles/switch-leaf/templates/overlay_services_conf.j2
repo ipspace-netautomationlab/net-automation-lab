@@ -8,8 +8,8 @@ vrf context {{ vrf_name }}
   ip pim ssm range {{ pim_global_params.ssm_multicast_group }}
   rd {{vrf_rd}}
   address-family ipv4 unicast
-    route-target both 1:{{ vrf_rt }}
-    route-target both 1:{{ vrf_rt }} evpn
+    route-target both {{ vrf_rt }}
+    route-target both {{ vrf_rt }} evpn
 !
 router bgp {{ bgp_global_params.local_as | int }}
   vrf {{ vrf_name }}
