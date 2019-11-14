@@ -4,12 +4,12 @@
 {% if ( vrf_state == "create" or vrf_state == "modify" ) %}
 {% if vrf_name != "default" %}
 vrf context {{ vrf_name }}
-  vni {{ vrf_id | int + 1000 }}
+  vni {{ l3vni_id }}
   ip pim ssm range {{ pim_global_params.ssm_multicast_group }}
-  rd 1:{{ vrf_id }}
+  rd {{vrf_rd}}
   address-family ipv4 unicast
-    route-target both 1:{{ vrf_id }}
-    route-target both 1:{{ vrf_id }} evpn
+    route-target both 1:{{ vrf_rt }}
+    route-target both 1:{{ vrf_rt }} evpn
 !
 router bgp {{ bgp_global_params.local_as | int }}
   vrf {{ vrf_name }}
@@ -19,11 +19,11 @@ router bgp {{ bgp_global_params.local_as | int }}
       redistribute ospf overlay route-map to-leaves
 {% endif %}
 !
-vlan {{ vrf_id | int + 1000 }}
+vlan {{ l3vlan_id }}
  name l3-{{ vrf_name}}
- vn-segment {{ vrf_id | int + 1000 }}
+ vn-segment {{l3vni_id}}
 !
-interface Vlan{{ vrf_id | int + 1000 }}
+interface Vlan{{ l3vlan_id }}
   description l3-{{ vrf_name }}
   no shutdown
   mtu {{ phyif_global_params.mtu | int }}
@@ -33,16 +33,16 @@ interface Vlan{{ vrf_id | int + 1000 }}
   no ipv6 redirects
 !
 interface nve1
-  member vni {{ vrf_id | int + 1000 }} associate-vrf
+  member vni {{ l3vni_id }} associate-vrf
 {% endif %}
 {% elif vrf_state == "delete" %}
 !
 interface nve1
-  no member vni {{ vrf_id | int + 1000 }} associate-vrf
+  no member vni {{ l3vni_id }} associate-vrf
 !
-no interface Vlan{{ vrf_id | int + 1000 }}
+no interface Vlan{{ l3vlan_id }}
 !
-no vlan {{ vrf_id | int + 1000 }}
+no vlan {{ l3vlan_id }}
 !
 router bgp {{ bgp_global_params.local_as | int }}
   no vrf {{ vrf_name }}
