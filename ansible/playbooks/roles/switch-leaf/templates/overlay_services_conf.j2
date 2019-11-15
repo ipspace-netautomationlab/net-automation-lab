@@ -4,6 +4,7 @@
 {% if ( vrf_state == "create" or vrf_state == "modify" ) %}
 {% if vrf_name != "default" %}
 vrf context {{ vrf_name }}
+  description {{ vrf_descr }}
   vni {{ l3vni_id }}
   ip pim ssm range {{ pim_global_params.ssm_multicast_group }}
   rd {{vrf_rd}}
