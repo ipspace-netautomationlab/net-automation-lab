@@ -1,0 +1,9 @@
+---
+
+- name: write security zone config file
+  template:
+    src: sec-zone.j2
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_4_3_sec-zone.conf"
+  tags:
+  - config
+  - sec-zone

@@ -1,3 +1,6 @@
 ---
 
  - import_tasks: overlay-services.yml
+ - import_tasks: vlan.yml
+ - import_tasks: svi.yml
+ - import_tasks: sec-zone.yml

@@ -1,0 +1,9 @@
+---
+
+- name: write vlan config file
+  template:
+    src: vlan.j2
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_4_1_vlan.conf"
+  tags:
+  - config
+  - vlan
