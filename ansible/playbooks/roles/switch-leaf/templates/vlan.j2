@@ -4,12 +4,12 @@
 {% if ( vlan_state == "create" or vlan_state == "modify" ) %}
 vlan {{ vlan_id | int }}
   name {{ vlan_name }}
-  {% if private_vlan_type is defined %}
+{% if private_vlan_type is defined %}
   private-vlan {{private_vlan_type}}
-  {% if private_vlan_type == "primary" %}
+{% if private_vlan_type == "primary" %}
   private-vlan association {{private_vlan_association}}
-  {% endif %}
-  {% endif %}
+{% endif %}
+{% endif %}
   vn-segment {{ vni_id}}
 !
 !
