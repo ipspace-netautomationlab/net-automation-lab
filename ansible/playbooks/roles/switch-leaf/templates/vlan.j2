@@ -24,7 +24,7 @@ interface nve1
 !
 evpn
  vni {{ vni_id }} l2
-    rd {{ generic_params.id }}:{{ vni_id }}
+    rd {{ vni_rd_top }}:{{ vni_id }}
     route-target import 1:{{ vni_id }}
     route-target export 1:{{ vni_id }}
 !
