@@ -162,6 +162,18 @@
       - validate
       - postdeploy
       - predeploy
+    
+    # Gathering info about interfaces
+    - name: Running 'show ip int brie vrf all' on remote devices
+      nxos_command:
+        commands: 
+          - command: show ip int brie vrf all
+            output: json
+      register: nxos_int_leaf_out
+      tags:
+      - validate
+      - postdeploy
+      - predeploy
 
     # Gathering info about Switchports
     - name: Running 'show interface switchport' on remote devices
@@ -179,6 +191,7 @@
       set_fact:
         vrf_list: "{{ nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list }}"
         vlan_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_vlanbrief.ROW_vlanbrief | map(attribute='vlanshowbr-vlanid') | list }}"
+        int_list: "{{nxos_int_leaf_out.stdout.0.TABLE_intf.ROW_intf | map(attribute='intf-name') | list }}"
       tags:
       - validate
       - postdeploy
@@ -209,6 +222,18 @@
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' is existing on device '{{inventory_hostname}}'"
       when: (vlan_state is defined and vlan_state == "delete" and ( vlan_id | string ) in vlan_list)
+      
+    #  The task fails if Interface VLAN to be created or modified is not found           
+    - name: postdeploy - Checking for Interface VLANs to be created or modified
+      fail:
+        msg: "WARNING: Interface vlan '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
+      when: (svi_state is defined and ( svi_state == "create" or svi_state == "modify" ) and ( "Vlan{{vlan_id}}" | string ) not in int_list)
+    
+    #  The task fails if Interface VLAN to be deleted is found           
+    - name: postdeploy - Checking for VLANs to be deleted
+      fail:
+        msg: "WARNING: Interface vlan '{{vlan_id}}' is existing on device '{{inventory_hostname}}'"
+      when: (svi_state is defined and svi_state == "delete" and ( "Vlan{{vlan_id}}" | string ) in int_list)
 
     rescue:
     - name: Include rescue tasks
@@ -240,6 +265,19 @@
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
       when: (vlan_state is defined and ( vlan_state == "modify" or vlan_state == "delete" ) and ( vlan_id | string ) not in vlan_list)
+
+    #  The task fails if Interface VLAN to be created is found           
+    - name: predeploy - Checking for VLANs to be created
+      fail:
+        msg: "WARNING: Interface vlan  '{{vlan_id}}' already existing on device '{{inventory_hostname}}'"
+      when: (svi_state is defined and svi_state == "create" and ( "Vlan{{vlan_id}}" | string ) in int_list)
+    
+    #  The task fails if Interface VLAN to be modified or deleted is not found           
+    - name: predeploy - Checking for VLANs to be modified or deleted
+      fail:
+        msg: "WARNING: Interface vlan '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
+      when: (svi_state is defined and ( svi_state == "modify" or svi_state == "delete" ) and ( "Vlan{{vlan_id}}" | string ) not in int_list)
+
 
     tags:
     - predeploy  

@@ -1,10 +1,10 @@
 !
 !
-{% if vlan_state is defined %}
-{% if ( vlan_state == "create" or vlan_state == "modify" ) %}
+{% if svi_state is defined %}
+{% if ( svi_state == "create" or svi_state == "modify" ) %}
 
 !
-{%if vrf_id is defined and vlan_ipaddr is defined and vlan_ipaddr | length and vlan_ipaddr | ipaddr %}
+{%if vrf_id is defined and svi_ipaddr is defined and svi_ipaddr | length and svi_ipaddr | ipaddr %}
 interface Vlan{{ vlan_id | int }}
   description {{ vlan_descr }}
   no shutdown
@@ -15,13 +15,13 @@ interface Vlan{{ vlan_id | int }}
   {% endif %}
   mtu {{ vlanif_global_params.mtu | int }}
   vrf member {{ vrf_name }}
-  ip address {{ vlan_ipaddr | ipaddr }}
+  ip address {{ svi_ipaddr | ipaddr }}
   fabric forwarding mode anycast-gateway
 !
 {% endif %}
 !
-{% elif vlan_state == "delete" %}
-{% if vlan_ipaddr is defined and vlan_ipaddr | length %}
+{% elif svi_state == "delete" %}
+{% if svi_ipaddr is defined and svi_ipaddr | length %}
 no interface vlan {{ vlan_id | int }}
 !
 {% endif %}
