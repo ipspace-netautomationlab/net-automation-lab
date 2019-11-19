@@ -16,7 +16,7 @@ vlan {{ vlan_id | int }}
 interface nve1
   member vni {{ vni_id }}
     suppress-arp
-{%if vrf_id is defined and vlan_ipaddr is defined and vlan_ipaddr | length and vlan_ipaddr | ipaddr %}
+{%if vrf_id is defined%}
     mcast-group 239.1.0.{{ vrf_id }}
 {% else %}
     mcast-group 239.1.0.0
