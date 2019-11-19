@@ -10,11 +10,11 @@ vlan {{ vlan_id | int }}
   private-vlan association {{private_vlan_association}}
   {% endif %}
   {% endif %}
-  vn-segment {{ vlan_id | int + 10000}}
+  vn-segment {{ vni_id}}
 !
 !
 interface nve1
-  member vni {{ vlan_id | int + 10000 }}
+  member vni {{ vni_id }}
     suppress-arp
 {%if vrf_id is defined and vlan_ipaddr is defined and vlan_ipaddr | length and vlan_ipaddr | ipaddr %}
     mcast-group 239.1.0.{{ vrf_id }}
@@ -23,20 +23,20 @@ interface nve1
 {% endif %}
 !
 evpn
- vni {{ vlan_id | int + 10000 }} l2
-    rd {{ generic_params.id }}:{{ vlan_id | int + 10000 }}
-    route-target import 1:{{ vlan_id | int + 10000 }}
-    route-target export 1:{{ vlan_id | int + 10000 }}
+ vni {{ vni_id }} l2
+    rd {{ generic_params.id }}:{{ vni_id }}
+    route-target import 1:{{ vni_id }}
+    route-target export 1:{{ vni_id }}
 !
 {% elif vlan_state == "delete" %}
 no vlan {{ vlan_id | int }}
 !
 !
 interface nve1
-  no member vni {{ vlan_id | int + 10000 }}
+  no member vni {{ vni_id }}
 !
 evpn
- no vni {{ vlan_id | int + 10000 }} l2
+ no vni {{ vni_id }} l2
 !
 {% else %}
 {% endif %}
