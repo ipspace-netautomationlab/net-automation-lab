@@ -194,16 +194,26 @@
     - name: setting vars
       set_fact:
         vrf_list: "{{ nxos_vrf_leaf_out.stdout.0.TABLE_vrf.ROW_vrf | map(attribute='vrf_name') | list }}"
-        vlan_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_vlanbrief.ROW_vlanbrief | map(attribute='vlanshowbr-vlanid') | list }}"
-        int_list: "{{nxos_int_leaf_out.stdout.0.TABLE_intf.ROW_intf | map(attribute='intf-name') | list }}"
       tags:
       - validate
       - postdeploy-sec-zone
       - predeploy-sec-zone
-      - postdeploy-svi
-      - predeploy-svi
+
+    - name: setting vars
+      set_fact:
+        vlan_list: "{{ nxos_vlan_leaf_out.stdout.0.TABLE_vlanbrief.ROW_vlanbrief | map(attribute='vlanshowbr-vlanid') | list }}"
+      tags:
+      - validate
       - postdeploy-vlan
       - predeploy-vlan
+
+    - name: setting vars
+      set_fact:
+        int_list: "{{nxos_int_leaf_out.stdout.0.TABLE_intf.ROW_intf | map(attribute='intf-name') | list }}"
+      tags:
+      - validate
+      - postdeploy-svi
+      - predeploy-svi
      
   tasks:  
   
