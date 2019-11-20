@@ -2,17 +2,16 @@
 !
 {% if svi_state is defined %}
 {% if ( svi_state == "create" or svi_state == "modify" ) %}
-
 !
 {%if vrf_id is defined and svi_ipaddr is defined and svi_ipaddr | length and svi_ipaddr | ipaddr %}
 interface Vlan{{ vlan_id | int }}
   description {{ vlan_descr }}
   no shutdown
-  {% if private_vlan_type is defined %}
-  {% if private_vlan_type == "primary" %}
+{% if private_vlan_type is defined %}
+{% if private_vlan_type == "primary" %}
   private-vlan mapping {{private_vlan_association}}
-  {% endif %}
-  {% endif %}
+{% endif %}
+{% endif %}
   mtu {{ vlanif_global_params.mtu | int }}
   vrf member {{ vrf_name }}
   ip address {{ svi_ipaddr | ipaddr }}
