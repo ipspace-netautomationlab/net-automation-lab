@@ -280,8 +280,8 @@
     rescue:
     - name: Include rescue tasks
       include_tasks: rescue.yml
-    tags:
-    - postdeploy-sec-zone
+      tags:
+      - postdeploy-sec-zone
   
     - block:
     
@@ -304,8 +304,8 @@
     rescue:
     - name: Include rescue tasks
       include_tasks: rescue.yml
-    tags:
-    - postdeploy-vlan
+      tags:
+      - postdeploy-vlan
 
     - block:
   
@@ -328,6 +328,6 @@
     rescue:
     - name: Include rescue tasks
       include_tasks: rescue.yml
-    tags:
-    - postdeploy-svi   
+      tags:
+      - postdeploy-svi   
     
