@@ -214,15 +214,16 @@
       fail:
         msg: "WARNING: VRF '{{vrf_name}}' already existing on device '{{inventory_hostname}}'"
       when: (vrf_state is defined and vrf_state == "create" and vrf_name in vrf_list)
+      tags:
+      - predeploy-sec-zone
     
     #  The task fails if VRF to be modified or deleted is not found           
     - name: predeploy - Checking for VRFs to be modified or deleted
       fail:
         msg: "WARNING: VRF '{{vrf_name}}' is not existing on device '{{inventory_hostname}}'"
       when: (vrf_state is defined and ( vrf_state == "modify" or vrf_state == "delete" ) and vrf_name not in vrf_list)
-
-    tags:
-    - predeploy-sec-zone
+      tags:
+      - predeploy-sec-zone
     
   - block:
 
@@ -231,14 +232,16 @@
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' already existing on device '{{inventory_hostname}}'"
       when: (vlan_state is defined and vlan_state == "create" and ( vlan_id | string ) in vlan_list)
+      tags:
+      - predeploy-vlan
     
     #  The task fails if VLAN to be modified or deleted is not found           
     - name: predeploy - Checking for VLANs to be modified or deleted
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
       when: (vlan_state is defined and ( vlan_state == "modify" or vlan_state == "delete" ) and ( vlan_id | string ) not in vlan_list)
-    tags:
-    - predeploy-vlan
+      tags:
+      - predeploy-vlan
     
   - block:
   
@@ -247,15 +250,16 @@
       fail:
         msg: "WARNING: Interface vlan  '{{vlan_id}}' already existing on device '{{inventory_hostname}}'"
       when: (svi_state is defined and svi_state == "create" and ( "Vlan{{vlan_id}}" | string ) in int_list)
+      tags:
+      - predeploy-svi  
     
     #  The task fails if Interface VLAN to be modified or deleted is not found           
     - name: predeploy - Checking for VLANs to be modified or deleted
       fail:
         msg: "WARNING: Interface vlan '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
       when: (svi_state is defined and ( svi_state == "modify" or svi_state == "delete" ) and ( "Vlan{{vlan_id}}" | string ) not in int_list)
-
-    tags:
-    - predeploy-svi  
+      tags:
+      - predeploy-svi  
   
   - block:
   
@@ -264,13 +268,15 @@
       fail:
         msg: "WARNING: VRF '{{vrf_name}}' is not existing on device '{{inventory_hostname}}'"
       when: (vrf_state is defined and ( vrf_state == "create" or vrf_state == "modify" )and vrf_name not in vrf_list)
-    
+      tags:
+      - postdeploy-sec-zone
     #  The task fails if VRF to be deleted is found           
     - name: postdeploy - Checking for VRFs to be deleted
       fail:
         msg: "WARNING: VRF '{{vrf_name}}' is existing on device '{{inventory_hostname}}'"
       when: (vrf_state is defined and vrf_state == "delete" and vrf_name in vrf_list)
-
+      tags:
+      - postdeploy-sec-zone
     rescue:
     - name: Include rescue tasks
       include_tasks: rescue.yml
@@ -284,12 +290,16 @@
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
       when: (vlan_state is defined and ( vlan_state == "create" or vlan_state == "modify" ) and ( vlan_id | string ) not in vlan_list)
+      tags:
+      - postdeploy-vlan
     
     #  The task fails if VLAN to be deleted is found           
     - name: postdeploy - Checking for VLANs to be deleted
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' is existing on device '{{inventory_hostname}}'"
       when: (vlan_state is defined and vlan_state == "delete" and ( vlan_id | string ) in vlan_list)
+      tags:
+      - postdeploy-vlan
     
     rescue:
     - name: Include rescue tasks
@@ -304,12 +314,16 @@
       fail:
         msg: "WARNING: Interface vlan '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
       when: (svi_state is defined and ( svi_state == "create" or svi_state == "modify" ) and ( "Vlan{{vlan_id}}" | string ) not in int_list)
-    
+      tags:
+      - postdeploy-svi
+      
     #  The task fails if Interface VLAN to be deleted is found           
     - name: postdeploy - Checking for VLANs to be deleted
       fail:
         msg: "WARNING: Interface vlan '{{vlan_id}}' is existing on device '{{inventory_hostname}}'"
       when: (svi_state is defined and svi_state == "delete" and ( "Vlan{{vlan_id}}" | string ) in int_list)
+      tags:
+      - postdeploy-svi
       
     rescue:
     - name: Include rescue tasks
