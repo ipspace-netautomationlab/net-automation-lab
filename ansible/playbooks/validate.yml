@@ -277,11 +277,11 @@
         when: (vrf_state is defined and vrf_state == "delete" and vrf_name in vrf_list)
         tags:
         - postdeploy-sec-zone
-    rescue:
-    - name: Include rescue tasks
-      include_tasks: rescue.yml
-      tags:
-      - postdeploy-sec-zone
+      rescue:
+      - name: Include rescue tasks
+        include_tasks: rescue.yml
+        tags:
+        - postdeploy-sec-zone
   
     - block:
     
@@ -301,11 +301,11 @@
         tags:
         - postdeploy-vlan
     
-    rescue:
-    - name: Include rescue tasks
-      include_tasks: rescue.yml
-      tags:
-      - postdeploy-vlan
+      rescue:
+      - name: Include rescue tasks
+        include_tasks: rescue.yml
+        tags:
+        - postdeploy-vlan
 
     - block:
   
@@ -325,9 +325,9 @@
         tags:
         - postdeploy-svi
       
-    rescue:
-    - name: Include rescue tasks
-      include_tasks: rescue.yml
-      tags:
-      - postdeploy-svi   
+      rescue:
+      - name: Include rescue tasks
+        include_tasks: rescue.yml
+        tags:
+        - postdeploy-svi   
     
