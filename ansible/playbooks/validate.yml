@@ -136,8 +136,12 @@
         gather_subset: all
       tags:
       - validate
-      - postdeploy
-      - predeploy
+      - postdeploy-sec-zone
+      - predeploy-sec-zone
+      - postdeploy-svi
+      - predeploy-svi
+      - postdeploy-vlan
+      - predeploy-vlan
       
     # Gathering info about VRFs
     - name: Running 'show vrf' on remote devices
@@ -148,8 +152,8 @@
       register: nxos_vrf_leaf_out
       tags:
       - validate
-      - postdeploy
-      - predeploy
+      - postdeploy-sec-zone
+      - predeploy-sec-zone
     
     # Gathering info about VLANs
     - name: Running 'show vlan' on remote devices
@@ -160,8 +164,8 @@
       register: nxos_vlan_leaf_out
       tags:
       - validate
-      - postdeploy
-      - predeploy
+      - postdeploy-vlan
+      - predeploy-vlan
     
     # Gathering info about interfaces
     - name: Running 'show ip int brie vrf all' on remote devices
@@ -172,8 +176,8 @@
       register: nxos_int_leaf_out
       tags:
       - validate
-      - postdeploy
-      - predeploy
+      - postdeploy-svi
+      - predeploy-svi
 
     # Gathering info about Switchports
     - name: Running 'show interface switchport' on remote devices
@@ -184,8 +188,8 @@
       register: nxos_switchport_leaf_out
       tags:
       - validate
-      - postdeploy
-      - predeploy
+      - postdeploy-intf
+      - predeploy-intf
 
     - name: setting vars
       set_fact:
@@ -194,54 +198,17 @@
         int_list: "{{nxos_int_leaf_out.stdout.0.TABLE_intf.ROW_intf | map(attribute='intf-name') | list }}"
       tags:
       - validate
-      - postdeploy
-      - predeploy
+      - postdeploy-sec-zone
+      - predeploy-sec-zone
+      - postdeploy-svi
+      - predeploy-svi
+      - postdeploy-vlan
+      - predeploy-vlan
      
   tasks:  
-  - block:
-    #  The task fails if VRF to be created or modified is not found           
-    - name: postdeploy - Checking for VRFs to be created or modified
-      fail:
-        msg: "WARNING: VRF '{{vrf_name}}' is not existing on device '{{inventory_hostname}}'"
-      when: (vrf_state is defined and ( vrf_state == "create" or vrf_state == "modify" )and vrf_name not in vrf_list)
-    
-    #  The task fails if VRF to be deleted is found           
-    - name: postdeploy - Checking for VRFs to be deleted
-      fail:
-        msg: "WARNING: VRF '{{vrf_name}}' is existing on device '{{inventory_hostname}}'"
-      when: (vrf_state is defined and vrf_state == "delete" and vrf_name in vrf_list)
-      
-    #  The task fails if VLAN to be created or modified is not found           
-    - name: postdeploy - Checking for VLANs to be created or modified
-      fail:
-        msg: "WARNING: VLAN '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
-      when: (vlan_state is defined and ( vlan_state == "create" or vlan_state == "modify" ) and ( vlan_id | string ) not in vlan_list)
-    
-    #  The task fails if VLAN to be deleted is found           
-    - name: postdeploy - Checking for VLANs to be deleted
-      fail:
-        msg: "WARNING: VLAN '{{vlan_id}}' is existing on device '{{inventory_hostname}}'"
-      when: (vlan_state is defined and vlan_state == "delete" and ( vlan_id | string ) in vlan_list)
-      
-    #  The task fails if Interface VLAN to be created or modified is not found           
-    - name: postdeploy - Checking for Interface VLANs to be created or modified
-      fail:
-        msg: "WARNING: Interface vlan '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
-      when: (svi_state is defined and ( svi_state == "create" or svi_state == "modify" ) and ( "Vlan{{vlan_id}}" | string ) not in int_list)
-    
-    #  The task fails if Interface VLAN to be deleted is found           
-    - name: postdeploy - Checking for VLANs to be deleted
-      fail:
-        msg: "WARNING: Interface vlan '{{vlan_id}}' is existing on device '{{inventory_hostname}}'"
-      when: (svi_state is defined and svi_state == "delete" and ( "Vlan{{vlan_id}}" | string ) in int_list)
-
-    rescue:
-    - name: Include rescue tasks
-      include_tasks: rescue.yml
-    tags:
-    - postdeploy
-    
-  - block:
+  
+    - block:
+  
     #  The task fails if VRF to be created is found           
     - name: predeploy - Checking for VRFs to be created
       fail:
@@ -253,7 +220,12 @@
       fail:
         msg: "WARNING: VRF '{{vrf_name}}' is not existing on device '{{inventory_hostname}}'"
       when: (vrf_state is defined and ( vrf_state == "modify" or vrf_state == "delete" ) and vrf_name not in vrf_list)
-      
+
+    tags:
+    - predeploy-sec-zone
+    
+  - block:
+
     #  The task fails if VLAN to be created is found           
     - name: predeploy - Checking for VLANs to be created
       fail:
@@ -265,7 +237,11 @@
       fail:
         msg: "WARNING: VLAN '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
       when: (vlan_state is defined and ( vlan_state == "modify" or vlan_state == "delete" ) and ( vlan_id | string ) not in vlan_list)
-
+    tags:
+    - predeploy-vlan
+    
+  - block:
+  
     #  The task fails if Interface VLAN to be created is found           
     - name: predeploy - Checking for VLANs to be created
       fail:
@@ -278,7 +254,66 @@
         msg: "WARNING: Interface vlan '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
       when: (svi_state is defined and ( svi_state == "modify" or svi_state == "delete" ) and ( "Vlan{{vlan_id}}" | string ) not in int_list)
 
-
     tags:
-    - predeploy  
+    - predeploy-svi  
+  
+  - block:
+  
+    #  The task fails if VRF to be created or modified is not found           
+    - name: postdeploy - Checking for VRFs to be created or modified
+      fail:
+        msg: "WARNING: VRF '{{vrf_name}}' is not existing on device '{{inventory_hostname}}'"
+      when: (vrf_state is defined and ( vrf_state == "create" or vrf_state == "modify" )and vrf_name not in vrf_list)
+    
+    #  The task fails if VRF to be deleted is found           
+    - name: postdeploy - Checking for VRFs to be deleted
+      fail:
+        msg: "WARNING: VRF '{{vrf_name}}' is existing on device '{{inventory_hostname}}'"
+      when: (vrf_state is defined and vrf_state == "delete" and vrf_name in vrf_list)
 
+    rescue:
+    - name: Include rescue tasks
+      include_tasks: rescue.yml
+    tags:
+    - postdeploy-sec-zone
+  
+  - block:
+    
+    #  The task fails if VLAN to be created or modified is not found           
+    - name: postdeploy - Checking for VLANs to be created or modified
+      fail:
+        msg: "WARNING: VLAN '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
+      when: (vlan_state is defined and ( vlan_state == "create" or vlan_state == "modify" ) and ( vlan_id | string ) not in vlan_list)
+    
+    #  The task fails if VLAN to be deleted is found           
+    - name: postdeploy - Checking for VLANs to be deleted
+      fail:
+        msg: "WARNING: VLAN '{{vlan_id}}' is existing on device '{{inventory_hostname}}'"
+      when: (vlan_state is defined and vlan_state == "delete" and ( vlan_id | string ) in vlan_list)
+    
+    rescue:
+    - name: Include rescue tasks
+      include_tasks: rescue.yml
+    tags:
+    - postdeploy-vlan
+
+  - block:
+  
+    #  The task fails if Interface VLAN to be created or modified is not found           
+    - name: postdeploy - Checking for Interface VLANs to be created or modified
+      fail:
+        msg: "WARNING: Interface vlan '{{vlan_id}}' is not existing on device '{{inventory_hostname}}'"
+      when: (svi_state is defined and ( svi_state == "create" or svi_state == "modify" ) and ( "Vlan{{vlan_id}}" | string ) not in int_list)
+    
+    #  The task fails if Interface VLAN to be deleted is found           
+    - name: postdeploy - Checking for VLANs to be deleted
+      fail:
+        msg: "WARNING: Interface vlan '{{vlan_id}}' is existing on device '{{inventory_hostname}}'"
+      when: (svi_state is defined and svi_state == "delete" and ( "Vlan{{vlan_id}}" | string ) in int_list)
+      
+    rescue:
+    - name: Include rescue tasks
+      include_tasks: rescue.yml
+    tags:
+    - postdeploy-svi   
+    
