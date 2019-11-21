@@ -135,13 +135,14 @@
       nxos_facts:
         gather_subset: all
       tags:
-      - validate
-      - postdeploy-sec-zone
-      - predeploy-sec-zone
-      - postdeploy-svi
-      - predeploy-svi
-      - postdeploy-vlan
-      - predeploy-vlan
+#      - validate
+#      - postdeploy-sec-zone
+#      - predeploy-sec-zone
+#      - postdeploy-svi
+#      - predeploy-svi
+#      - postdeploy-vlan
+#      - predeploy-vlan
+       -validate-facts
       
     # Gathering info about VRFs
     - name: Running 'show vrf' on remote devices
