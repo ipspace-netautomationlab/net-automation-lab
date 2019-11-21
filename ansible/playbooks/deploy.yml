@@ -19,7 +19,7 @@
   hosts: nexus_switch
   tasks:
   # Gathering info about system
-  - name: Running 'show vlan' on remote devices
+  - name: Running 'show version' on remote devices
     nxos_command:
       commands: 
         - command: show version
