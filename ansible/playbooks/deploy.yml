@@ -18,12 +18,21 @@
   gather_facts: no
   hosts: nexus_switch
   tasks:
+  # Gathering info about system
+  - name: Running 'show vlan' on remote devices
+    nxos_command:
+      commands: 
+        - command: show version
+          output: json
+    register: nxos_version
+    tags:
+    - serial_check
   # The task fails if inventory serial and device serial mismatch
   - name: verifying Serial Number
     fail:
-      msg: "ERROR: serial number mismatch, device serial number is {{ansible_net_serialnum}}, inventory serial number is {{serial_num}}, stopping execution."
+      msg: "ERROR: serial number mismatch, device serial number is {{nxos_version.proc_board_id}}, inventory serial number is {{serial_num}}, stopping execution."
     # Errors triggered on serial mismatch
-    when: ansible_net_serialnum != serial_num
+    when: nxos_version.proc_board_id != serial_num   
     tags:
     - serial_check
   - name: config checkpoint for rollback
