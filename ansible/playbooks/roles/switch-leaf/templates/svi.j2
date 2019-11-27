@@ -6,7 +6,7 @@
 {%if vrf_id is defined and svi_ipaddr is defined and svi_ipaddr | length and svi_ipaddr | ipaddr %}
 interface Vlan{{ vlan_id | int }}
   description {{ vlan_descr }}
-  no shutdown
+  shutdown
 {% if private_vlan_type is defined %}
 {% if private_vlan_type == "primary" %}
   private-vlan mapping {{private_vlan_association}}
@@ -24,6 +24,14 @@ interface Vlan{{ vlan_id | int }}
 no interface vlan {{ vlan_id | int }}
 !
 {% endif %}
+{% elif svi_state == "shutdown" %}
+interface vlan {{ vlan_id | int }}
+ shutdown
+!
+{% elif svi_state == "no_shutdown" %}
+interface vlan {{ vlan_id | int }}
+ no shutdown
+!
 {% else %}
 {% endif %}
 {% endif %}
