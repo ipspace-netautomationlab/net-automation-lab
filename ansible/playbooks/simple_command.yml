@@ -58,7 +58,7 @@
        ansible_command_timeout: 40
       nxos_config:
        lines:
-        - {{simple_command}}
+        - "{{simple_command}}"
       notify: save_config
     #if deploy fails then roll back to the last backup
     rescue:
