@@ -1,0 +1,9 @@
+---
+
+- name: write spanning-tree config file
+  template:
+    src: spanning-tree.j2
+    dest: "{{ output_folder }}/config/{{ inventory_hostname }}_4_4_spanning_tree.conf"
+  tags:
+  - config
+  - spanning-tree

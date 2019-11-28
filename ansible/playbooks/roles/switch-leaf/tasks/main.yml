@@ -4,3 +4,4 @@
  - import_tasks: vlan.yml
  - import_tasks: svi.yml
  - import_tasks: sec-zone.yml
+ - import_tasks: spanning-tree.yml
